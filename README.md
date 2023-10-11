@@ -13,8 +13,8 @@ LembarPena adalah tempat seluruh komunitas literasi berkumpul. Pembaca dapat mem
 Dataset yang akan kami pakai berasal dari Kaggle dengan judul ```Google Books Dataset```. Klik link di [sini](https://www.kaggle.com/datasets/bilalyussef/google-books-dataset)
 
 ## Role atau peran pengguna beserta deskripsinya
-1. Seller
+1. Seller <br/>
 Seller merupakan profil penjual buku yang dapat dipakai oleh para penulis maupun penerbit di luar sana. Dengan begitu, penulis yang hendak menjual karyanya bisa langsung menjualnya di sini tanpa perlu melewati penerbit sekalipun.
 
-2. Buyer
+2. Buyer <br/>
 Buyer atau pembeli ini dapat membeli buku yang dicari dan diinginkan dari para penjual buku. Nantinya buyer ini juga bisa berdiskusi di forum dengan buyer yang lain
