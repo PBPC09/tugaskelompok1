@@ -11,4 +11,10 @@ LembarPena adalah tempat seluruh komunitas literasi berkumpul. Pembaca dapat mem
 ## Daftar modul yang akan diimplementasikan
 ## Sumber dataset katalog buku
 Dataset yang akan kami pakai berasal dari Kaggle dengan judul ```Goodreads-books```. Klik link di [sini](https://www.kaggle.com/datasets/jealousleopard/goodreadsbooks/)
+
 ## Role atau peran pengguna beserta deskripsinya
+1. Seller
+Seller merupakan profil penjual buku yang dapat dipakai oleh para penulis maupun penerbit di luar sana. Dengan begitu, penulis yang hendak menjual karyanya bisa langsung menjualnya di sini tanpa perlu melewati penerbit sekalipun.
+
+2. Buyer
+Buyer atau pembeli ini dapat membeli buku yang dicari dan diinginkan dari para penjual buku. Nantinya buyer ini juga bisa berdiskusi di forum dengan buyer yang lain
