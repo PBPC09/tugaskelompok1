@@ -16,8 +16,8 @@ LembarPena adalah tempat seluruh komunitas literasi berkumpul. Pembaca dapat mem
 ## Daftar modul yang akan diimplementasikan
 ### 📚 Modul Buy Book 📚
 Modul ini memungkinkan pengguna untuk memilih dan membeli buku dari katalog yang tersedia di situs web. Fitur-fitur utama dari modul ini akan meliputi:
-- Menampilkan daftar buku yang tersedia untuk dibeli
-- Opsi untuk pengguna mencari buku berdasarkan penulis, genre, dan harga
+- Menampilkan daftar buku yang tersedia untuk dibeli. Pengguna bisa melakukan add to cart. Jendela cart akan menampilkan keranjang belanja dan bisa meminta input jumlah dan akan mengoperasikan total harga.
+- Opsi untuk pengguna mencari buku berdasarkan penulis, genre, dan harga.
 - Saat pengguna mengklik buku tertentu, halaman detail buku akan menampilkan informasi yang lebih lengkap
 
 ### 🛒 Modul Checkout Book 🛒
