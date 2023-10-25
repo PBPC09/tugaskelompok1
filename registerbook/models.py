@@ -8,10 +8,10 @@ class Book(models.Model):
     rating = models.IntegerField()
     voters = models.IntegerField()
     price = models.IntegerField()
-    currency = models.TextField()
-    decscription = models.CharField(max_length=500)
+    currency = models.CharField(max_length=20)
+    decscription = models.TextField()
     publisher = models.CharField(max_length=300)
     page_count = models.IntegerField()
-    
+
     def __str__(self):
         return self.title
