@@ -1,10 +1,9 @@
 from django.shortcuts import render
 
 # Create your views here.
-def show_main(request):
+def show_landing_page(request):
     context = {
         'name': 'Pak Bepe',
         'class': 'PBP A'
     }
-
-    return render(request, "main.html", context)
+    return render(request, "landingpage.html", context)
