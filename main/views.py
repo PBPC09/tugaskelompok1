@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def show_landing_page(request):
@@ -15,6 +16,11 @@ def show_landing_page(request):
     }
     return render(request, "landingpage.html", context)
 
+@csrf_exempt
+def show_landing_page_logged_in(request):
+    context = {
+    }
+    return render(request, "landingpageafterlogin.html", context)
 def signup(request):
     form = SignUpForm()
     if request.method == "POST":
@@ -38,7 +44,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            response = HttpResponseRedirect(reverse("main:show_main")) 
+            response = HttpResponseRedirect(reverse("main:show_landing_page_logged_in")) 
             response.set_cookie('last_login', str(datetime.datetime.now()))
             return response
         else:
