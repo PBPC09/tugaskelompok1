@@ -10,10 +10,6 @@ class SignUpForm(UserCreationForm):
         required=True,
         choices=ROLE_CHOICES
     )
-<<<<<<< HEAD
-=======
-    full_name = forms.CharField(max_length=50)
->>>>>>> 6e20312ef3086855cb1a5dba4b0e11c5ccf2df13
     email = forms.EmailField(max_length=200)
 
     class Meta:
@@ -32,8 +28,5 @@ class SignUpForm(UserCreationForm):
             last_name=self.cleaned_data["last_name"],  
             email=self.cleaned_data["email"],
         )
-<<<<<<< HEAD
         return user
-=======
-        return user
->>>>>>> 6e20312ef3086855cb1a5dba4b0e11c5ccf2df13
+
