@@ -40,10 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+<<<<<<< HEAD
     'registerbook',
     'buybooks',
     'bookforum', 
     'checkoutbook',
+=======
+>>>>>>> 6e20312ef3086855cb1a5dba4b0e11c5ccf2df13
     'wishlist',
 ]
 

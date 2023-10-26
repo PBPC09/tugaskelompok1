@@ -13,4 +13,8 @@ class AddToWishlistForm(forms.Form):
         label='How much do you like this book?',
         choices=PREFERENCE_CHOICES,
         widget=forms.RadioSelect
+<<<<<<< HEAD
     )
+=======
+    )
+>>>>>>> 6e20312ef3086855cb1a5dba4b0e11c5ccf2df13
