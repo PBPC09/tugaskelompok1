@@ -10,6 +10,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseNotFound, HttpResponseRedirect
+
+#IMPORT BUAT USER PURA PURAAN
+from django.contrib.auth.models import User
+USER_BARU = User(id = 1 , pk = 1, username="Bryan")
+USER_BARU.save()
 # Create your views here.
 # @login_required(login_url='/login/')
 def show_forum(request):
@@ -26,7 +31,8 @@ def show_forum(request):
 @csrf_exempt
 def create_question(request):
     if request.method == 'POST':
-        user = request.user
+        # user = request.user
+        user = USER_BARU
         book = request.POST.get('book')
         question = request.POST.get('question')
         date = datetime.now()
@@ -50,9 +56,10 @@ def create_question(request):
 def create_comments(request, pk):
     forum_head = ForumHead.objects.filter(pk = pk)
     if request.method == 'POST':
-        user = request.user
+        # user = request.user
+        user = USER_BARU
         comment_to = forum_head 
-        date = datetime.date.today()
+        date = datetime.now()
         answer = request.POST.get('answer')
 
         new_comment = ForumComment(user = user, comment_to = comment_to, date = date, answer = answer)
@@ -64,6 +71,7 @@ def create_comments(request, pk):
                 'date' : new_comment.date
             }
         }
+        new_comment.save()
         return JsonResponse(result)
     return HttpResponseNotFound()
 

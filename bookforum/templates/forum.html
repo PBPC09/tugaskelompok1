@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<table class="row" id="product_container"></table>
 <!-- Modal untuk melakukan input -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -39,49 +40,47 @@
 </div>
 <script>
     async function getProducts() {
-        return fetch("{% url 'bookforum:show_forum' %}").then((res) => res.json())
+        return fetch("{% url 'bookforum:show_forum_json' %}").then((res) => res.json())
     }
 
     async function refreshProducts() {
         document.getElementById("product_container").innerHTML = "";
         const products = await getProducts();
 
-        let htmlString = "";
+        let htmlString = `<table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                            </tr>
+                        </thead><tbody class="table-group-divider">
+`;
         products.forEach((item) => {
             htmlString += `
-                <div class="col-sm-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">${item.fields.name}</h5>
-                            <div class="d-flex justify-content-center set-margin">
-                                <p class="card-text">Amount:  </p>
-                                <span class="button">
-                                    <a href="/decrease-quantity/${item.pk}">
-                                        <button type="submit" style="width: 25px; padding: 3px;">-</button>
-                                    </a>
-                                </span>
-                                <p class="card-text">${item.fields.amount}</p>
+   
+                            <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                            </tr>
+                            <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                            </tr>
+                            <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                            </tr>
 
-                                <span class="button">
-                                    <a href="/increase-quantity/${item.pk}">
-                                        <button type="submit" style="width: 25px; padding: 3px;">+</button>
-                                    </a>
-                                </span>
-                            </div>
-                            <p class="card-text">Price: ${item.fields.price}</p>
-                            <p class="card-text">${item.fields.description}</p>
-                            <p class="card-text"> Date Added ${item.fields.date_in}</p>  
-                            <p class="card-text"> Categories ${item.fields.categories}</p>                              
-                            <p class="card-text"> Stock less than five days? ${item.fields.stock}</p>
-                            <div class="d-flex justify-content-center set-margin">
-                                <span class="button">
-                                    <button type="button" onclick="deleteProduct(${item.pk}); return false;" class="btn delete-product-button" style="background-color: red; color:white; width: 100px; padding: 3px;" data-product-id="${item.pk}">Delete Product</button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div> `
+`
         });
+        htmlString +=  `</tbody></table>`
         document.getElementById("product_container").innerHTML = htmlString
     }
 
