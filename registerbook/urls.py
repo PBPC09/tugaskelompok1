@@ -4,6 +4,6 @@ from registerbook.views import regist_books, show_registered_books
 app_name = 'registerbook'
 
 urlpatterns = [
-    path('books/', show_registered_books, name='show_registered_books'),
+    path('', show_registered_books, name='show_registered_books'),
     #path('', regist_books, name='regist_books'),
 ]
