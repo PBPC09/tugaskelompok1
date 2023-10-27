@@ -1,0 +1,114 @@
+{% extends 'base.html' %} 
+
+{% block meta %}
+    <title>Add Item Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url("https://cutewallpaper.org/21/astroneer-wallpapers/System-Era-Softworks.png");
+            background-size: 100% 100%;
+            background-color: ghostwhite;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            padding: 20px;
+            margin: 40px 0px 40px 0px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(35,0,77,.2);
+            background-color: rgba(242, 242, 242, 0.8);
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #7e74f1;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-table {
+            width: 100%;
+        }
+
+        .form-table th,
+        .form-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-table th {
+            text-align: left;
+            color: black;
+        }
+
+        .form-table td input[type="text"], td input[type="number"] {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #25316D;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .form-table td input[type="submit"] {
+            background-color: #5F6F94;
+            color: white;
+            border: 2px solid #25316D;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"] {
+            margin: 30px 0px 0px 50px;
+            font-weight: bold;
+        }
+
+        .form-table td input[type="submit"]:hover {
+            background-color: #25316D;
+        }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="title">Add New Book</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <table class="form-table">
+            {{ form.as_table }}
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Add"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+{% endblock %}

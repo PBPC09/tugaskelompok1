@@ -16,7 +16,7 @@ from django.contrib.auth.models import User
 # USER_BARU = User(id = 1 , pk = 1, username="Bryan")
 # USER_BARU.save()
 # Create your views here.
-# @login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def show_forum(request):
     questions = ForumHead.objects.all()
     comments = ForumComment.objects.all()
@@ -27,7 +27,7 @@ def show_forum(request):
     }
     return render(request, "forum.html", context)
 
-# @login_required(login_url='/login/')
+@login_required(login_url='/login/')
 @csrf_exempt
 def create_question(request):
     if request.method == 'POST':
@@ -51,7 +51,7 @@ def create_question(request):
         return JsonResponse(result)
     return HttpResponseNotFound()
 
-# @login_required(login_url='/login/')
+@login_required(login_url='/login/')
 @csrf_exempt
 def create_comments(request, pk):
     forum_head = ForumHead.objects.filter(pk = pk)
@@ -75,7 +75,7 @@ def create_comments(request, pk):
         return JsonResponse(result)
     return HttpResponseNotFound()
 
-# @login_required(login_url='/login/')
+@login_required(login_url='/login/')
 @csrf_exempt
 def delete_question(request, id):
     if request.method == 'DELETE':
@@ -83,7 +83,7 @@ def delete_question(request, id):
         return HttpResponse(b"DELETED", status=201)
     return HttpResponseNotFound()
 
-# @login_required(login_url='/login/')
+@login_required(login_url='/login/')
 @csrf_exempt
 def delete_comments(request, id):
     if request.method == 'DELETE':
