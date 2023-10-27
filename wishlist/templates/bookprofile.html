@@ -60,6 +60,7 @@
         <div class="modal-content">
             <form id="wishlist-form" method="post" action="{% url 'wishlist:add_to_wishlist' %}">
                 {% csrf_token %}
+                <input type="hidden" id="id_book_id" name="book_id">
                 <div class="modal-header">
                     <h5 class="modal-title" id="wishlistModalLabel">Add to Wishlist</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
