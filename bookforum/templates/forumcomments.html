@@ -53,6 +53,7 @@
 
 </div>
 
+<div class="save-url" data-url="{% url 'bookforum:show_uniquecomments_json' question.pk %}" id="url-unique-json"></div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -139,8 +140,10 @@
     }
 </style>
 <script>
-async function getForum() {
-        return fetch("{% url 'bookforum:show_comments_json' %}").then((res) => res.json())
+    async function getForum() {
+        let formElement = document.getElementById('url-unique-json');
+        let url = formElement.getAttribute('data-url');
+        return fetch(url).then((res) => res.json())
     }
 
     async function refreshComments() {
@@ -152,22 +155,17 @@ async function getForum() {
             htmlString += `         
             <div class="card">
                 <h7 class="card-header d-flex justify-content-between align-items-center" style="height: 30px;">
-                    Date Time
-                    <button class="btn btn-primary" style="font-size:10px;height: 24px; text-align: center;">Your Button</button>
+                    ${item.fields.user} pada ${item.fields.date} 
+                    <button class="btn btn-primary" style="font-size:10px;height: 24px; text-align: center;" onclick="deleteComments('${item.fields.user}', ${item.pk}); return false;">Delete</button>
                 </h7>
                 <div class="card-body">
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text">${item.fields.answer}</p>
                 </div>
             </div>
             `
         });
-        htmlString +=  `</tbody></table>`
-        document.getElementById("forum_container").innerHTML = htmlString
+        document.getElementById("list-komentar").innerHTML = htmlString
 
-    }
-
-    function navigateToForum(url) {
-        window.location.href = url;
     }
 
     refreshComments()
@@ -183,6 +181,15 @@ async function getForum() {
             document.getElementById("form").reset()
             return false
     }
+
     document.getElementById("button_add").onclick = addComment
+
+    function deleteComments(username, commentId) {
+        const url = `/bookforum/delete_comments/${username}/${commentId}/`;
+            fetch(url, {
+                method: "GET",
+            }).then(refreshComments)
+            return false
+        }
 </script>
 {% endblock content %}

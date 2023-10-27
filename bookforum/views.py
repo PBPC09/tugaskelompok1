@@ -57,14 +57,13 @@ def create_question(request):
 @login_required(login_url='/login/')
 @csrf_exempt
 def create_comments(request, pk):
-    forum_head = ForumHead.objects.filter(pk = pk)
+    forum_head = ForumHead.objects.get(pk = pk)
     if request.method == 'POST':
         user = request.user
         # user = USER_BARU
-        comment_to = forum_head 
         date = datetime.now()
         answer = request.POST.get('answer')
-        new_comment = ForumComment(user = user, comment_to = comment_to, date = date, answer = answer)
+        new_comment = ForumComment(user = user, comment_to = forum_head, date = date, answer = answer)
         result = {
             'pk' : new_comment.pk,
             'fields' : {
@@ -87,11 +86,11 @@ def delete_question(request, id):
 
 @login_required(login_url='/login/')
 @csrf_exempt
-def delete_comments(request, id):
-    if request.method == 'DELETE':
-        ForumComment.objects.get(pk = id).delete()
+def delete_comments(request, username, id):
+    # if request.method == 'GET' and request.user.username == user :
+        # ForumComment.objects.get(pk = id)
         return HttpResponse(b"DELETED", status=201)
-    return HttpResponseNotFound()
+    # return HttpResponseNotFound()
 
 def show_forum_json_2(request):
     data = ForumHead.objects.all()
@@ -124,13 +123,34 @@ def show_comments_json(request):
     data = ForumComment.objects.all()
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
 
+def show_uniquecomments_json(request, id):
+    question = ForumHead.objects.get(pk = id)
+    comments = ForumComment.objects.filter(comment_to=question)
+    serialized_data = []
+    for model in comments:
+        user = model.user
+        model_data = {
+            "model": "bookforum.forumcomment",
+            "pk": model.pk,  # Include the "pk" field
+            "fields": {
+                "user": user.username,
+                "comment_to": model.comment_to.pk,
+                "date": str(model.date),  # Convert the date to a string
+                "answer" :  model.answer
+            }
+        }
+        serialized_data.append(model_data)
+        # abis udah append ke serialized_data
+    json_data = json.dumps(serialized_data)
+    return HttpResponse(json_data, content_type="application/json")
+
 def show_books_json(request):
     books = Book.objects.all()
     return HttpResponse(serializers.serialize('json', books), content_type="application/json")
 
 @login_required(login_url='/login/')
 def show_forumcomments(request, id_head):
-    question = get_object_or_404(ForumHead, pk=id_head)
+    question = ForumHead.objects.get(pk = id_head)
     comments = ForumComment.objects.filter(comment_to=question)
     
     context = {
