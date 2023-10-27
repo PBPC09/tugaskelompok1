@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shopping Cart</title>
+    <title>Cart</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Your Shopping Cart</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Book Title</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                <tr>
-                    <td>{{ item.book.title }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>${{ item.book.price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="text-right">
-            <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+    <div class="container">
+        <h1 class="mt-5 mb-4">Your Cart</h1>
+
+        {% for item in cart_items %}
+        <div class="card mb-3">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="{{ item.book.cover.url }}" class="card-img-top" alt="{{ item.book.title }}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.book.title }}</h5>
+                        <p class="card-text">Price: ${{ item.book.price }}</p>
+                        <p class="card-text">Quantity: {{ item.quantity }}</p>
+                        <!-- Add a button to remove the item from the cart -->
+                        <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger">Remove from Cart</a>
+                    </div>
+                </div>
+            </div>
         </div>
+        {% endfor %}
+
+        <!-- Add a button to proceed to checkout -->
+        {% if cart_items %}
+        <a href="{% url 'checkout' %}" class="btn btn-success btn-lg btn-block">Proceed to Checkout</a>
+        {% endif %}
     </div>
+
 </body>
 </html>
+
