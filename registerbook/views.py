@@ -7,7 +7,6 @@ from .forms import BookForm
 
 def show_registered_books(request):
     books = Book.objects.all()
-   
     context = {
         'books': books,
     }

@@ -10,7 +10,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseNotFound, HttpResponseRedirect
-
+from registerbook.models import Book
+import json
 #IMPORT BUAT USER PURA PURAAN
 from django.contrib.auth.models import User
 # USER_BARU = User(id = 1 , pk = 1, username="Bryan")
@@ -33,7 +34,8 @@ def create_question(request):
     if request.method == 'POST':
         user = request.user
         # user = USER_BARU
-        book = request.POST.get('book')
+        book_id = request.POST.get('book_id')
+        book = Book.objects.get(pk=book_id)
         question = request.POST.get('question')
         date = datetime.now()
         title = request.POST.get('title')
@@ -44,7 +46,8 @@ def create_question(request):
                 'username' : new_question.user.username,
                 'title' : new_question.title,
                 'question' : new_question.question,
-                'date' : new_question.date
+                'date' : new_question.date,
+                'book' : new_question.book.title,
             }
         }
         new_question.save()
@@ -61,7 +64,6 @@ def create_comments(request, pk):
         comment_to = forum_head 
         date = datetime.now()
         answer = request.POST.get('answer')
-
         new_comment = ForumComment(user = user, comment_to = comment_to, date = date, answer = answer)
         result = {
             'pk' : new_comment.pk,
@@ -91,10 +93,49 @@ def delete_comments(request, id):
         return HttpResponse(b"DELETED", status=201)
     return HttpResponseNotFound()
 
-def show_forum_json(request):
+def show_forum_json_2(request):
     data = ForumHead.objects.all()
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
+
+
+def show_forum_json(request):
+    models = ForumHead.objects.all()
+    serialized_data = []
+    for model in models:
+        book = model.book
+        user = model.user
+        model_data = {
+            "model": "bookforum.forumhead",
+            "pk": model.pk,  # Include the "pk" field
+            "fields": {
+                "book": book.title,
+                "user": user.username,
+                "date": str(model.date),  # Convert the date to a string
+                "title": model.title,
+                "question": model.question,
+            }
+        }
+        serialized_data.append(model_data)
+        # abis udah append ke serialized_data
+    json_data = json.dumps(serialized_data)
+    return HttpResponse(json_data, content_type="application/json")
 
 def show_comments_json(request):
     data = ForumComment.objects.all()
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')
+
+def show_books_json(request):
+    books = Book.objects.all()
+    return HttpResponse(serializers.serialize('json', books), content_type="application/json")
+
+@login_required(login_url='/login/')
+def show_forumcomments(request, id_head):
+    question = get_object_or_404(ForumHead, pk=id_head)
+    comments = ForumComment.objects.filter(comment_to=question)
+    
+    context = {
+        'question': question,
+        'comments': comments,
+    }
+    
+    return render(request, "forumcomments.html", context)
