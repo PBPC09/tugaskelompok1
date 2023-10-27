@@ -1,7 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<table class="row" id="product_container"></table>
+
+<style>
+    .scrollspy-example {
+        max-height: 200px;  /* Adjust this value based on your preference */
+        overflow-y: auto;
+    }
+    </style>
+    
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+        <a class="navbar-brand" href="#">Lembar Pena</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            </ul>
+            <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
+            <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
+            <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
+            <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
+            <a class="btn btn-outline-success" style="margin-right: 10px;" href="{% url 'main:logout' %}">Logout</a>    
+        </div>
+    </nav>
+    <h2 style="margin: 30px 30px 30px 30px; text-align: center;"> Forum Buku</h2>
+    <div class="d-flex justify-content-center set-margin">
+        <a>    
+            <button type="button" class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Buat Forum Baru
+            </button>
+        </a>    
+    </div>
+<table class="row" id="forum_container" style="margin: 40px 40px 40px 40px;"></table>
 <!-- Modal untuk melakukan input -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -17,7 +49,21 @@
                         <label for="title" class="col-form-label">Judul:</label>
                         <input type="text" class="form-control" id="title" name="title"></input>
                     </div>
-                    <!-- DI SINI NANTI ADA DROP DOWN BUKU -->
+                    <div class="mb-3">
+                        <label for="title" class="col-form-label">Pilih Buku:</label>
+                        <input type="hidden" id="book_id" name="book_id">
+                        <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle"  id="dropdown-buku" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                Pilih buku
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+                                        <div class="list-group">
+    
+                                        </div>
+                                </ul>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="question" class="col-form-label">Silakan masukkan pertanyaan Anda:</label>
                         <textarea class="form-control" id="question" name="question"></textarea>
@@ -31,70 +77,147 @@
         </div>
     </div>
 </div>
-<div class="d-flex justify-content-center set-margin">
-    <a>    
-        <button type="button" class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Buat Forum Baru
-        </button>
-    </a>    
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ayo mulai diskusi!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="title" class="col-form-label">Judul:</label>
+                        <input type="text" class="form-control" id="title" name="title"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="col-form-label">Pilih Buku:</label>
+                        <input type="hidden" id="book_id" name="book_id">
+                        <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle"  id="dropdown-buku" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                Pilih buku
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+                                        <div class="list-group">
+    
+                                        </div>
+                                </ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="question" class="col-form-label">Silakan masukkan pertanyaan Anda:</label>
+                        <textarea class="form-control" id="question" name="question"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Tambahkan Forum</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 <script>
-    async function getProducts() {
+    
+    $(document).ready(function() {
+        $('.dropdown-menu').on('click', '.list-group-item', function() {
+            // Get the content of the selected item (for demonstration, we'll get the heading)
+            var selectedItem = $(this).find('h5').text();
+            var selectedBookId = $(this).data('id');        
+            $('#book_id').val(selectedBookId);
+            console.log(selectedBookId)
+            // Update the button content
+            $('.dropdown-toggle').text(selectedItem);
+
+        });
+    });
+
+    async function getForum() {
         return fetch("{% url 'bookforum:show_forum_json' %}").then((res) => res.json())
     }
-
-    async function refreshProducts() {
-        document.getElementById("product_container").innerHTML = "";
-        const products = await getProducts();
+    async function getBook() {
+        return fetch("{% url 'bookforum:show_books_json' %}").then((res) => res.json())
+    }
+    async function refreshForum() {
+        document.getElementById("forum_container").innerHTML = "";
+        const allForums = await getForum();
 
         let htmlString = `<table class="table">
-                        <thead>
                             <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col" style="width:400px;">Pertanyaan</th>
+                            <th scope="col" style="width:300px;">Buku</th>
+                            <th scope="col" style="width:200px;">Penanya</th>
+                            <th scope="col" style="width:100px;">Tanggal</th>
+                            <th scope="col" style="width:100px;">Komentar</th>
                             </tr>
-                        </thead><tbody class="table-group-divider">
-`;
-        products.forEach((item) => {
-            htmlString += `
-   
-                            <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                            </tr>
-
-`
+                       <tbody class="table-group-divider">
+        `;
+        allForums.forEach((item) => {
+            let database_url="{% url 'bookforum:show_forumcomments' id_head=9999 %}"
+            const rowUrl = database_url.replace('9999', item.pk);
+            htmlString += ` <tr class="clickable-row" data-id="${item.pk}" data-url="${rowUrl}">
+                                    <td style="width:400px;">${item.fields.title}</td>
+                                    <td style="width:300px;">${item.fields.book}</td>
+                                    <td style="width:200px;">${item.fields.user}</td>
+                                    <td style="width:100px;">${item.fields.date}</td>
+                                    <td style="width:100px;"></td>
+                            </tr>  
+                        `
         });
         htmlString +=  `</tbody></table>`
-        document.getElementById("product_container").innerHTML = htmlString
+        document.getElementById("forum_container").innerHTML = htmlString
+        document.querySelectorAll('.clickable-row').forEach(row => {
+        row.addEventListener('click', () => {
+            const url = row.getAttribute('data-url');
+            window.location.href = url;
+            });
+        });
     }
 
-    refreshProducts()
+    function navigateToForum(url) {
+        window.location.href = url;
+    }
 
-    function addProduct() {
+    refreshForum()
+
+    async function showBooks(){
+        document.getElementsByClassName("list-group")[0].innerHTML = "";
+        const allBook = await getBook();
+        let stringHTML="";
+        allBook.forEach((item) => {
+            stringHTML += `<a href="#" class="list-group-item list-group-item-action" data-id="${item.pk}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">${item.fields.title}</h5>
+                                <small class="text-body-secondary">${item.fields.rating}</small>
+                        </div>
+                        <p class="mb-1">${item.fields.author}</p>
+                        <small class="text-body-secondary">${item.fields.publisher}</small>
+                        </a>    `
+        });
+        document.getElementsByClassName("list-group")[0].innerHTML = stringHTML;
+    }
+    
+    showBooks()
+
+    function addForum() {
+        let formData = new FormData(document.querySelector('#form'));
             fetch("{% url 'bookforum:create_question' %}", {
                 method: "POST",
                 body: new FormData(document.querySelector('#form'))
-            }).then(refreshProducts)
+            }).then(refreshForum)
 
             document.getElementById("form").reset()
+            document.getElementById("dropdown-buku").innerText = "Pilih Buku"
             return false
         }
-    document.getElementById("button_add").onclick = addProduct
+    document.getElementById("button_add").onclick = addForum
+
+    
+
 </script>
 {% endblock content %}

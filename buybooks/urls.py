@@ -3,6 +3,6 @@ from .views import *
 app_name = 'buybooks'
 
 urlpatterns = [    
-    path('', show_test, name="show_test" ),
+    path('', show_test, name="show_test"),
 
 ]

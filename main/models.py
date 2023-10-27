@@ -13,10 +13,10 @@ class Profile(models.Model):
     email = models.EmailField(max_length=200)
 
     def is_seller(self):
-        return self.role == 'S'
+        return self.role == 'Seller'
 
     def is_buyer(self):
-        return self.role == 'B'
+        return self.role == 'Buyer'
 
     def __str__(self):
         return self.user.username
