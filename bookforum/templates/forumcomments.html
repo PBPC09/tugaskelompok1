@@ -147,7 +147,7 @@ async function getForum() {
         document.getElementById("list-komentar").innerHTML = "";
         const allForums = await getForum();
 
-        let htmlString ="";
+        let htmlString =" ";
         allForums.forEach((item) => {
             htmlString += `         
             <div class="card">
