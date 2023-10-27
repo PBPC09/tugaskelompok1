@@ -1,47 +1,190 @@
 {% extends 'base.html' %}
 
+{% block meta %}
+    <title>Seller Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        /* Mengatur navbar agar elemen-elemen di kanan atas */
+        .navbar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Mengatur nama web di kiri atas */
+        .navbar-brand {
+            margin-right: auto; /* Mendorong ke kiri sejauh mungkin */
+        }
+
+        /* Mengatur tombol remove */
+        .btn-remove {
+            font-size: 1.2rem; /* Ukuran ikon */
+        }
+
+        /* Mengatur posisi ikon trash di pojok kanan atas card */
+        .card-header {
+            position: relative;
+        }
+
+        .btn-remove {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+        }
+        
+        .add-book-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+{% endblock meta %}
+
 {% block content %}
-<div class="container mt-5">
-    <h1>Books</h1>
-    <div class="row">
-        {% for book in books %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">{{ book.title }}</h5>
-                    <p class="card-text"><strong>Author:</strong> {{ book.author }}</p>
-                    <p class="card-text"><strong>Rating:</strong> {{ book.rating }}</p>
-                    <p class="card-text"><strong>Voters:</strong> {{ book.voters }}</p>
-                    <p class="card-text"><strong>Price:</strong> {{ book.price }} {{ book.currency }}</p>
-                    <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
-                    <p class="card-text"><strong>Page Count:</strong> {{ book.page_count }}</p>
-                    <p class="card-text"><strong>Genres:</strong> {{ book.genres }}</p>
-                     <!-- Button to show description -->
-                    <button class="btn btn-link show-description-button" data-toggle="modal" data-target="#descriptionModal{{ forloop.counter }}">Show Description</button>
-                    
-                    <!-- Modal for Description -->
-                    <div class="modal fade" id="descriptionModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="descriptionModalLabel">{{ book.title }}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    {{ book.description }}
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">LembarPena</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">  <!-- ml-auto akan mendorong item ke kanan navbar -->
+            <li class="nav-item">
+                <span class="nav-link">Hi, {{ request.user.username }}!</span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'registerbook:show_received_orders' %}">Received Order</a>
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-sm btn-danger delete-button" id="logout-button">Logout</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Book</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="title" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="title" name="title"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="author" class="col-form-label">Author:</label>
+                        <input type="text" class="form-control" id="author" name="author"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rating" class="col-form-label">Rating:</label>
+                        <input type="number" class="form-control" id="rating" name="rating"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="voters" class="col-form-label">Voters:</label>
+                        <input type="number" class="form-control" id="voters" name="voters"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="col-form-label">Price:</label>
+                        <input type="number" class="form-control" id="price" name="price"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="currency" class="col-form-label">Currency:</label>
+                        <input type="text" class="form-control" id="currency" name="currency"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="publisher" class="col-form-label">Publisher:</label>
+                        <input type="text" class="form-control" id="publisher" name="publisher"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="page_count" class="col-form-label">Page Count:</label>
+                        <input type="number" class="form-control" id="page_count" name="page_count"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="genres" class="col-form-label">Genres:</label>
+                        <input type="text" class="form-control" id="genres" name="genres"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Book</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="product_table" class="row"></div>
+
+<button type="button" class="btn btn-primary add-book-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Book by AJAX</button>
+
+<script>
+    async function getBooks() {
+        return fetch("{% url 'registerbook:get_book_json' %}").then((res) => res.json())
+    }
+
+    async function refreshBooks() {
+        const container = document.getElementById("product_table");
+        container.innerHTML = ""; // Clear previous content
+
+        const books = await getBooks();
+
+        books.forEach((book) => {
+            const card = `
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <a href="#">
+                                <button class="btn btn-link btn-remove" onclick="removeItem(${book.pk})"><i class="fas fa-trash-alt"></i></button>
+                            </a>
+                            <h5 class="card-title">${book.fields.title}</h5>
+                            <p class="card-text"><strong>Author:</strong> ${book.fields.author}</p>
+                            <p class="card-text"><strong>Rating:</strong> ${book.fields.rating}</p>
+                            <p class="card-text"><strong>Voters:</strong> ${book.fields.voters}</p>
+                            <p class="card-text"><strong>Price:</strong> ${book.fields.price} ${book.fields.currency}</p>
+                            <p class="card-text"><strong>Publisher:</strong> ${book.fields.publisher}</p>
+                            <p class="card-text"><strong>Page Count:</strong> ${book.fields.page_count}</p>
+                            <p class="card-text"><strong>Genres:</strong> ${book.fields.genres}</p>
+                            <p class="card-text">${book.fields.description}</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+            `;
+
+            container.innerHTML += card;
+        });
+    }
+
+    function addBook() {
+        fetch("{% url 'registerbook:add_book_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshBooks)
+
+        document.getElementById("form").reset()
+        return false
+    }
+
+    // Implementasi AJAX DELETE
+    function removeItem(bookId) {
+        fetch(`delete-book-ajax/${bookId}/`, {
+            method: "DELETE",
+        }).then(refreshBooks)
+
+        return false
+    }
+    refreshBooks();
+    document.getElementById("button_add").onclick = addBook
+    document.getElementById("logout-button").addEventListener("click", function() {
+        window.location.href = "{% url 'main:logout' %}";
+    });
+</script>
 {% endblock %}

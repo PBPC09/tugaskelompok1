@@ -1,4 +1,5 @@
 from django.db import models
+from main.models import Profile
 
 # Create your models here.
 class Book(models.Model):
@@ -12,6 +13,16 @@ class Book(models.Model):
     publisher = models.CharField(max_length=300)
     page_count = models.IntegerField()
     genres = models.CharField(max_length=200)
+    seller = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='books')  # relasi ke Profile
 
     def __str__(self):
         return self.title
+    
+class Order(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='orders')
+    buyer = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='purchased')
+    seller = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sold')
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order {self.id} - Book {self.book.title} - Buyer {self.buyer.user.username}"

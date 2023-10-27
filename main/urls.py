@@ -9,4 +9,5 @@ urlpatterns = [
     path('login/', login_user, name='login'),
     path('signup/', signup, name='signup'),
     path('landingpageafterlogin/', show_landing_page_logged_in, name='show_landing_page_logged_in'),
+    path('logout/', logout_user, name='logout'),
 ]
