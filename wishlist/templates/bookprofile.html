@@ -2,19 +2,13 @@
 
 {% block content %}
 <head> 
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
-    
     <style>
-        /* CSS untuk buku */
         .book-card {
             margin-bottom: 20px;
         }
-        /* CSS untuk detail buku (awalnya disembunyikan) */
         .book-details {
             display: none;
         }
-        /* CSS untuk Show Detail (teks abu) */
         .show-detail-text {
             color: #888;
             cursor: pointer;
@@ -29,9 +23,7 @@
         <div class="col-md-4 mb-4">
             <div class="book-card">
                 <h5 class="card-title">{{ book.title }}</h5>
-                <!-- Text to show book details (initially hidden) -->
                 <p class="show-detail-text" data-book-id="{{ book.id }}">Show Detail</p>
-                <!-- Book Details (initially hidden) -->
                 <div class="book-details" data-book-id="{{ book.id }}">
                     <p class="card-text"><strong>Author:</strong> {{ book.author }}</p>
                     <p class="card-text"><strong>Rating:</strong> {{ book.rating }}</p>
@@ -40,7 +32,6 @@
                     <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
                     <p class="card-text"><strong>Page Count:</strong> {{ book.page_count }}</p>
                     <p class="card-text"><strong>Genres:</strong> {{ book.genres }}</p>
-                    <!-- Add Wishlist Button -->
                     <button class="btn btn-primary add-to-wishlist-button" data-book-id="{{ book.id }}">Add to Wishlist</button>
                 </div>
             </div>
@@ -49,7 +40,6 @@
     </div>
 </div>
 
-<!-- Modal for Wishlist -->
 <div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="wishlistModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -72,25 +62,55 @@
         </div>
     </div>
 </div>
-<!-- Akhir Modal for Wishlist -->
 
+<!-- ini pake jquery udah jalan -->
 <script>
 $(document).ready(function(){
-    // Show/Hide book details when "Show Detail" text is clicked
     $(".show-detail-text").click(function(){
         var bookId = $(this).data("book-id");
         $(".book-details[data-book-id='" + bookId + "']").slideToggle();
     });
-
-     // Handle "Add Wishlist" button click
      $(".add-to-wishlist-button").click(function(){
         var bookId = $(this).data("book-id");
-        // Set the book_id value in the form
         $("#id_book_id").val(bookId);
-
-        // Show the modal
         $("#wishlistModal").modal("show");
     });
 });
 </script>
+
+<!-- ini pake yang kaya di tutor tapi belom test takut error -->
+<!-- <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const showDetailTexts = document.querySelectorAll(".show-detail-text");
+        showDetailTexts.forEach((showDetailText) => {
+            showDetailText.addEventListener("click", function () {
+                const bookId = this.getAttribute("data-book-id");
+                const bookDetails = document.querySelector(`.book-details[data-book-id='${bookId}']`);
+                if (bookDetails) {
+                    if (bookDetails.style.display === "none" || bookDetails.style.display === "") {
+                        bookDetails.style.display = "block";
+                    } else {
+                        bookDetails.style.display = "none";
+                    }
+                }
+            });
+        });
+    
+        const addToWishlistButtons = document.querySelectorAll(".add-to-wishlist-button");
+        addToWishlistButtons.forEach((addToWishlistButton) => {
+            addToWishlistButton.addEventListener("click", function () {
+                const bookId = this.getAttribute("data-book-id");
+                const bookIdField = document.querySelector("#id_book_id");
+                if (bookIdField) {
+                    bookIdField.value = bookId;
+                }
+                const wishlistModal = document.querySelector("#wishlistModal");
+                if (wishlistModal) {
+                    wishlistModal.style.display = "block";
+                }
+            });
+        });
+    });
+</script> -->
+
 {% endblock %}

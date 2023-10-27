@@ -38,21 +38,23 @@ def add_to_wishlist(request):
             book_id = form.cleaned_data['preference']
             preference = form.cleaned_data['preference']
             book = Book.objects.get(pk=book_id)
-
             Wishlist.objects.create(user=request.user, book=book, preference=preference)
-
-            return redirect('wishlist:my_wishlist')
+            return redirect('wishlist:bookprofile')
 
     response_data = {'message': 'Terjadi kesalahan saat menambahkan buku ke Wishlist'}
     return JsonResponse(response_data, status=400)
 
-
 @login_required
-def my_wishlist(request):
+def mywishlist(request):
     wishlist_books = Wishlist.objects.filter(user=request.user)
     context = {
         'wishlist_books': wishlist_books
     }
-    return render(request, 'wishlist/mywishlist.html', context=context)
+    return render(request, 'mywishlist.html', context=context)
 
-
+@login_required
+def delete_wishlist_item(request, item_id):
+    item = get_object_or_404(Wishlist, pk=item_id)
+    if request.method == 'POST':
+        item.delete()
+    return redirect('wishlist:mywishlist')
