@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
+from main.models import Profile
 
 class SignUpForm(UserCreationForm):
-    ROLE_CHOICES = [('S', 'Seller'), ('B', 'Buyer')]
+    ROLE_CHOICES = [('Seller', 'Seller'), ('Buyer', 'Buyer')]
     role = forms.ChoiceField(
         label="Choose Your User Type",
         required=True,

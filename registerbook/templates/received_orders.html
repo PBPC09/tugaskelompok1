@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Received Orders</h1>
+  <ul>
+    {% for order in orders %}
+      <li>
+        Book: {{ order.book.title }}<br>
+        Buyer: {{ order.buyer.user.username }}<br>
+        Time: {{ order.timestamp }}<br>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

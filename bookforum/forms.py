@@ -4,7 +4,7 @@ from bookforum.models import ForumHead, ForumComment
 class FormPertanyaan(ModelForm):
     class Meta:
         model = ForumHead
-        fields = ["title", "question", "book"]
+        fields = ["title", "book", "question", ]
 
 
 class FormJawaban(ModelForm):

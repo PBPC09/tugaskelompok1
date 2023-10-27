@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+    <a class="navbar-brand" href="#">Lembar Pena</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
+        <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
+        <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
+        <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
+        <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
+        </form>
+    </div>
+    </div>
+</nav>
+<div class="container" style="margin-top: 40px;">
+    <div class="row">
+        <div class="col-12 col-md-4 forum-question">
+            <h1>Forum Question</h1>
+            <div class="forum-question-details">
+                <p><strong>Title:</strong> {{ question.title }}</p>
+                <p><strong>Date:</strong> {{ question.date }}</p>
+                <p><strong>Sender:</strong> {{ question.user }}</p>
+            </div>
+            <div class="forum-question-body">
+                <p><strong>Question:</strong> {{ question.question }}</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-8 cards">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ question.book.title }}</h5>
+                        <p class="card-text line-spaced"><strong>Author:</strong> {{ question.book.author }} - 
+                            <strong> Rating:</strong> {{ question.book.rating }} - 
+                            <strong> Voters:</strong> {{ question.book.voters }} -  
+                            <strong>Price:</strong> {{ question.book.price }} 
+                        <p class="card-text line-spaced"></p>    
+                            <strong>Publisher:</strong> {{ question.book.publisher }} -
+                            <strong>Page Count:</strong> {{ question.book.page_count }} -
+                            <strong>Genres:</strong> {{ question.book.genres }}</p>
+                            <strong>Description:</strong>
+                        <p class="card-text line-spaced" style="font-size: x-small;"> {{ question.book.description }}</p>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div class="d-flex flex-row set-margin mb-3">
+            <h2 style="margin:20px">Comments</h2>    
+            <button type="button" class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin: 10px;">
+                Tambahkan Tanggapan Anda
+            </button> 
+    </div>
+    <div class="comment-list" id="list-komentar">
+        {% for comment in comments %}
+        {% empty %}
+            <li class="no-comments">No comments yet.</li>
+        {% endfor %}
+    </div>
+    
+
+</div>
+
+<div class="save-url" data-url="{% url 'bookforum:show_uniquecomments_json' question.pk %}" id="url-unique-json"></div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Forum lembarpena</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" data-url="{% url 'bookforum:create_comments' question.pk %}" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="answer" class="col-form-label">Silakan masukkan tanggapan Anda:</label>
+                        <textarea class="form-control" id="answer" name="answer"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Tambahkan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* CSS styles for the forum question section */
+
+    .forum-question {
+        flex: 1;
+        background-color: #f7f7f7;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-right: 20px; /* Add some spacing between forum-question and cards */
+    }
+
+    .forum-question h1 {
+        font-size: 24px;
+    }
+
+    .forum-question-details {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .forum-question-body {
+        font-size: 18px;
+    }
+
+    /* CSS styles for the comments section */
+    h2 {
+        font-size: 24px;
+    }
+
+    .comment-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 20px 20px 20px 20px;
+    }
+
+    .comment {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .comment-details {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .comment-body {
+        font-size: 16px;
+    }
+    .line-spaced {
+        line-height: 1; /* Adjust the value as needed to control the line spacing */
+    }
+    .no-comments {
+        font-size: 16px;
+        color: #777;
+    }
+</style>
+<script>
+    async function getForum() {
+        let formElement = document.getElementById('url-unique-json');
+        let url = formElement.getAttribute('data-url');
+        return fetch(url).then((res) => res.json())
+    }
+
+    async function refreshComments() {
+        document.getElementById("list-komentar").innerHTML = "";
+        const allForums = await getForum();
+
+        let htmlString =" ";
+        allForums.forEach((item) => {
+            htmlString += `         
+            <br>
+            <div class="card">
+                <h7 class="card-header d-flex justify-content-between align-items-center" style="height: 30px;">
+                    ${item.fields.user} pada ${item.fields.date} 
+                    <button class="btn btn-primary" style="font-size:10px;height: 24px; text-align: center;" onclick="deleteComments('${item.fields.user}', ${item.pk}); return false;">Delete</button>
+                </h7>
+                <div class="card-body">
+                    <p class="card-text">${item.fields.answer}</p>
+                </div>
+            </div>
+            `
+        });
+        document.getElementById("list-komentar").innerHTML = htmlString
+
+    }
+
+    refreshComments()
+
+    function addComment() {
+        let formElement = document.querySelector('#form');
+        let url = formElement.getAttribute('data-url');
+        fetch(url, {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshComments)
+
+            document.getElementById("form").reset()
+            return false
+    }
+
+    document.getElementById("button_add").onclick = addComment
+
+    function deleteComments(username, commentId) {
+        const url = `/bookforum/delete_comments/${username}/${commentId}`;
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                if (response.status === 201) {
+                    refreshComments();
+                } else {
+                    console.error("Failed to delete comment");
+                    alert("Ini bukan komentar dari akun Anda, Anda tidak bisa menghapusnya :)"); // Display an alert with an error message
+
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting comment:", error);
+                alert("Error deleting comment. Please try again later."); // Display an alert with an error message
+            });
+            return false
+        }
+</script>
+{% endblock content %}
