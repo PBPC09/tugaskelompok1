@@ -87,10 +87,10 @@ def delete_question(request, id):
 @login_required(login_url='/login/')
 @csrf_exempt
 def delete_comments(request, username, id):
-    # if request.method == 'GET' and request.user.username == user :
-        # ForumComment.objects.get(pk = id)
+    if request.method == 'GET' and request.user.username == username:
+        ForumComment.objects.get(pk = id).delete()
         return HttpResponse(b"DELETED", status=201)
-    # return HttpResponseNotFound()
+    return HttpResponseNotFound()
 
 def show_forum_json_2(request):
     data = ForumHead.objects.all()
