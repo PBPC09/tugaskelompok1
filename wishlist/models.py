@@ -3,8 +3,15 @@ from django.contrib.auth.models import User
 from registerbook.models import Book
 class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)  # Gantikan 'main_app' dengan nama aplikasi Anda
-    preference = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    PREFERENCE_CHOICES = [
+        (1, 'Not Interested'),
+        (2, 'Maybe Later'),
+        (3, 'Interested'),
+        (4, 'Really Want It'),
+        (5, 'Must Have')
+    ]
+    preference = models.IntegerField(choices=PREFERENCE_CHOICES)
 
     def __str__(self):
         return f"{self.user.username}'s Wishlist - {self.book.title}"

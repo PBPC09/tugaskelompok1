@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>My Wishlist</h1>
+    <ul>
+        {% for item in wishlist_books %}
+        <li>{{ item.book.title }} - {{ item.get_preference_display }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
