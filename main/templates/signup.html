@@ -1,76 +1,125 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block content %}
-<style>
-    body {
-        background-color: #FAFAFA;
-        font-family: 'Poppins', sans-serif;
-    }
+<head>
+    {% block meta %}
+        <title>Sign Up</title>
+    {% endblock meta %}
+</head>
 
-    .auth.signup {
-        display: flex;
-        justify-content: center; 
-        align-items: center;    
-        height: 100vh;          
-    }
+<body>
+    {% block content %}
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins';
+        }
 
-    .auth .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(#273faa, #010246);
+            margin: 0;
+        }
 
-    .auth h2 {
-        color: #1C2964;
-    }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(#273faa, #010246);
+            padding: 40px; 
+        }
 
-    .auth form .signup-btn {
-        background-color: rgba(50, 98, 255, 0.9);
-        border: 2px solid #3262FF;
-        color: white;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        border-radius: 15px;
-        width: 100%;
-    }
 
-    .auth form .signup-btn:hover {
-        background-color: rgba(50, 98, 255, 0.7);
-    }
+        .signup {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 1100px; /* Atur lebar form menjadi 1000px */
+            /* Hapus tinggi form agar mengikuti kontennya */
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
 
-</style>
+        form {
+            width: 100%;
+            padding: 20px;
+        }
 
-<div class="w-100 auth signup">
-    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
-        <div class="container">
-            <h2>Sign Up</h2>
-            <br/>
-            <div class="w-75">
-                <form method="POST" action="{% url 'main:signup' %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        {{ form.as_p }}
-                        <button class="signup-btn" type="submit">Sign Up</button>
-                    </div>
-                </form>
-            </div>
+        h1 {
+            text-align: center;
+            font-weight: bolder;
+        }
+
+        hr {
+            border-top: 2px solid #e7a1b0;
+        }
+
+        p {
+            text-align: center;
+            margin: 10px;
+        }
+
+        form label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 5px;
+        }
+
+        input {
+            width: 100%;
+            margin: 5px 0;
+            border: none;
+            outline: none;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid gray;
+        }
+
+        button {
+            border: none;
+            outline: none;
+            padding: 8px;
+            width: 100%;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 5px;
+            background: #010246;
+        }
+
+        button:hover {
+            background: #3262ff;
+        }
+
+    </style>
+
+    <div class="container">
+        <div class="signup">
+            <form method="POST" action="">
+                <h1>Sign Up LembarPena</h1>
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                    <button class="signup-btn" type="submit">Sign Up</button>
+                </div>
+            </form>
 
             {% if messages %}
             {% for message in messages %}
                 <p>{{ message }}</p>
             {% endfor %}
-            {% endif %}
-
-            <p class="pb-4">
-                <br/>
-                <a href="/login">Already have an account? Log in</a>
+            {% endif %} 
+            <br>
+            <p>Don't have an account yet?
+            <a href="/login">Already have an account? Log in</a>
             </p>
         </div>
     </div>
-    <div class="col-md-6 col-lg-6 col-sm-6 d-none d-md-block"></div>
-</div>
-{% endblock content %}
+    {% endblock content %}
+</body>

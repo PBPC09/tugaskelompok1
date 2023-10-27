@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>My Wishlist</h1>
+    <div class="row">
+        {% for item in wishlist_books %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.book.title }}</h5>
+                    <p class="card-text">{{ item.get_preference_display }}</p>
+                    <form method="post" action="{% url 'wishlist:delete_wishlist_item' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
