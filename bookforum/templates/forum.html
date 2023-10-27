@@ -7,24 +7,18 @@
         max-height: 200px;  /* Adjust this value based on your preference */
         overflow-y: auto;
     }
+    .table-row-spacing tbody tr:not(:last-child) {
+    border-bottom: none;
+}
+
+.table-row-spacing tbody tr:after {
+    content: "";
+    display: block;
+    height: 20px;  /* Adjust to your desired spacing */
+}
     </style>
     
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-        <a class="navbar-brand" href="#">Lembar Pena</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            </ul>
-            <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
-            <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
-            <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
-            <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
-            <a class="btn btn-outline-success" style="margin-right: 10px;" href="{% url 'main:logout' %}">Logout</a>    
-        </div>
-    </nav>
+    {% include "navbarloggedin.html" %}
     <h2 style="margin: 30px 30px 30px 30px; text-align: center;"> Forum Buku</h2>
     <div class="d-flex justify-content-center set-margin">
         <a>    
@@ -46,7 +40,7 @@
                 <form id="form" onsubmit="return false;">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="title" class="col-form-label">Judul:</label>
+                        <label for="title" class="col-form-label">Tentukan Topik:</label>
                         <input type="text" class="form-control" id="title" name="title"></input>
                     </div>
                     <div class="mb-3">
@@ -120,7 +114,7 @@
         </div>
     </div>
 </div>
-
+{% include "footer.html" %}
 
 <script>
     
@@ -147,9 +141,9 @@
         document.getElementById("forum_container").innerHTML = "";
         const allForums = await getForum();
 
-        let htmlString = `<table class="table">
-                            <tr>
-                            <th scope="col" style="width:400px;">Pertanyaan</th>
+        let htmlString = `<table class="table table-row-spacing">
+                            <tr style="height:50px;">
+                            <th scope="col" style="width:400px;">Judul Topik</th>
                             <th scope="col" style="width:300px;">Buku</th>
                             <th scope="col" style="width:200px;">Penanya</th>
                             <th scope="col" style="width:100px;">Tanggal</th>
@@ -160,13 +154,14 @@
         allForums.forEach((item) => {
             let database_url="{% url 'bookforum:show_forumcomments' id_head=9999 %}"
             const rowUrl = database_url.replace('9999', item.pk);
-            htmlString += ` <tr class="clickable-row" data-id="${item.pk}" data-url="${rowUrl}">
+            htmlString += ` <tr class="mb-1 clickable-row" data-id="${item.pk}" data-url="${rowUrl}" style="height:50px;">
                                     <td style="width:400px;">${item.fields.title}</td>
                                     <td style="width:300px;">${item.fields.book}</td>
                                     <td style="width:200px;">${item.fields.user}</td>
                                     <td style="width:100px;">${item.fields.date}</td>
                                     <td style="width:100px;"></td>
                             </tr>  
+                      
                         `
         });
         htmlString +=  `</tbody></table>`
@@ -216,8 +211,5 @@
             return false
         }
     document.getElementById("button_add").onclick = addForum
-
-    
-
 </script>
 {% endblock content %}
