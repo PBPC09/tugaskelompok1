@@ -43,13 +43,5 @@
         </div>
         {% endfor %}
     </div>
-
-    <!-- Add Book Form -->
-    <h3 class="mt-5">Add New Book</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Add Book</button>
-    </form>
 </div>
 {% endblock %}

@@ -21,12 +21,13 @@ def show_landing_page_logged_in(request):
     context = {
     }
     return render(request, "landingpageafterlogin.html", context)
+
 def signup(request):
     form = SignUpForm()
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
+            form.save()
             role = form.cleaned_data["role"]
             if role == 'S':
                 messages.success(request, 'You are now a Seller!')
@@ -42,9 +43,17 @@ def login_user(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
+            profile = Profile.objects.get(user=user)
             login(request, user)
-            response = HttpResponseRedirect(reverse("main:show_landing_page_logged_in")) 
+            response = None
+
+            if profile.is_seller():
+                response = HttpResponseRedirect(reverse("registerbook:show_registered_books"))
+            else:
+                response = HttpResponseRedirect(reverse("main:show_landing_page_logged_in"))
+ 
             response.set_cookie('last_login', str(datetime.datetime.now()))
             return response
         else:
