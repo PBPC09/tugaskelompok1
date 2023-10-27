@@ -48,17 +48,21 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Lembar Pena</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarScroll">
-            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-            </ul>
-        </div>
+    <a class="navbar-brand" href="#">Lembar Pena</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
+        <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
+        <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
+        <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
+        <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
+        </form>
+    </div>
     </div>
 </nav>
-
 <div>Nikmati Buku</div>
 <div>Semua dalam satu aplikasi</div>
 
@@ -76,7 +80,7 @@
         <a href="#" class="card-clickable">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title" href="{% url 'buybooks:show_something' %}">Beli Buku</h5>
+                    <h5 class="card-title" href="{% url 'buybooks:show_test' %}">Beli Buku</h5>
                     <p class="card-text">Perluas cakrawala, miliki buku yang hendak Anda baca!</p>
                 </div>
             </div>
@@ -86,7 +90,7 @@
         <a href="#" class="card-clickable">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title" href="{% url 'wishlist:wishlistpage' %}">Simpan Keinginan</h5>
+                    <h5 class="card-title" href="{% url 'wishlist:bookprofile' %}">Simpan Keinginan</h5>
                     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
                 </div>
             </div>

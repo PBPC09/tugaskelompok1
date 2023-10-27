@@ -1,6 +1,31 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
+<style>
+    .scrollspy-example {
+        max-height: 200px;  /* Adjust this value based on your preference */
+        overflow-y: auto;
+    }
+    </style>
+    
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+        <a class="navbar-brand" href="#">Lembar Pena</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            </ul>
+            <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
+            <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
+            <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
+            <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
+            </form>
+        </div>
+        </div>
+    </nav>
 <table class="row" id="product_container"></table>
 <!-- Modal untuk melakukan input -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -18,6 +43,52 @@
                         <input type="text" class="form-control" id="title" name="title"></input>
                     </div>
                     <!-- DI SINI NANTI ADA DROP DOWN BUKU -->
+                    <div class="mb-3">
+                        <label for="title" class="col-form-label">Pilih Buku:</label>
+                        <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown button
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+                                        <div class="list-group">
+                                            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">List group item heading</h5>
+                                                <small>3 days ago</small>
+                                                </div>
+                                                <p class="mb-1">Some placeholder content in a paragraph.</p>
+                                                <small>And some small print.</small>
+                                            </a>
+                                                <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h5 class="mb-1">List group item heading</h5>
+                                                    <small class="text-body-secondary">3 days ago</small>
+                                                </div>
+                                                <p class="mb-1">Some placeholder content in a paragraph.</p>
+                                                <small class="text-body-secondary">And some muted small print.</small>
+                                                </a>
+                                                <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h5 class="mb-1">List group item heading</h5>
+                                                    <small class="text-body-secondary">3 days ago</small>
+                                                </div>
+                                                <p class="mb-1">Some placeholder content in a paragraph.</p>
+                                                <small class="text-body-secondary">And some muted small print.</small>
+                                                </a>
+                                                <a href="#" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h5 class="mb-1">List group item heading</h5>
+                                                    <small class="text-body-secondary">3 days ago</small>
+                                                </div>
+                                                <p class="mb-1">Some placeholder content in a paragraph.</p>
+                                                <small class="text-body-secondary">And some muted small print.</small>
+                                                </a>
+                                                </div>           
+                                        </div>
+                                </ul>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="question" class="col-form-label">Silakan masukkan pertanyaan Anda:</label>
                         <textarea class="form-control" id="question" name="question"></textarea>
@@ -39,6 +110,18 @@
     </a>    
 </div>
 <script>
+    $(document).ready(function() {
+        $('.dropdown-menu .list-group-item').click(function() {
+            console.log("Dropdown item clicked!");
+            // Get the content of the selected item (for demonstration, we'll get the heading)
+            var selectedItem = $(this).find('h5').text();
+
+            // Update the button content
+            $('.dropdown-toggle').text(selectedItem);
+
+        });
+    });
+
     async function getProducts() {
         return fetch("{% url 'bookforum:show_forum_json' %}").then((res) => res.json())
     }
@@ -56,10 +139,9 @@
                             <th scope="col">Handle</th>
                             </tr>
                         </thead><tbody class="table-group-divider">
-`;
+        `;
         products.forEach((item) => {
             htmlString += `
-   
                             <tr>
                             <th scope="row">1</th>
                             <td>Mark</td>
@@ -77,7 +159,6 @@
                             <td colspan="2">Larry the Bird</td>
                             <td>@twitter</td>
                             </tr>
-
 `
         });
         htmlString +=  `</tbody></table>`
@@ -96,5 +177,8 @@
             return false
         }
     document.getElementById("button_add").onclick = addProduct
+
+    
+
 </script>
 {% endblock content %}
