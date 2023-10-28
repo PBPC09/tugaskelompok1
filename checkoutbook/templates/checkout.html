@@ -7,6 +7,16 @@
 
 {% block content %}
 
+<style>
+    h1 {
+        margin-top: 20px;
+    }
+
+    h6 {
+        color: #3262ff
+    }
+</style>
+
 <body>
     <h1 class="text-center">Checkout</h1>
     <table class="table table-bordered">
@@ -27,9 +37,14 @@
                 <td>{{product.subtotal}}</td>
             </tr>
             {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><h6>Total Harga: ${{ total_price }}</h6></td>
+            </tr>
         </tbody>
     </table>
-    <h6>Total Harga: ${{ total_price }}</h6>
     <form method="post" id="checkout-form" class="mx-auto">
         {% csrf_token %}
         <div class="mb-3 mx-auto">

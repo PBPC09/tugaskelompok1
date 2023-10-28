@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.core import serializers
 from .models import Book, CartItem
 from django.contrib.auth.decorators import login_required
@@ -19,7 +19,7 @@ def add_cart_ajax(request, id):
         data = json.loads(request.body.decode("utf-8"))
         user = request.user
         book = Book.objects.get(pk=data["id"])
-        quantity = request.POST.get("amount")
+        quantity = request.POST.get("quantity")
         is_ordered = False
         
         new_item = CartItem(user=user, book=book, quantity=quantity, is_ordered=is_ordered)
@@ -45,3 +45,10 @@ def delete_cart_ajax(request, id):
     item = CartItem.objects.get(pk=data["id"])
     item.delete()
     return HttpResponse("DELETED",status=200)
+
+def selected(request, id):
+    data = json.loads(request.body.decode("utf-8"))
+    item = CartItem.objects.get(pk=data["id"])
+    item.is_ordered = True
+    item.save()
+    return JsonResponse({"message": "Item is Selected to Order"})
