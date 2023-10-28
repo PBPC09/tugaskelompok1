@@ -32,7 +32,11 @@
         background-color: #0056b3; 
     }
 </style>
+
 <div class="container" style="margin-top: 40px;">
+    <a href="{% url 'bookforum:show_forum' %}">
+        <button type="button" class="btn btn-outline-primary btn-sm" style="margin-bottom: 10px;">←</button>
+    </a>
     <div class="row">
         <div class="col-12 col-md-4 forum-question overflow-control-card">
             <h1>Forum Question</h1>
