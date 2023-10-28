@@ -1,75 +1,86 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-    <a class="navbar-brand" href="#">Lembar Pena</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        </ul>
-        <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
-        <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
-        <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
-        <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
-        </form>
-    </div>
-    </div>
-</nav>
+{% include "navbarloggedin.html" %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .overflow-control-card {
+        overflow: hidden;
+    }
+
+    .wrap {
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    button {
+        background-color: #273faa; 
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3; 
+    }
+</style>
 <div class="container" style="margin-top: 40px;">
     <div class="row">
-        <div class="col-12 col-md-4 forum-question">
+        <div class="col-12 col-md-4 forum-question overflow-control-card">
             <h1>Forum Question</h1>
             <div class="forum-question-details">
-                <p><strong>Title:</strong> {{ question.title }}</p>
+                <p class="wrap"><strong>Title:</strong> {{ question.title }}</p>
                 <p><strong>Date:</strong> {{ question.date }}</p>
                 <p><strong>Sender:</strong> {{ question.user }}</p>
             </div>
             <div class="forum-question-body">
-                <p><strong>Question:</strong> {{ question.question }}</p>
+                <p class="wrap"><strong>Question:</strong> 
+                    {{ question.question }}</p>
+                        
             </div>
         </div>
         <div class="col-12 col-md-8 cards">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ question.book.title }}</h5>
-                        <p class="card-text line-spaced"><strong>Author:</strong> {{ question.book.author }} - 
-                            <strong> Rating:</strong> {{ question.book.rating }} - 
-                            <strong> Voters:</strong> {{ question.book.voters }} -  
-                            <strong>Price:</strong> {{ question.book.price }} 
-                        <p class="card-text line-spaced"></p>    
-                            <strong>Publisher:</strong> {{ question.book.publisher }} -
-                            <strong>Page Count:</strong> {{ question.book.page_count }} -
-                            <strong>Genres:</strong> {{ question.book.genres }}</p>
-                            <strong>Description:</strong>
-                        <p class="card-text line-spaced" style="font-size: x-small;"> {{ question.book.description }}</p>
-                    </div>
+            <div class="card h-100">
+                <div class="card-body ">
+                    <h5 class="card-title">{{ question.book.title }}</h5>
+                    <p class="card-text line-spaced"></p>
+                    <p class="card-text line-spaced"><strong>Author:</strong> {{ question.book.author }}</p>
+                    <p class="card-text line-spaced"></p><strong> Rating:</strong> {{ question.book.rating }} </p>
+                    <p class="card-text line-spaced"><strong> Voters:</strong> {{ question.book.voters }} </p>
+                    <p class="card-text line-spaced"><strong>Price:</strong> {{ question.book.price }} {{question.book.currency}} </p>
+                    <p class="card-text line-spaced"><strong>Publisher:</strong> {{ question.book.publisher }}</p>
+                    <p class="card-text line-spaced"><strong>Page Count:</strong> {{ question.book.page_count }} </p>
+                    <p class="card-text line-spaced"><strong>Genres:</strong> {{ question.book.genres }}</p>
+                    <p class="card-text line-spaced"> 
+                    <strong>Description:</strong>
+                    <p class="card-text line-spaced" style="font-size: medium;"> {{ question.book.description }}</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-    <div class="d-flex flex-row set-margin mb-3">
-            <h2 style="margin:20px">Comments</h2>    
-            <button type="button" class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin: 10px;">
-                Tambahkan Tanggapan Anda
-            </button> 
-    </div>
-    <div class="comment-list" id="list-komentar">
-        {% for comment in comments %}
-        {% empty %}
-            <li class="no-comments">No comments yet.</li>
-        {% endfor %}
-    </div>
-    
-
+<div class="d-flex flex-row set-margin mb-3">
+    <h2 style="margin:20px">Comments</h2>
+    <button type="button" class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin: 10px;">
+        Tambahkan Tanggapan Anda
+    </button>
 </div>
-
+<div class="comment-list" id="list-komentar">
+    {% for comment in comments %}
+    {% empty %}
+    <li class="no-comments">No comments yet.</li>
+    {% endfor %}
+</div>
+</div>
 <div class="save-url" data-url="{% url 'bookforum:show_uniquecomments_json' question.pk %}" id="url-unique-json"></div>
-
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -93,9 +104,9 @@
         </div>
     </div>
 </div>
+{%include "footer.html" %}
 <style>
     /* CSS styles for the forum question section */
-
     .forum-question {
         flex: 1;
         background-color: #f7f7f7;
@@ -143,9 +154,11 @@
     .comment-body {
         font-size: 16px;
     }
+
     .line-spaced {
         line-height: 1; /* Adjust the value as needed to control the line spacing */
     }
+
     .no-comments {
         font-size: 16px;
         color: #777;
@@ -169,7 +182,7 @@
             <div class="card">
                 <h7 class="card-header d-flex justify-content-between align-items-center" style="height: 30px;">
                     ${item.fields.user} pada ${item.fields.date} 
-                    <button class="btn btn-primary" style="font-size:10px;height: 24px; text-align: center;" onclick="deleteComments('${item.fields.user}', ${item.pk}); return false;">Delete</button>
+                    <button class="btn btn-primary" style="font-size:12px;height: auto; text-align: center; style="background-color: #273faa;" onclick="deleteComments('${item.fields.user}', ${item.pk}); return false;">Delete</button>
                 </h7>
                 <div class="card-body">
                     <p class="card-text">${item.fields.answer}</p>

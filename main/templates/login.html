@@ -3,6 +3,7 @@
 <head>
     {% block meta %}
         <title>Login</title>
+        
     {% endblock meta %}
 </head>
 
@@ -11,7 +12,6 @@
     <style>
         * {
             box-sizing: border-box;
-            font-family:'Poppins';
         }
 
         body {
@@ -23,7 +23,6 @@
         }
 
         .container {
-            width: 100%;
             display: flex;
             max-width: 850px;
             background: #fff;
@@ -42,22 +41,19 @@
 
         h1 {
             text-align: center;
-            font-weight: bolder;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; 
+
         }
 
         hr {
             border-top: 2px solid #e7a1b0;
         }
 
-        p {
-            text-align: center;
-            margin: 10px;
-        }
-
         form label {
             display: block;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 400;
             padding: 5px;
         }
 
@@ -72,16 +68,18 @@
         }
 
         button {
+            font-weight: 600;
             border: none;
             outline: none;
             padding: 8px;
-            width: 252px;
+            width: 100%;
             color: #fff;
             font-size: 16px;
             cursor: pointer;
             margin-top: 20px;
             border-radius: 5px;
             background: #010246;
+            transition: background 0.2s ease;
         }
 
         button:hover {
@@ -95,35 +93,28 @@
             border-bottom-right-radius: 15px;
         }
 
-
         @media (max-width: 880px) {
             .container {
-                width: 100%;
-                max-width: 880px;
-                margin-left: 20px;
+                flex-direction: column;
+                align-items: center;
             }
 
             form {
-                width: 300px;
+                width: 90%;
                 margin: 20px auto;
             }
 
             .login {
-                width: 400px;
-            }
-
-            button {
                 width: 100%;
             }
 
             .right img {
-                width: 100%;
-                height: 100%;
+                width: 80%;
+                height: auto;
             }
         }
-
     </style>
-    
+
     <div class="container">
         <div class = "login">
 

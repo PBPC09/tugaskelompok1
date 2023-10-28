@@ -9,6 +9,7 @@ class Buybooks(models.Model):
     quantity = models.PositiveIntegerField(default=1)  
     is_ordered = models.BooleanField(default=False)
 
+
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)

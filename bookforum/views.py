@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from bookforum.models import ForumHead, ForumComment
 from django.shortcuts import render, redirect, get_object_or_404
 import datetime
@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseNotFound
 from registerbook.models import Book
 import json
 #IMPORT BUAT USER PURA PURAAN
@@ -22,6 +22,7 @@ def show_forum(request):
     questions = ForumHead.objects.all()
     comments = ForumComment.objects.all()
     context = {
+        'user' : request.user,
         'name':request.user.username,
         'questions' : questions,
         'comments': comments,
@@ -78,8 +79,8 @@ def create_comments(request, pk):
 
 @login_required(login_url='/login/')
 @csrf_exempt
-def delete_question(request, id):
-    if request.method == 'DELETE':
+def delete_question(request, username, id):
+    if request.method == 'GET' and request.user.username == username:
         ForumHead.objects.get(pk = id).delete()
         return HttpResponse(b"DELETED", status=201)
     return HttpResponseNotFound()
@@ -101,6 +102,8 @@ def show_forum_json(request):
     models = ForumHead.objects.all()
     serialized_data = []
     for model in models:
+        connected_comments = ForumComment.objects.filter(comment_to = model)
+        comment_counts = len(connected_comments)
         book = model.book
         user = model.user
         model_data = {
@@ -112,6 +115,7 @@ def show_forum_json(request):
                 "date": str(model.date),  # Convert the date to a string
                 "title": model.title,
                 "question": model.question,
+                "comment_counts" : comment_counts,
             }
         }
         serialized_data.append(model_data)
@@ -154,6 +158,7 @@ def show_forumcomments(request, id_head):
     comments = ForumComment.objects.filter(comment_to=question)
     
     context = {
+        'name' : request.user,
         'question': question,
         'comments': comments,
     }

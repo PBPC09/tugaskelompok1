@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-# Create your models here.
-
 class Profile(models.Model):
     ROLE_CHOICES = [('S', 'Seller'), ('B', 'Buyer')]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -13,10 +11,10 @@ class Profile(models.Model):
     email = models.EmailField(max_length=200)
 
     def is_seller(self):
-        return self.role == 'S'
+        return self.role == 'Seller'
 
     def is_buyer(self):
-        return self.role == 'B'
+        return self.role == 'Buyer'
 
     def __str__(self):
         return self.user.username

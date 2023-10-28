@@ -29,7 +29,7 @@ def signup(request):
         if form.is_valid():
             form.save()
             role = form.cleaned_data["role"]
-            if role == 'S':
+            if role == 'Seller':
                 messages.success(request, 'You are now a Seller!')
             else:
                 messages.success(request, 'You are now a Buyer!')

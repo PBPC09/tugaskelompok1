@@ -10,10 +10,11 @@ from django.contrib.auth.decorators import login_required
 def show_book_profile(request):
     if request.method == 'POST':
         form = AddToWishlistForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            #form.save()
             book_id = request.POST.get('book_id')
-            book = Book.objects.get(id=book_id)
+            book = get_object_or_404(Book, id=book_id)
             preference = form.cleaned_data['preference']
             Wishlist.objects.create(user=request.user, book=book, preference=preference)
         return redirect('bookprofile')
@@ -26,6 +27,7 @@ def show_book_profile(request):
     }
     return render(request, 'bookprofile.html', context=context)
 
+
 def show_book_details(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     return render(request, 'book_details.html', {'book': book})
@@ -34,8 +36,9 @@ def show_book_details(request, book_id):
 def add_to_wishlist(request):
     if request.method == 'POST':
         form = AddToWishlistForm(request.POST)
+
         if form.is_valid():
-            book_id = form.cleaned_data['preference']
+            book_id = request.POST.get('book_id')
             preference = form.cleaned_data['preference']
             book = Book.objects.get(pk=book_id)
             Wishlist.objects.create(user=request.user, book=book, preference=preference)

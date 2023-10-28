@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<style>
+
+<!-- <style>
     .book-card {
         border: 1px solid #ccc;     
         padding: 10px;  
@@ -34,22 +35,6 @@
     }
 
 </style>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-    <a class="navbar-brand" href="#">Lembar Pena</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-        <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
-        <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
-        <a class="nav-link active" href="{% url 'buybooks:show_buybooks' %}" style="margin-right: 30px;">Buy Books</a>
-        <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
-        </form>
-    </div>
-</div>
-</nav>
 <head> 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
@@ -91,11 +76,105 @@
                         <button class="btn btn-primary add-to-cart-button" data-item-id="{{ item.id }}">Add to Cart</button>
                     </div>
                 </div>
+            </div> -->
+
+<head> 
+    <style>
+        .book-card {
+            border: 1px solid #ccc;     
+            padding: 10px;  
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;  /* Baris baru */
+            height: 100%;  /* Baris baru */
+        }
+        .book-details {
+            display: none;
+        }
+        .show-detail-text {
+            color: #888;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+{% include "navbarloggedin.html" %}
+<div class="container mt-5">
+    <h1>Books
+        <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
+    </h1>
+    <div class="row card-container align-items-stretch">
+        {% for item in books %}
+            <div class="col-md-4 mb-4">
+                <div class="accordion" id="accordionExample-{{item.pk}}">
+                    <div class="item-card">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{item.pk}}" aria-expanded="false" aria-controls="collapse{{item.pk}}">
+                                    {{ item.title }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{item.pk}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample-{{item.pk}}">
+                                <div class="accordion-body">
+                                    <p class="card-text">
+                                        <strong>Genres:</strong> {{ item.genres }}
+                                        <strong>Rating:</strong> {{ item.rating }}
+                                        <strong>Voters:</strong> {{ item.voters }}
+                                        <strong>Page Count:</strong> {{ item.page_count }}
+                                    </p>
+                                    <p class="card-text"><strong>Publisher:</strong> {{ item.publisher }}</p>
+                                    <button class="btn btn-primary add-to-cart-button" data-item-id="{{ item.id }}">Add to Cart</button>        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- <div class="container mt-5">
+    <h1>Books
+        <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
+    </h1>
+    <div class="row card-container">
+        <div class="accordion" id="accordionExample">
+            {% for book in books %}
+                <div  class="col-md-4 mb-4">
+                    <div class="book-card">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{book.pk}}" aria-expanded="false" aria-controls="collapse{{book.pk}}">
+                                {{ book.title }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{book.pk}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p class="card-text">
+                                    <strong>Genres:</strong> {{ book.genres }}
+                                    <strong>Rating:</strong> {{ book.rating }}
+                                    <strong>Voters:</strong> {{ book.voters }}
+                                    <strong>Page Count:</strong> {{ book.page_count }}</p>
+                                </p>
+                                <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
+                                <button class="btn btn-primary add-to-cart-button" data-book-id="{{ book.id }}">Add to Cart</button>        
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+>>>>>>> 46b58d208306ecb1a1dac7dd366c5b77b9330198
             {% endfor %}
         </div>
     </div>
 </div>
+
 
 
 <!-- Modal -->
@@ -105,26 +184,82 @@
 </div>
 
 <!-- jQuery script -->
-<script>
-    $(document).ready(function(){
-        $(".show-detail-text").click(function(){
-            var bookId = $(this).data("book-id");
-            $(".book-details[data-book-id='" + bookId + "']").slideToggle();
-        });
-        $(".add-to-cart-button").click(function(){
-            var bookId = $(this).data("book-id");
-            $("#id_book_id").val(bookId);
-            $("#cartModal").modal("show");
-        });
-});
+<!-- <script>
+    {% for item in books %}
+        <div class="col-md-4 mb-4">
+            <div class="book-card">
+                <h5 class="card-title">{{ book.title }}</h5>     
+                <p class="card-text">Author: {{ book.author }} - {{ book.price }} {{ book.currency }}</p>
+                <p class="show-detail-text" data-book-id="{{ book.id }}">Show Detail</p>
+                <div class="book-details" data-book-id="{{ book.id }}">
+                    <p class="card-text">
+                        <strong>Genres:</strong> {{ book.genres }}
+                        <strong>Rating:</strong> {{ book.rating }}
+                        <strong>Voters:</strong> {{ book.voters }}
+                        <strong>Page Count:</strong> {{ book.page_count }}</p>
+                    </p>
+                    <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
+                    <button class="btn btn-primary add-to-cart-button" data-book-id="{{ book.id }}">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    {% endfor %} --> -->
 
-    // Fungsi untuk mengganti URL saat item filter dipilih
-    document.querySelectorAll('.dropdown-item').forEach(item => {
-        item.addEventListener('click', event => {
-            const href = event.target.getAttribute('href');
-            window.location.href = href;
-        });
-});
+<div class="modal" id="cartModal" tabindex="-1">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="wishlistModalLabel">Add to Cart</h5>
+        </div>
+
+        <div class="modal-body" style="margin: auto;">
+            <form id="form">
+                // {% csrf_token %}
+                <div class="mb-3">
+                    <label for="quantity" class="col-form-label">Tentukan Jumlah:</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity"></input>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+// {% include "footer.html" %}
+
+// <script>
+//     async function getBook() {
+//         return fetch("{% url 'buybooks:show_books_json' %}").then((res) => res.json())
+//     }
+//     async function getCart() {
+//         return fetch("{% url 'buybooks:get_cart_json' %}").then((res) => res.json())
+//     }
+    
+
+
+//     $(document).ready(function(){
+//         $(".show-detail-text").click(function(){
+//             var bookId = $(this).data("book-id");
+//             $(".book-details[data-book-id='" + bookId + "']").slideToggle();
+//         });
+//         $(".add-to-cart-button").click(function(){
+//             var bookId = $(this).data("book-id");
+//             $("#id_book_id").val(bookId);
+//             $("#cartModal").modal("show");
+//         });
+// });
+
+
+//     // Fungsi untuk mengganti URL saat item filter dipilih
+//     document.querySelectorAll('.dropdown-item').forEach(item => {
+//         item.addEventListener('click', event => {
+//             const href = event.target.getAttribute('href');
+//             window.location.href = href;
+//         });
+// });
 </script>
-
-{% endblock %}

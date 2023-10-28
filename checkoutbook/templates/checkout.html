@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+<head>
+    {% block meta %}
+        <title>Checkout</title>
+    {% endblock meta %}
+</head>
+
+{% block content %}
+
+<body>
+    <h1 class="text-center">Checkout</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Produk</th>
+                <th>Harga Satuan</th>
+                <th>Jumlah</th>
+                <th>Subtotal Harga</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in cart_items %}
+            <tr>
+                <td>{{product.book.title}}</td>
+                <td>${{product.book.price}}</td>
+                <td>{{product.amount}}</td>
+                <td>{{product.subtotal}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h6>Total Harga: ${{ total_price }}</h6>
+    <form method="post" id="checkout-form" class="mx-auto">
+        {% csrf_token %}
+        <div class="mb-3 mx-auto">
+            <label for="alamat" class="col-form-label">Alamat:</label>
+            <div class="col-6">
+            <textarea class="form-control" id="alamat" name="alamat"></textarea>
+            </div>
+        </div>
+        <div class="mb-3 mx-auto">
+            <label for="metode_pembayaran" class="col-form-label">Metode Pembayaran:</label>
+            <div>
+                <input type="radio" id="metode1" name="metode_pembayaran" value="kartu_kredit">
+                <label for="metode1">Kartu Kredit</label>
+            </div>
+            <div>
+                <input type="radio" id="metode2" name="metode_pembayaran" value="kartu_debit">
+                <label for="metode2">Kartu Debit</label>
+            </div>
+            <div>
+                <input type="radio" id="metode3" name="metode_pembayaran" value="transfer_bank">
+                <label for="metode3">Transfer Bank</label>
+            </div>
+            <div>
+                <input type="radio" id="metode4" name="metode_pembayaran" value="e_wallet">
+                <label for="metode4">E-Wallet</label>
+            </div>
+        </div>
+    </form>
+    <button type="button" class="btn btn-primary mx-auto" id="button_checkout">Checkout</button>
+
+    <script>
+        function checkout() {
+            var alamatInput = document.querySelector('#alamat');
+            var metodePembayaranInput = document.querySelector('input[name="metode_pembayaran"]:checked');
+    
+            if (!alamatInput.value) {
+                alert("Alamat harus diisi.");
+                return false;
+            }
+    
+            if (!metodePembayaranInput) {
+                alert("Pilih metode pembayaran.");
+                return false;
+            }
+    
+            fetch("{% url 'checkoutbook:checkout_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#checkout-form'))
+            }).then(response => {
+                successful();
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+    
+            document.getElementById("checkout-form").reset();
+            return false;
+        }
+    
+        document.getElementById("button_checkout").onclick = checkout;
+
+        function successful() {
+            // add saldo == total_harga
+        }
+    </script>
+    
+</body>
+
+{% endblock content %}
