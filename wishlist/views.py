@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AddToWishlistForm
 from .models import Wishlist
 from registerbook.models import Book
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 @login_required
 def show_book_profile(request):
@@ -32,20 +33,25 @@ def show_book_details(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     return render(request, 'book_details.html', {'book': book})
 
+
 @login_required
+@csrf_exempt
 def add_to_wishlist(request):
     if request.method == 'POST':
         form = AddToWishlistForm(request.POST)
-
         if form.is_valid():
             book_id = request.POST.get('book_id')
             preference = form.cleaned_data['preference']
             book = Book.objects.get(pk=book_id)
-            Wishlist.objects.create(user=request.user, book=book, preference=preference)
-            return redirect('wishlist:bookprofile')
 
-    response_data = {'message': 'Terjadi kesalahan saat menambahkan buku ke Wishlist'}
-    return JsonResponse(response_data, status=400)
+            if Wishlist.objects.filter(user=request.user, book=book).exists():
+                return JsonResponse({'status': 'error', 'message': f"Buku berjudul {book.title} sudah ada dalam wishlist Anda."})
+            else:
+                Wishlist.objects.create(user=request.user, book=book, preference=preference)
+                return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully!'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Form is not valid.'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
 
 @login_required
 def mywishlist(request):
@@ -61,3 +67,15 @@ def delete_wishlist_item(request, item_id):
     if request.method == 'POST':
         item.delete()
     return redirect('wishlist:mywishlist')
+
+def get_books(request):
+    search = request.GET.get('search')
+    rating = request.GET.get('rating')
+
+    books = Book.objects.all()
+    if search:
+        books = books.filter(Q(title__icontains=search))
+    if rating:
+        books = books.filter(rating=rating)
+
+    return render(request, 'books.html', {'books': books})

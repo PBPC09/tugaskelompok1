@@ -123,6 +123,32 @@ def show_forum_json(request):
     json_data = json.dumps(serialized_data)
     return HttpResponse(json_data, content_type="application/json")
 
+def show_forum_json_popular_only(request):
+    models = ForumHead.objects.filter(book__rating__gt=4.5)
+    serialized_data = []
+    for model in models:
+        book = model.book
+        connected_comments = ForumComment.objects.filter(comment_to = model)
+        comment_counts = len(connected_comments)
+        user = model.user
+        model_data = {
+            "model": "bookforum.forumhead",
+            "pk": model.pk,  # Include the "pk" field
+            "fields": {
+                "book": book.title,
+                "user": user.username,
+                "date": str(model.date),  # Convert the date to a string
+                "title": model.title,
+                "question": model.question,
+                "comment_counts" : comment_counts,
+            }
+        }
+
+        serialized_data.append(model_data)
+        # abis udah append ke serialized_data
+    json_data = json.dumps(serialized_data)
+    return HttpResponse(json_data, content_type="application/json")
+
 def show_comments_json(request):
     data = ForumComment.objects.all()
     return HttpResponse(serializers.serialize('json', data), content_type='application/json')

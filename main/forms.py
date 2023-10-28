@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from main.models import Profile
 
 class SignUpForm(UserCreationForm):
-    ROLE_CHOICES = [('Seller', 'Seller'), ('Buyer', 'Buyer')]
+    ROLE_CHOICES = [('Admin', 'Admin'), ('Buyer', 'Buyer')]
     role = forms.ChoiceField(
         label="Choose Your User Type",
         required=True,
@@ -21,7 +21,7 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         
-        profile = Profile.objects.create(
+        Profile.objects.create(
             user=user,
             role=self.cleaned_data["role"],
             first_name=self.cleaned_data["first_name"], 
@@ -29,4 +29,3 @@ class SignUpForm(UserCreationForm):
             email=self.cleaned_data["email"],
         )
         return user
-
