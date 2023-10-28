@@ -14,7 +14,7 @@ def show_buybooks(request):
     }
     return render(request, 'buybooks.html', context)
 
-def add_cart_ajax(request, id): # TODO
+def add_cart_ajax(request, id):
     if request.method == 'POST':
         data = json.loads(request.body.decode("utf-8"))
         user = request.user
