@@ -78,8 +78,8 @@ def create_comments(request, pk):
 
 @login_required(login_url='/login/')
 @csrf_exempt
-def delete_question(request, id):
-    if request.method == 'DELETE':
+def delete_question(request, username, id):
+    if request.method == 'GET' and request.user.username == username:
         ForumHead.objects.get(pk = id).delete()
         return HttpResponse(b"DELETED", status=201)
     return HttpResponseNotFound()
@@ -101,6 +101,8 @@ def show_forum_json(request):
     models = ForumHead.objects.all()
     serialized_data = []
     for model in models:
+        connected_comments = ForumComment.objects.filter(comment_to = model)
+        comment_counts = len(connected_comments)
         book = model.book
         user = model.user
         model_data = {
@@ -112,6 +114,7 @@ def show_forum_json(request):
                 "date": str(model.date),  # Convert the date to a string
                 "title": model.title,
                 "question": model.question,
+                "comment_counts" : comment_counts,
             }
         }
         serialized_data.append(model_data)

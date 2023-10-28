@@ -3,120 +3,181 @@
 
 {% block content %}
 <style>
+    body, html {
+        background-color: #f5f7fa;
+        font-family: 'Poppins', sans-serif;
+    }
+
     .custom-image-height {
         height: 500px;
         width: 100vw;
         object-fit: cover;
         position: relative; 
     }
-    
+
     .parentClass { 
         position: relative; 
         width: 80vw; 
         height: auto;
         margin-bottom: 20px; 
     } 
+
+    .parentClass img {
+        filter: brightness(0.7); 
+    }
     
     .childClass { 
         top: 0; 
         left: 0; 
-        opacity: 0.7; 
         height: 500px;
         width: 100vw;
-        background: rgb(0, 0, 0); 
+        background: rgba(28, 41, 100, 0.7); 
         position: absolute; 
         justify-content: center;
         align-items: center;
     }
+
     .childClass .textChild{
         text-align: center;
         font-size: 28px;
-        margin-top: 20px;
+        margin-top: 40px;
         color: white;
+        opacity: 1;
+        font-weight: bold;
     }
+
+    .tagline div {
+        color: white;  /* Update tagline text color */
+    }
+
+    .card {
+        background-color: #DEE3EF;  /* Light purple-ish */
+        border: none;
+        transition: 0.3s;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+        overflow: hidden;  /* To handle rounded corners for child elements */
+    }
+
     .card-clickable {
-        text-decoration: none; /* Remove underlines from links */
-        color: inherit; /* Inherit text color from parent */
-        cursor: pointer; /* Change cursor to a pointer when hovering over the card */
-        display: block; /* Make the entire card area clickable */
+        text-decoration: none;
     }
-    .card-clickable:hover {
-        /* Add any hover effects or styles here */
-        background-color: #f0f0f0; /* Example: change background color on hover */
+
+    .card:hover {
+        transform: scale(1.05); /* Slight zoom effect on hover */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-title, .card-text {
+        color: #010246;  /* Deep blue for both title and text */
+        font-size: 1em;
+    }
+
+    .card-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        color: #333; /* Darker text for contrast */
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    /* Icon Styling */
+    .card-icon {
+        font-size: 2em;
+        margin-bottom: 10px;
+        color: #DEE3EF; /* Light color from your palette */
+    }
+
+    /* Consistent Spacing */
+    .card-content {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .fixed-card-height {
+        height: 170px; /* Increased height to accommodate the header */
+        display: flex;
+        flex-direction: column;
+    }
+    .tagline{
+        margin-top: 100px;
+        font-size: 24px;
+        margin-left: 200px;
+        opacity: 1;
+        text-align: left;
+        font-weight: normal;
+        border-left: 3px solid white;
+        padding-left: 20px;
     }
 </style>
-
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-    <a class="navbar-brand" href="#">Lembar Pena</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        </ul>
-        <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
-        <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
-        <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
-        <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
-        <a class="btn btn-outline-success" style="margin-right: 10px;" href="{% url 'main:logout' %}">Logout</a>    
-    </div>
-</nav>
-<div>Nikmati Buku</div>
-<div>Semua dalam satu aplikasi</div>
-
+{% include "navbarloggedin.html" %}
 <div class="parentClass"> 
     <img class="custom-image-height" src="{% static 'Gambar/imagecover.jpg' %}" alt="Image">
     <div class="childClass">
         <div class="textChild">
             Lembar Pena
-        </div>     
+            <div class="tagline">
+                <div>Nikmati Buku</div>
+                <div style="opacity:1; font-style:italic;">Semua dalam satu aplikasi</div>
+            </div>
+        </div>  
     </div> 
 </div> 
 
 <div class="row">
-    <div class="col-sm-6">
-        <a href="#" class="card-clickable">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" href="{% url 'buybooks:show_test' %}">Beli Buku</h5>
+    <div class="col">
+        <a href="{% url 'buybooks:show_test' %}" class="card-clickable">
+            <div class="card fixed-card-height">
+                <div class="card-content">
+                    <i class="card-icon fas fa-book"></i> 
+                    <h5 class="card-title">Beli Buku</h5>
                     <p class="card-text">Perluas cakrawala, miliki buku yang hendak Anda baca!</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-sm-6">
+    <div class="col">
         <a href="{% url 'wishlist:mywishlist' %}" class="card-clickable">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" href="{% url 'wishlist:bookprofile' %}">Simpan Keinginan</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <div class="card fixed-card-height">
+                <div class="card-content">
+                    <i class="card-icon fas fa-book"></i>
+                    <h5 class="card-title">Simpan Keinginan</h5>
+                    <p class="card-text">Temukan bacaan terbaik dan simpan pada koleksi Anda!</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-sm-6">
+    <div class="col">
         <a href="{% url 'wishlist:bookprofile' %}" class="card-clickable">
-            <div class="card">
-                <div class="card-body">
+            <div class="card fixed-card-height">
+                <div class="card-content">
+                    <i class="card-icon fas fa-book"></i>
                     <h5 class="card-title">Lihat Profil Buku</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text">Amati buku-buku terbaik dan bagaimana mereka siap menghibur Anda!</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-sm-6">
-        <a href="#" class="card-clickable">
-            <div class="card">
-                <div class="card-body">
+    <div class="col">
+        <a href="{% url 'bookforum:show_forum' %}" class="card-clickable">
+            <div class="card fixed-card-height">
+                <div class="card-content">
+                    <i class="card-icon fas fa-book"></i>
                     <h5 class="card-title">Forum Buku</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text">Temukan komunitas yang akan membantu Anda memahami bacaan terbaik!</p>
                 </div>
             </div>
         </a>
     </div>
 </div>
-
-<div>Frequently Asked Question</div>
-
+{% include "faq.html" %}
+{% include "footer.html" %}
 {% endblock content %}

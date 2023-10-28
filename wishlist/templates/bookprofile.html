@@ -2,35 +2,68 @@
 {% block content %}
 <head> 
     <style>
-        .book-card {
-            margin-bottom: 20px;
+       body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #DEE3EF;
         }
+    
+        .book-card {
+            border: 1px solid #b0c4de; 
+            padding: 10px;  
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column; 
+            height: 100%;  
+            transition: 0.3s;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05); 
+            background-color: #FFFFFF;
+        }
+
         .book-details {
             display: none;
         }
+
         .show-detail-text {
-            color: #888;
+            color: #010246; 
             cursor: pointer;
             text-decoration: underline;
         }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .modal-content {
+            border-radius: 5px;
+            background-color: #FFFFFF
+        }
+    
+        .modal-header {
+            border-bottom: none;
+            background-color: #FFFFFF;
+        }
+    
+        .modal-footer {
+            border-top: none;
+            background-color: #FFFFFF; 
+        }
+
+        button.btn-primary {
+            background-color: #3262FF;
+            border-color: #3262FF;
+        }
+
+        button.btn-secondary {
+            background-color: #bbbbbb;
+            border-color: bbbbbb;
+        }
     </style>
+     
 </head>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-    <a class="navbar-brand" href="#">Lembar Pena</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        </ul>
-        <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
-        <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
-        <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
-        <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
-        <a class="btn btn-outline-success" style="margin-right: 10px;" href="{% url 'main:logout' %}">Logout</a>    
-    </div>
-</nav>
+
+{% include "navbarloggedin.html" %}
 <div class="container mt-5">
     <h1>Books</h1>
     <div class="row">
@@ -47,7 +80,7 @@
                     <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
                     <p class="card-text"><strong>Page Count:</strong> {{ book.page_count }}</p>
                     <p class="card-text"><strong>Genres:</strong> {{ book.genres }}</p>
-                    <button type="button" class="btn btn-primary add-to-wishlist-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add to Wishlist by AJAX</button>
+                    <button class="btn btn-primary add-to-wishlist-button" data-book-id="{{ book.id }}">Add to Wishlist</button>
                 </div>
             </div>
         </div>
@@ -60,9 +93,10 @@
         <div class="modal-content">
             <form id="wishlist-form" method="post" action="{% url 'wishlist:add_to_wishlist' %}">
                 {% csrf_token %}
+                <input type="hidden" id="id_book_id" name="book_id">
                 <div class="modal-header">
                     <h5 class="modal-title" id="wishlistModalLabel">Add to Wishlist</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -71,80 +105,16 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<script>
-    $(document).ready(function(){
-        $(".show-detail-text").click(function(){
-            var bookId = $(this).data("book-id");
-            $(".book-details[data-book-id='" + bookId + "']").slideToggle();
-        });
-    });
-    document.addEventListener("DOMContentLoaded", function () {
-    // Temukan semua tombol "Add to Wishlist"
-    const addToWishlistButtons = document.querySelectorAll(".add-to-wishlist-button");
-
-    // Tambahkan event listener pada setiap tombol
-    addToWishlistButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-            // Dapatkan ID buku dari atribut data-book-id
-            const bookId = button.getAttribute("data-book-id");
-
-            // Panggil fungsi addToWishlist dengan ID buku
-            addToWishlist(bookId);
-        });
-    });
-});
-
-// Fungsi untuk menambahkan buku ke Wishlist
-async function addToWishlist(bookId) {
-    try {
-        // Kirim permintaan POST ke URL yang sesuai di sisi server Anda
-        const response = await fetch("{% url 'wishlist:add_to_wishlist' %}", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
-            },
-            body: JSON.stringify({
-                book_id: bookId
-            })
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                // Tampilkan pemberitahuan bahwa buku telah ditambahkan ke Wishlist
-                alert("Added to wishlist successfully!");
-            } else {
-                // Tampilkan pemberitahuan jika gagal menambahkan ke Wishlist
-                alert("Failed to add to wishlist.");
-            }
-        } else {
-            throw new Error("Network response was not ok.");
-        }
-    } catch (error) {
-        // Tangani kesalahan jika terjadi
-        alert("An error occurred while adding to wishlist: " + error.message);
-    }
-}
-
-
-    // Fungsi yang sama dengan yang ada pada contoh sebelumnya
-    function removeItem(bookId) {
-        // Implementasi AJAX DELETE di sini
-    }
-
-
-</script>
-
+{% include "footer.html" %}
 <!-- ini pake jquery udah jalan -->
-<!-- <script>
+<script>
 $(document).ready(function(){
     $(".show-detail-text").click(function(){
         var bookId = $(this).data("book-id");
@@ -156,41 +126,8 @@ $(document).ready(function(){
         $("#wishlistModal").modal("show");
     });
 });
-</script> -->
+</script>
 
-<!-- ini pake yang kaya di tutor tapi belom test takut error -->
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const showDetailTexts = document.querySelectorAll(".show-detail-text");
-        showDetailTexts.forEach((showDetailText) => {
-            showDetailText.addEventListener("click", function () {
-                const bookId = this.getAttribute("data-book-id");
-                const bookDetails = document.querySelector(`.book-details[data-book-id='${bookId}']`);
-                if (bookDetails) {
-                    if (bookDetails.style.display === "none" || bookDetails.style.display === "") {
-                        bookDetails.style.display = "block";
-                    } else {
-                        bookDetails.style.display = "none";
-                    }
-                }
-            });
-        });
-    
-        const addToWishlistButtons = document.querySelectorAll(".add-to-wishlist-button");
-        addToWishlistButtons.forEach((addToWishlistButton) => {
-            addToWishlistButton.addEventListener("click", function () {
-                const bookId = this.getAttribute("data-book-id");
-                const bookIdField = document.querySelector("#id_book_id");
-                if (bookIdField) {
-                    bookIdField.value = bookId;
-                }
-                const wishlistModal = document.querySelector("#wishlistModal");
-                if (wishlistModal) {
-                    wishlistModal.style.display = "block";
-                }
-            });
-        });
-    });
-</script> -->
+
 
 {% endblock %}
