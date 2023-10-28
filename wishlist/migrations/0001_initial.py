@@ -16,11 +16,10 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='CartItem',
+            name='Wishlist',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField(default=1)),
-                ('is_ordered', models.BooleanField(default=False)),
+                ('preference', models.IntegerField(choices=[(1, 'Not Interested'), (2, 'Maybe Later'), (3, 'Interested'), (4, 'Really Want It'), (5, 'Must Have')])),
                 ('book', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='registerbook.book')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

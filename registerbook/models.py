@@ -13,7 +13,7 @@ class Book(models.Model):
     publisher = models.CharField(max_length=300)
     page_count = models.IntegerField()
     genres = models.CharField(max_length=200)
-    seller = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='books')  # relasi ke Profile
+    # seller = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='books')  # relasi ke Profile
 
     def __str__(self):
         return self.title
