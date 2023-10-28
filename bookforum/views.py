@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from bookforum.models import ForumHead, ForumComment
 from django.shortcuts import render, redirect, get_object_or_404
 import datetime
@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseNotFound
 from registerbook.models import Book
 import json
 #IMPORT BUAT USER PURA PURAAN
