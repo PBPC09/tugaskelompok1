@@ -1,6 +1,6 @@
 import json
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
 from django.core import serializers
 from .models import Book, CartItem
 from django.contrib.auth.decorators import login_required
@@ -10,12 +10,13 @@ from django.http import HttpResponseNotFound
 @login_required
 def show_buybooks(request):
     books = Book.objects.all()
-    form = AddToWishlistForm()
+    form = AddToCart()
 
     context = {
         'books': books,
         'form' : form,
     }
+    
     return render(request, 'buybooks.html', context)
 
 def add_cart_ajax(request, id):
@@ -23,9 +24,8 @@ def add_cart_ajax(request, id):
         data = json.loads(request.body.decode("utf-8"))
         user = request.user
         book = Book.objects.get(pk=data["id"])
-        quantity = request.POST.get("amount")
-        is_ordered = False
-        
+        quantity = request.POST.get("quantity")
+        is_ordered = False  
         new_item = CartItem(user=user, book=book, quantity=quantity, is_ordered=is_ordered)
         new_item.save()
         return HttpResponse(b"CREATED", status=201)
@@ -36,7 +36,7 @@ def show_cart(request):
     context = {
         'cart_items': cart_items,
     }
-    return render(request, 'buybooks.html', context)
+    return render(request, 'cartwindow.html', context)
 
 def get_cart_json(request):
     items = CartItem.objects.filter(user=request.user)
@@ -48,9 +48,14 @@ def delete_cart_ajax(request, id):
     item.delete()
     return HttpResponse("DELETED",status=200)
 
-def selected(request, id):
-    data = json.loads(request.body.decode("utf-8"))
-    item = CartItem.objects.get(pk=data["id"])
-    item.is_ordered = True
-    item.save()
-    return JsonResponse({"success": True})
+def show_books_json(request):
+    books = Book.objects.all()
+    return HttpResponse(serializers.serialize('json', books), content_type="application/json")
+
+def show_books_json_rating_lt(request):
+    books = Book.objects.filter(rating__lt=3)
+    return HttpResponse(serializers.serialize('json', books), content_type="application/json")
+
+def show_books_json_rating_gte(request):
+    books = Book.objects.filter(rating__gte=3)
+    return HttpResponse(serializers.serialize('json', books), content_type="application/json")
