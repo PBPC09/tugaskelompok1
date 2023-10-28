@@ -1,11 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound
 from django.core import serializers
-from django.urls import reverse
 from .models import Book, Profile, Order
-from .forms import BookForm
 
 @login_required(login_url='/login')
 def show_registered_books(request):
@@ -18,21 +16,23 @@ def show_registered_books(request):
 
     return render(request, 'regist_book.html', context=context)
 
-def add_book(request):
-    form = BookForm(request.POST or None)
+@login_required(login_url='/login')
+def show_received_orders(request):
+    received_orders = Order.objects.filter(seller__user=request.user)
+    context = {
+        'username': request.user,
+        'orders': received_orders,
+    }
 
-    if form.is_valid() and request.method == "POST":
-        book = form.save(commit=False)
-        book.seller = Profile.objects.get(user=request.user)  # set seller buku
-        book.save()
-        return HttpResponseRedirect(reverse('registerbook:show_registered_books'))
+    return render(request, 'received_orders.html', context=context)
 
-    context = {'form': form}
-    return render(request, "add_book.html", context)
-
-def regist_books_json(request):
+def show_json(request):
     books = Book.objects.all()
     return HttpResponse(serializers.serialize('json', books), content_type="application/json")
+
+def show_json_by_id(request, id):
+    data = Book.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def get_book_json(request):
     books = Book.objects.filter(seller__user=request.user)
@@ -80,13 +80,3 @@ def remove_book(request, book_id):
         return HttpResponse(b"DELETED", status=201)
     
     return HttpResponseNotFound()
-
-@login_required(login_url='/login')
-def show_received_orders(request):
-    received_orders = Order.objects.filter(seller__user=request.user)
-    context = {
-        'username': request.user,
-        'orders': received_orders,
-    }
-
-    return render(request, 'received_orders.html', context=context)

@@ -9,3 +9,4 @@ urlpatterns = [
     path('get-cart/', get_cart_json, name="get_cart"),
     path('delete/', delete_cart_ajax, name="delete"),
 ]
+

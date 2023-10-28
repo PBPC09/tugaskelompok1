@@ -27,6 +27,7 @@ def show_book_profile(request):
     }
     return render(request, 'bookprofile.html', context=context)
 
+
 def show_book_details(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     return render(request, 'book_details.html', {'book': book})
