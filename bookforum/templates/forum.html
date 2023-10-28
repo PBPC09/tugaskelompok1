@@ -8,32 +8,33 @@
         overflow-y: auto;
     }
     .table-row-spacing tbody tr:not(:last-child) {
-    border-bottom: none;
-}
+        border-bottom: none;
+    }
 
-.table-row-spacing tbody tr:after {
-    content: "";
-    display: block;
-    height: 20px;  /* Adjust to your desired spacing */
-}
-.overflow-control{
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+    .table-row-spacing tbody tr:after {
+        content: "";
+        display: block;
+        height: 20px;  /* Adjust to your desired spacing */
+    }
+    .overflow-control {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
 
-    </style>
-    
-    {% include "navbarloggedin.html" %}
-    <h2 style="margin: 30px 30px 30px 30px; text-align: center;"> Forum Buku</h2>
-    <div class="d-flex justify-content-center set-margin">
-        <a>    
-            <button type="button" class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Buat Forum Baru
-            </button>
-        </a>    
-    </div>
+{% include "navbarloggedin.html" %}
+<h2 style="margin: 30px 30px 30px 30px; text-align: center;"> Forum Buku</h2>
+<div class="d-flex justify-content-center set-margin">
+    <a>    
+        <button type="button" class="btn btn-primary btn-custom" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Buat Forum Baru
+        </button>
+    </a>    
+</div>
+
 <table class="row" id="forum_container" style="margin: 40px 40px 40px 40px;"></table>
+
 <!-- Modal untuk melakukan input -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -53,13 +54,13 @@
                         <label for="title" class="col-form-label">Pilih Buku:</label>
                         <input type="hidden" id="book_id" name="book_id">
                         <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle"  id="dropdown-buku" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <button class="btn btn-secondary dropdown-toggle" id="dropdown-buku" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 Pilih buku
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
-                                        <div class="list-group">
-                                        </div>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+                                    <div class="list-group">
+                                    </div>
                                 </ul>
                         </div>
                     </div>
@@ -77,60 +78,17 @@
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ayo mulai diskusi!</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="form" onsubmit="return false;">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="title" class="col-form-label">Judul:</label>
-                        <input type="text" class="form-control" id="title" name="title"></input>
-                    </div>
-                    <div class="mb-3">
-                        <label for="title" class="col-form-label">Pilih Buku:</label>
-                        <input type="hidden" id="book_id" name="book_id">
-                        <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle"  id="dropdown-buku" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                Pilih buku
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
-                                        <div class="list-group">
-    
-                                        </div>
-                                </ul>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="question" class="col-form-label">Silakan masukkan pertanyaan Anda:</label>
-                        <textarea class="form-control" id="question" name="question"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Tambahkan Forum</button>
-            </div>
-        </div>
-    </div>
-</div>
 {% include "footer.html" %}
 
 <script>
     let isBookClicked = false;
+
     $(document).ready(function() {
         $('.dropdown-menu').on('click', '.list-group-item', function() {
-            // Get the content of the selected item (for demonstration, we'll get the heading)
             var selectedItem = $(this).find('h5').text();
             var selectedBookId = $(this).data('id');        
             $('#book_id').val(selectedBookId);
             console.log(selectedBookId)
-            // Update the button content
             $('.dropdown-toggle').text(selectedItem);
             isBookClicked = true;
         });
@@ -139,24 +97,27 @@
     async function getForum() {
         return fetch("{% url 'bookforum:show_forum_json' %}").then((res) => res.json())
     }
+    
     async function getBook() {
         return fetch("{% url 'bookforum:show_books_json' %}").then((res) => res.json())
     }
+
     async function refreshForum() {
         document.getElementById("forum_container").innerHTML = "";
         const allForums = await getForum();
 
         let htmlString = `<table class="table table-row-spacing">
                             <tr style="height:50px;">
-                            <th scope="col" style="width:400px;">Judul Topik</th>
-                            <th scope="col" style="width:300px;">Buku</th>
-                            <th scope="col" style="width:100px;">Penanya</th>
-                            <th scope="col" style="width:100px;">Tanggal</th>
-                            <th scope="col" style="width:100px;">Komentar</th>
-                            <th scope="col" style="width:100px;"></th>
+                                <th scope="col" style="width:400px;">Judul Topik</th>
+                                <th scope="col" style="width:300px;">Buku</th>
+                                <th scope="col" style="width:100px;">Penanya</th>
+                                <th scope="col" style="width:100px;">Tanggal</th>
+                                <th scope="col" style="width:100px;">Komentar</th>
+                                <th scope="col" style="width:100px;"></th>
                             </tr>
-                       <tbody class="table-group-divider">
+                            <tbody class="table-group-divider">
         `;
+
         allForums.forEach((item) => {
             let database_url="{% url 'bookforum:show_forumcomments' id_head=9999 %}"
             const rowUrl = database_url.replace('9999', item.pk);
@@ -168,9 +129,10 @@
                                     <td class="overflow-control" style="width:100px;max-width: 100px;">${item.fields.comment_counts}</td>
                                     <td class="overflow-control" style="width:100px;max-width: 100px;"> 
                                     <button class="btn btn-primary" style="font-size:10px;height: 24px; text-align: center;" onclick="event.stopPropagation(); deleteForum('${item.fields.user}',${item.pk}); return false;">Delete</button>
-                                        </td>
+                                    </td>
                             </tr>`
         });
+
         htmlString +=  `</tbody></table>`
         document.getElementById("forum_container").innerHTML = htmlString
         document.querySelectorAll('.clickable-row').forEach(row => {
