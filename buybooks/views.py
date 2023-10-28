@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from registerbook.models import Book
 from .models import Buybooks
+from django.http import HttpResponse
+from django.core import serializers
 
 # Create your views here.
 def show_test(request):
@@ -8,27 +10,26 @@ def show_test(request):
     return render(request, 'buybooks.html', context)
 
 def show_book(request):
-    book = Book.objects.all()
+    book = Buybooks.objects.all()
 
     context = {
         'book' : book
     }
-    return render(request, 'buybooks.html', context=context)
+    return render(request, 'buybooks.html', context)
+
+def show_book_json(request):
+    buku = Buybooks.objects.all()
+    return HttpResponse(serializers.serialize('json', buku), content_type='application/json')
 
 def add_to_cart(request, book_id):
     book = Book.objects.get(id=book_id)
-
+    user = request.user
     # Cek apakah buku sudah ada di keranjang
-    if Buybooks.objects.filter(book=book, user=request.user, is_ordered=False).exists():
+    cart_item, created = Buybooks.objects.get_or_create(user=user, book=book, is_ordered=False)
+    if not created:
         # Jika sudah ada, tambahkan jumlahnya
-        cart_item = Buybooks.objects.get(book=book, user=request.user, is_ordered=False)
         cart_item.quantity += 1
         cart_item.save()
-    else:
-        # Jika belum ada, buat item baru di keranjang
-        cart_item = Buybooks(user=request.user, book=book, quantity=1)
-        cart_item.save()
-
     return redirect('show_books')
 
 # Fungsi untuk menampilkan buku berdasarkan filter

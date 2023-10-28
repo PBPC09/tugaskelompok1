@@ -7,6 +7,7 @@ from django.urls import reverse
 from .models import Book, Profile, Order
 from .forms import BookForm
 
+
 @login_required(login_url='/login')
 def show_registered_books(request):
     books = Book.objects.filter(seller__user=request.user)
