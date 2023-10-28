@@ -27,7 +27,9 @@
 </head>
 {% include "navbarloggedin.html" %}
 <div class="container mt-5">
-    <h1>Books</h1>
+    <h1>Books
+        <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
+    </h1>
     <div class="row card-container">
         {% for book in books %}
         <div class="col-md-4 mb-4">
@@ -36,40 +38,42 @@
                 <p class="card-text">Author: {{ book.author }} - {{ book.price }} {{ book.currency }}</p>
                 <p class="show-detail-text" data-book-id="{{ book.id }}">Show Detail</p>
                 <div class="book-details" data-book-id="{{ book.id }}">
-                    <p class="card-text"><strong>Rating:</strong> {{ book.rating }}</p>
-                    <p class="card-text"><strong>Voters:</strong> {{ book.voters }}</p>
+                    <p class="card-text">
+                        <strong>Genres:</strong> {{ book.genres }}
+                        <strong>Rating:</strong> {{ book.rating }}
+                        <strong>Voters:</strong> {{ book.voters }}
+                        <strong>Page Count:</strong> {{ book.page_count }}</p>
+                    </p>
                     <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
-                    <p class="card-text"><strong>Page Count:</strong> {{ book.page_count }}</p>
-                    <p class="card-text"><strong>Genres:</strong> {{ book.genres }}</p>
-                    <button class="btn btn-primary add-to-wishlist-button" data-book-id="{{ book.id }}">Add to Wishlist</button>
+                    <button class="btn btn-primary add-to-cart-button" data-book-id="{{ book.id }}">Add to Cart</button>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
+<div class="modal" id="cartModal" tabindex="-1">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="wishlistModalLabel">Add to Cart</h5>
+        </div>
 
-<div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="wishlistModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form id="wishlist-form" method="post" action="{% url 'wishlist:add_to_wishlist' %}">
+        <div class="modal-body" style="margin: auto;">
+            <form id="form" onsubmit="return false;">
                 {% csrf_token %}
-                <input type="hidden" id="id_book_id" name="book_id">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="wishlistModalLabel">Add to Wishlist</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {{ form.as_p }}
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div class="mb-3">
+                    <label for="quantity" class="col-form-label">Tentukan Jumlah:</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity"></input>
                 </div>
             </form>
         </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
     </div>
 </div>
 {% include "footer.html" %}
@@ -80,10 +84,10 @@
             var bookId = $(this).data("book-id");
             $(".book-details[data-book-id='" + bookId + "']").slideToggle();
         });
-        $(".add-to-wishlist-button").click(function(){
+        $(".add-to-cart-button").click(function(){
             var bookId = $(this).data("book-id");
             $("#id_book_id").val(bookId);
-            $("#wishlistModal").modal("show");
+            $("#cartModal").modal("show");
         });
 });
 </script>

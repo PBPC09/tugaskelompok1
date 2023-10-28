@@ -4,13 +4,16 @@ from django.http import HttpResponse
 from django.core import serializers
 from .models import Book, CartItem
 from django.contrib.auth.decorators import login_required
-
+from .forms import *
 # Create your views here.
 @login_required
 def show_buybooks(request):
     books = Book.objects.all()
+    form = AddToWishlistForm()
+
     context = {
         'books': books,
+        'form' : form,
     }
     return render(request, 'buybooks.html', context)
 
