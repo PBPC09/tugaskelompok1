@@ -1,6 +1,14 @@
+<style>
+    .navbar a:hover {
+      color: #ff9900; 
+    }
+    #log-out:hover {
+      color: #ffffff; 
+    }
+</style>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-    <a class="navbar-brand" href="#">Lembar Pena</a>
+    <a class="navbar-brand" href="{% url 'main:show_landing_page_logged_in' %}">Lembar Pena</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,6 +20,6 @@
         <a class="nav-link active" href="{% url 'wishlist:mywishlist' %}" style="margin-right: 30px;">Wishlist</a>
         <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
         <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
-        <a class="btn btn-outline-success" style="margin-right: 10px;" href="{% url 'main:logout' %}">Logout</a>    
+        <a class="btn btn-outline-success" id="log-out" style="margin-right: 10px;" href="{% url 'main:logout' %}">Logout</a>    
     </div>
 </nav>
