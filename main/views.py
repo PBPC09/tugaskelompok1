@@ -12,25 +12,25 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def show_landing_page(request):
-    context = {
-    }
+    context = {}
     return render(request, "landingpage.html", context)
 
 @csrf_exempt
 def show_landing_page_logged_in(request):
-    context = {
-    }
+    context = {}
     return render(request, "landingpageafterlogin.html", context)
 
 def signup(request):
     form = SignUpForm()
     if request.method == "POST":
         form = SignUpForm(request.POST)
+
         if form.is_valid():
             form.save()
             role = form.cleaned_data["role"]
-            if role == 'Seller':
-                messages.success(request, 'You are now a Seller!')
+
+            if role == 'Admin':
+                messages.success(request, 'You are now an Admin!')
             else:
                 messages.success(request, 'You are now a Buyer!')
             return redirect('main:login')
@@ -49,7 +49,7 @@ def login_user(request):
             login(request, user)
             response = None
 
-            if profile.is_seller():
+            if profile.is_admin():
                 response = HttpResponseRedirect(reverse("registerbook:show_registered_books"))
             else:
                 response = HttpResponseRedirect(reverse("main:show_landing_page_logged_in"))

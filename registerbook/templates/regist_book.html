@@ -92,6 +92,7 @@
     </div>
 </div>
 
+<h1>Buku Tersedia</h1>
 <div id="product_table" class="row"></div>
 
 <button type="button" class="btn btn-primary add-book-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Book by AJAX</button>
@@ -103,7 +104,7 @@
 
     async function refreshBooks() {
         const container = document.getElementById("product_table");
-        container.innerHTML = ""; // Clear previous content
+        container.innerHTML = "";
 
         const books = await getBooks();
 
