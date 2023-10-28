@@ -3,6 +3,10 @@
 {% block content %}
 {% include "navbarloggedin.html" %}
 <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
     .overflow-control-card {
         overflow: hidden;
     }
@@ -11,6 +15,21 @@
         white-space: normal;
         overflow-wrap: break-word;
         word-wrap: break-word;
+    }
+
+    button {
+        background-color: #273faa; 
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3; 
     }
 </style>
 <div class="container" style="margin-top: 40px;">
@@ -23,23 +42,26 @@
                 <p><strong>Sender:</strong> {{ question.user }}</p>
             </div>
             <div class="forum-question-body">
-                <p class="wrap"><strong>Question:</strong> {{ question.question }}</p>
+                <p class="wrap"><strong>Question:</strong> 
+                    {{ question.question }}</p>
+                        
             </div>
         </div>
         <div class="col-12 col-md-8 cards">
             <div class="card h-100">
                 <div class="card-body ">
                     <h5 class="card-title">{{ question.book.title }}</h5>
-                    <p class="card-text line-spaced"><strong>Author:</strong> {{ question.book.author }} -
-                        <strong> Rating:</strong> {{ question.book.rating }} -
-                        <strong> Voters:</strong> {{ question.book.voters }} -
-                        <strong>Price:</strong> {{ question.book.price }} {{question.book.currency}}
                     <p class="card-text line-spaced"></p>
-                        <strong>Publisher:</strong> {{ question.book.publisher }} -
-                        <strong>Page Count:</strong> {{ question.book.page_count }} -
-                        <strong>Genres:</strong> {{ question.book.genres }}</p>
-                        <strong>Description:</strong>
-                    <p class="card-text line-spaced" style="font-size: x-small;"> {{ question.book.description }}</p>
+                    <p class="card-text line-spaced"><strong>Author:</strong> {{ question.book.author }}</p>
+                    <p class="card-text line-spaced"></p><strong> Rating:</strong> {{ question.book.rating }} </p>
+                    <p class="card-text line-spaced"><strong> Voters:</strong> {{ question.book.voters }} </p>
+                    <p class="card-text line-spaced"><strong>Price:</strong> {{ question.book.price }} {{question.book.currency}} </p>
+                    <p class="card-text line-spaced"><strong>Publisher:</strong> {{ question.book.publisher }}</p>
+                    <p class="card-text line-spaced"><strong>Page Count:</strong> {{ question.book.page_count }} </p>
+                    <p class="card-text line-spaced"><strong>Genres:</strong> {{ question.book.genres }}</p>
+                    <p class="card-text line-spaced"> 
+                    <strong>Description:</strong>
+                    <p class="card-text line-spaced" style="font-size: medium;"> {{ question.book.description }}</p>
                 </div>
             </div>
         </div>
@@ -160,7 +182,7 @@
             <div class="card">
                 <h7 class="card-header d-flex justify-content-between align-items-center" style="height: 30px;">
                     ${item.fields.user} pada ${item.fields.date} 
-                    <button class="btn btn-primary" style="font-size:10px;height: 24px; text-align: center;" onclick="deleteComments('${item.fields.user}', ${item.pk}); return false;">Delete</button>
+                    <button class="btn btn-primary" style="font-size:12px;height: auto; text-align: center; style="background-color: #273faa;" onclick="deleteComments('${item.fields.user}', ${item.pk}); return false;">Delete</button>
                 </h7>
                 <div class="card-body">
                     <p class="card-text">${item.fields.answer}</p>

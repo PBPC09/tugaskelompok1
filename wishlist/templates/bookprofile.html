@@ -2,19 +2,67 @@
 {% block content %}
 <head> 
     <style>
-        .book-card {
-            margin-bottom: 20px;
+       body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #DEE3EF;
         }
+    
+        .book-card {
+            border: 1px solid #b0c4de; 
+            padding: 10px;  
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column; 
+            height: 100%;  
+            transition: 0.3s;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05); 
+            background-color: #FFFFFF;
+        }
+
         .book-details {
             display: none;
         }
+
         .show-detail-text {
-            color: #888;
+            color: #010246; 
             cursor: pointer;
             text-decoration: underline;
         }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .modal-content {
+            border-radius: 5px;
+            background-color: #FFFFFF
+        }
+    
+        .modal-header {
+            border-bottom: none;
+            background-color: #FFFFFF;
+        }
+    
+        .modal-footer {
+            border-top: none;
+            background-color: #FFFFFF; 
+        }
+
+        button.btn-primary {
+            background-color: #3262FF;
+            border-color: #3262FF;
+        }
+
+        button.btn-secondary {
+            background-color: #bbbbbb;
+            border-color: bbbbbb;
+        }
     </style>
+     
 </head>
+
 {% include "navbarloggedin.html" %}
 <div class="container mt-5">
     <h1>Books</h1>
@@ -60,6 +108,7 @@
         </div>
     </div>
 </div>
+
 {% include "footer.html" %}
 <!-- ini pake jquery udah jalan -->
 <script>
@@ -76,39 +125,6 @@
 });
 </script>
 
-<!-- ini pake yang kaya di tutor tapi belom test takut error -->
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const showDetailTexts = document.querySelectorAll(".show-detail-text");
-        showDetailTexts.forEach((showDetailText) => {
-            showDetailText.addEventListener("click", function () {
-                const bookId = this.getAttribute("data-book-id");
-                const bookDetails = document.querySelector(`.book-details[data-book-id='${bookId}']`);
-                if (bookDetails) {
-                    if (bookDetails.style.display === "none" || bookDetails.style.display === "") {
-                        bookDetails.style.display = "block";
-                    } else {
-                        bookDetails.style.display = "none";
-                    }
-                }
-            });
-        });
-    
-        const addToWishlistButtons = document.querySelectorAll(".add-to-wishlist-button");
-        addToWishlistButtons.forEach((addToWishlistButton) => {
-            addToWishlistButton.addEventListener("click", function () {
-                const bookId = this.getAttribute("data-book-id");
-                const bookIdField = document.querySelector("#id_book_id");
-                if (bookIdField) {
-                    bookIdField.value = bookId;
-                }
-                const wishlistModal = document.querySelector("#wishlistModal");
-                if (wishlistModal) {
-                    wishlistModal.style.display = "block";
-                }
-            });
-        });
-    });
-</script> -->
+
 
 {% endblock %}
