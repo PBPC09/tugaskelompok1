@@ -26,37 +26,6 @@ def show_book_profile(request):
     }
     return render(request, 'bookprofile.html', context=context)
 
-# @login_required
-# def show_book_profile(request):
-#     search_query = request.GET.get('search', '')  # Ambil parameter pencarian dari URL
-
-#     if search_query:
-#         # Jika ada parameter pencarian, lakukan pencarian buku
-#         books = Book.objects.filter(title__icontains=search_query) | Book.objects.filter(author__icontains=search_query)
-#     else:
-#         # Jika tidak ada parameter pencarian, tampilkan semua buku
-#         books = Book.objects.all()
-
-#     form = AddToWishlistForm()  # Formulir untuk menambahkan buku ke Wishlist
-
-#     context = {
-#         'books': books,
-#         'form': form,
-#         'search_query': search_query,  # Sertakan parameter pencarian dalam konteks
-#     }
-
-#     if request.method == 'POST':
-#         form = AddToWishlistForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             book_id = request.POST.get('book_id')
-#             book = Book.objects.get(id=book_id)
-#             preference = form.cleaned_data['preference']
-#             Wishlist.objects.create(user=request.user, book=book, preference=preference)
-#             return redirect('bookprofile')
-
-#     return render(request, 'bookprofile.html', context=context)
-
 
 def show_book_details(request, book_id):
     book = get_object_or_404(Book, pk=book_id)

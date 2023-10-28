@@ -47,7 +47,7 @@
                     <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
                     <p class="card-text"><strong>Page Count:</strong> {{ book.page_count }}</p>
                     <p class="card-text"><strong>Genres:</strong> {{ book.genres }}</p>
-                    <button class="btn btn-primary add-to-wishlist-button" data-book-id="{{ book.id }}">Add to Wishlist</button>
+                    <button type="button" class="btn btn-primary add-to-wishlist-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add to Wishlist by AJAX</button>
                 </div>
             </div>
         </div>
@@ -78,8 +78,73 @@
     </div>
 </div>
 
-<!-- ini pake jquery udah jalan -->
 <script>
+    $(document).ready(function(){
+        $(".show-detail-text").click(function(){
+            var bookId = $(this).data("book-id");
+            $(".book-details[data-book-id='" + bookId + "']").slideToggle();
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+    // Temukan semua tombol "Add to Wishlist"
+    const addToWishlistButtons = document.querySelectorAll(".add-to-wishlist-button");
+
+    // Tambahkan event listener pada setiap tombol
+    addToWishlistButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            // Dapatkan ID buku dari atribut data-book-id
+            const bookId = button.getAttribute("data-book-id");
+
+            // Panggil fungsi addToWishlist dengan ID buku
+            addToWishlist(bookId);
+        });
+    });
+});
+
+// Fungsi untuk menambahkan buku ke Wishlist
+async function addToWishlist(bookId) {
+    try {
+        // Kirim permintaan POST ke URL yang sesuai di sisi server Anda
+        const response = await fetch("{% url 'wishlist:add_to_wishlist' %}", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            body: JSON.stringify({
+                book_id: bookId
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                // Tampilkan pemberitahuan bahwa buku telah ditambahkan ke Wishlist
+                alert("Added to wishlist successfully!");
+            } else {
+                // Tampilkan pemberitahuan jika gagal menambahkan ke Wishlist
+                alert("Failed to add to wishlist.");
+            }
+        } else {
+            throw new Error("Network response was not ok.");
+        }
+    } catch (error) {
+        // Tangani kesalahan jika terjadi
+        alert("An error occurred while adding to wishlist: " + error.message);
+    }
+}
+
+
+    // Fungsi yang sama dengan yang ada pada contoh sebelumnya
+    function removeItem(bookId) {
+        // Implementasi AJAX DELETE di sini
+    }
+
+
+</script>
+
+<!-- ini pake jquery udah jalan -->
+<!-- <script>
 $(document).ready(function(){
     $(".show-detail-text").click(function(){
         var bookId = $(this).data("book-id");
@@ -91,7 +156,7 @@ $(document).ready(function(){
         $("#wishlistModal").modal("show");
     });
 });
-</script>
+</script> -->
 
 <!-- ini pake yang kaya di tutor tapi belom test takut error -->
 <!-- <script>
