@@ -66,16 +66,16 @@
 {% include "footer.html" %}
 <!-- ini pake jquery udah jalan -->
 <script>
-$(document).ready(function(){
-    $(".show-detail-text").click(function(){
-        var bookId = $(this).data("book-id");
-        $(".book-details[data-book-id='" + bookId + "']").slideToggle();
-    });
-     $(".add-to-wishlist-button").click(function(){
-        var bookId = $(this).data("book-id");
-        $("#id_book_id").val(bookId);
-        $("#wishlistModal").modal("show");
-    });
+    $(document).ready(function(){
+        $(".show-detail-text").click(function(){
+            var bookId = $(this).data("book-id");
+            $(".book-details[data-book-id='" + bookId + "']").slideToggle();
+        });
+        $(".add-to-wishlist-button").click(function(){
+            var bookId = $(this).data("book-id");
+            $("#id_book_id").val(bookId);
+            $("#wishlistModal").modal("show");
+        });
 });
 </script>
 
