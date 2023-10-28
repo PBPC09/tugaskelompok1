@@ -17,45 +17,13 @@ from django.http import JsonResponse
 @login_required
 def show_buybooks(request):
     books = Book.objects.all()
-    books, filters = apply_filters(request, books)
+
     context = {
         'books': books,
-        'filters': filters,
+
     }
     return render(request, 'buybooks.html', context)
 
-@login_required
-def apply_filters(request, queryset):
-    filters = {}
-    
-    rating = request.GET.get('rating')
-    if rating:
-        if float(rating) >= 0:
-            queryset = queryset.filter(rating__gt=rating)
-            filters['rating'] = rating
-        else:
-            queryset = queryset.filter(rating__lt=-float(rating))
-            filters['rating'] = '-' + rating
-
-    page_count = request.GET.get('page_count')
-    if page_count:
-        if int(page_count) >= 0:
-            queryset = queryset.filter(page_count__gt=page_count)
-            filters['page_count'] = page_count
-        else:
-            queryset = queryset.filter(page_count__lt=-int(page_count))
-            filters['page_count'] = '-' + page_count
-
-    price = request.GET.get('price')
-    if price:
-        if float(price) >= 0:
-            queryset = queryset.filter(price__gt=price)
-            filters['price'] = price
-        else:
-            queryset = queryset.filter(price__lt=-float(price))
-            filters['price'] = '-' + price
-
-    return queryset, filters
 
 @login_required
 def show_cart(request):
@@ -67,14 +35,10 @@ def show_cart(request):
 
 @login_required
 def add_to_cart(request, book_id):
-    # Logika penambahan buku ke keranjang di sini
-    # Pastikan untuk menangani request POST dengan AJAX
     return JsonResponse({'message': 'Book added to cart.'})
 
 @login_required
 def remove_from_cart(request, cart_item_id):
-    # Logika penghapusan buku dari keranjang di sini
-    # Pastikan untuk menangani request POST dengan AJAX
     return JsonResponse({'message': 'Book removed from cart.'})
 
 

@@ -12,7 +12,6 @@
         <div class="card mb-3">
             <div class="row no-gutters">
                 <div class="col-md-4">
-                    <img src="{{ item.book.cover.url }}" class="card-img-top" alt="{{ item.book.title }}">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -32,7 +31,7 @@
         <a href="{% url 'checkout' %}" class="btn btn-success btn-lg btn-block">Proceed to Checkout</a>
         {% endif %}
     </div>
-
+<Button href="{% url 'buybooks:show_test' %}" classs="btn btn-success btn-lg btn-block">Back</Button>
 </body>
 </html>
 

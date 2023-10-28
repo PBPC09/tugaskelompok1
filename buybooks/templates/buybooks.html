@@ -1,62 +1,75 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<style>
+    .book-card {
+        border: 1px solid #ccc;     
+        padding: 10px;  
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;  
+        height: 100%;  
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Add shadow effect */
+        transition: 0.3s; /* Add transition for hover effect */
+    }
+    .book-card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); /* Add hover effect */
+    }
+    .book-details {
+        display: none;
+    }
+    .show-detail-text {
+        color: #888;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .btn-primary {
+        background-color: #007bff; /* Change button color */
+        border-color: #007bff; /* Change border color */
+    }
+
+</style>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+    <a class="navbar-brand" href="#">Lembar Pena</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+        <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
+        <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
+        <a class="nav-link active" href="{% url 'buybooks:show_buybooks' %}" style="margin-right: 30px;">Buy Books</a>
+        <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
+        </form>
+    </div>
+</div>
+</nav>
 <head> 
-    <style>
-        .book-card {
-            border: 1px solid #ccc;     
-            padding: 10px;  
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;  
-            height: 100%;  
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Add shadow effect */
-            transition: 0.3s; /* Add transition for hover effect */
-        }
-        .book-card:hover {
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); /* Add hover effect */
-        }
-        .book-details {
-            display: none;
-        }
-        .show-detail-text {
-            color: #888;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .btn-primary {
-            background-color: #007bff; /* Change button color */
-            border-color: #007bff; /* Change border color */
-        }
-    </style>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 
 
 <div class="container mt-5">
-    <h1>Books
-        <a class="btn btn-info" href="{% url 'buybooks:show_cart' %}" style="margin-left: 20px; margin-bottom: auto;">My Cart</a>
+    <h1>Buy Books
     </h1>
 
-    <!-- Filter options -->
     <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Filter Options
-        </button>
-        <div class="dropdown-menu" aria-labelledby="filterDropdownButton">
-            <a class="dropdown-item" href="?rating=3">Rating > 3</a>
-            <a class="dropdown-item" href="?rating=-3">Rating < 3</a>
-            <a class="dropdown-item" href="?page_count=30">Page Count > 30</a>
-            <a class "dropdown-item" href="?page_count=-30">Page Count < 30</a>
-            <a class="dropdown-item" href="?price=30">Price > 30</a>
-            <a class="dropdown-item" href="?price=-30">Price < 30</a>
-        </div>
+        <select class="btn btn-primary dropdown-toggle" type="button" id="filterDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <option class="dropdown-item">Filter Options</option>
+            <option class="dropdown-item" value="3">Rating 0 - 3</option>
+            <option class="dropdown-item" value="100">Page Count 0 - 100</option>
+            <option class="dropdown-item" value="">Price 0 - 30</option>
+        </select>
     </div>
+
+    <a class="btn btn-info" href="{% url 'buybooks:show_cart' %}" style="margin-left: 20px; margin-bottom: auto;">My Cart</a>
     
 
     <div class="container mt-5">
