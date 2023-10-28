@@ -1,7 +1,92 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block content %}
-{% include 'navbarloggedin.html' %}
+<head> 
+    <style>
+        .book-card {
+            border: 1px solid #ccc;     
+            padding: 10px;  
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;  /* Baris baru */
+            height: 100%;  /* Baris baru */
+        }
+        .book-details {
+            display: none;
+        }
+        .show-detail-text {
+            color: #888;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+{% include "navbarloggedin.html" %}
+<div class="container mt-5">
+    <h1>Books</h1>
+    <div class="row card-container">
+        {% for book in books %}
+        <div class="col-md-4 mb-4">
+            <div class="book-card">
+                <h5 class="card-title">{{ book.title }}</h5>     
+                <p class="card-text">Author: {{ book.author }} - {{ book.price }} {{ book.currency }}</p>
+                <p class="show-detail-text" data-book-id="{{ book.id }}">Show Detail</p>
+                <div class="book-details" data-book-id="{{ book.id }}">
+                    <p class="card-text"><strong>Rating:</strong> {{ book.rating }}</p>
+                    <p class="card-text"><strong>Voters:</strong> {{ book.voters }}</p>
+                    <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
+                    <p class="card-text"><strong>Page Count:</strong> {{ book.page_count }}</p>
+                    <p class="card-text"><strong>Genres:</strong> {{ book.genres }}</p>
+                    <button class="btn btn-primary add-to-wishlist-button" data-book-id="{{ book.id }}">Add to Wishlist</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
+<div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="wishlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="wishlist-form" method="post" action="{% url 'wishlist:add_to_wishlist' %}">
+                {% csrf_token %}
+                <input type="hidden" id="id_book_id" name="book_id">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="wishlistModalLabel">Add to Wishlist</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% include "footer.html" %}
-{% endblock content %}
+<!-- ini pake jquery udah jalan -->
+<script>
+    $(document).ready(function(){
+        $(".show-detail-text").click(function(){
+            var bookId = $(this).data("book-id");
+            $(".book-details[data-book-id='" + bookId + "']").slideToggle();
+        });
+        $(".add-to-wishlist-button").click(function(){
+            var bookId = $(this).data("book-id");
+            $("#id_book_id").val(bookId);
+            $("#wishlistModal").modal("show");
+        });
+});
+</script>
+
+
+{% endblock %}

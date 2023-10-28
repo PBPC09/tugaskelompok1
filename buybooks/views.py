@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 def show_buybooks(request):
     books = Book.objects.all()
     context = {
-        'book': books,
+        'books': books,
     }
     return render(request, 'buybooks.html', context)
 
