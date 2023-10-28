@@ -22,6 +22,7 @@ def show_forum(request):
     questions = ForumHead.objects.all()
     comments = ForumComment.objects.all()
     context = {
+        'user' : request.user,
         'name':request.user.username,
         'questions' : questions,
         'comments': comments,
@@ -157,6 +158,7 @@ def show_forumcomments(request, id_head):
     comments = ForumComment.objects.filter(comment_to=question)
     
     context = {
+        'name' : request.user,
         'question': question,
         'comments': comments,
     }
