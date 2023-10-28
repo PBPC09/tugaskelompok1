@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.core import serializers
 from .models import Book, CartItem
@@ -10,7 +10,7 @@ from django.http import HttpResponseNotFound
 @login_required
 def show_buybooks(request):
     books = Book.objects.all()
-    form = AddToWishlistForm()
+    form = AddToCart()
 
     context = {
         'books': books,
@@ -35,7 +35,7 @@ def show_cart(request):
     context = {
         'cart_items': cart_items,
     }
-    return render(request, 'buybooks.html', context)
+    return render(request, 'cartwindow.html', context)
 
 def get_cart_json(request):
     items = CartItem.objects.filter(user=request.user)
@@ -46,3 +46,7 @@ def delete_cart_ajax(request, id):
     item = CartItem.objects.get(pk=data["id"])
     item.delete()
     return HttpResponse("DELETED",status=200)
+
+def show_books_json(request):
+    books = Book.objects.all()
+    return HttpResponse(serializers.serialize('json', books), content_type="application/json")

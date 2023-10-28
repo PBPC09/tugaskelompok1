@@ -30,8 +30,73 @@
     <h1>Books
         <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
     </h1>
-    <div class="row card-container">
+    <div class="row card-container align-items-stretch">
         {% for book in books %}
+            <div class="col-md-4 mb-4">
+                <div class="accordion" id="accordionExample-{{book.pk}}">
+                    <div class="book-card">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{book.pk}}" aria-expanded="false" aria-controls="collapse{{book.pk}}">
+                                    {{ book.title }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{book.pk}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample-{{book.pk}}">
+                                <div class="accordion-body">
+                                    <p class="card-text">
+                                        <strong>Genres:</strong> {{ book.genres }}
+                                        <strong>Rating:</strong> {{ book.rating }}
+                                        <strong>Voters:</strong> {{ book.voters }}
+                                        <strong>Page Count:</strong> {{ book.page_count }}
+                                    </p>
+                                    <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
+                                    <button class="btn btn-primary add-to-cart-button" data-book-id="{{ book.id }}">Add to Cart</button>        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- <div class="container mt-5">
+    <h1>Books
+        <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
+    </h1>
+    <div class="row card-container">
+        <div class="accordion" id="accordionExample">
+            {% for book in books %}
+                <div  class="col-md-4 mb-4">
+                    <div class="book-card">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{book.pk}}" aria-expanded="false" aria-controls="collapse{{book.pk}}">
+                                {{ book.title }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{book.pk}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p class="card-text">
+                                    <strong>Genres:</strong> {{ book.genres }}
+                                    <strong>Rating:</strong> {{ book.rating }}
+                                    <strong>Voters:</strong> {{ book.voters }}
+                                    <strong>Page Count:</strong> {{ book.page_count }}</p>
+                                </p>
+                                <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
+                                <button class="btn btn-primary add-to-cart-button" data-book-id="{{ book.id }}">Add to Cart</button>        
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+        -->
+        <!-- {% for book in books %}
         <div class="col-md-4 mb-4">
             <div class="book-card">
                 <h5 class="card-title">{{ book.title }}</h5>     
@@ -49,9 +114,8 @@
                 </div>
             </div>
         </div>
-        {% endfor %}
-    </div>
-</div>
+        {% endfor %} -->
+
 <div class="modal" id="cartModal" tabindex="-1">
     <div class="modal-dialog">
     <div class="modal-content">
@@ -60,7 +124,7 @@
         </div>
 
         <div class="modal-body" style="margin: auto;">
-            <form id="form" onsubmit="return false;">
+            <form id="form">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="quantity" class="col-form-label">Tentukan Jumlah:</label>
@@ -76,9 +140,18 @@
     </div>
     </div>
 </div>
+
 {% include "footer.html" %}
 <!-- ini pake jquery udah jalan -->
 <script>
+    async function getBook() {
+        return fetch("{% url 'buybooks:show_books_json' %}").then((res) => res.json())
+    }
+    async function getCart() {
+        return fetch("{% url 'buybooks:get_cart_json' %}").then((res) => res.json())
+    }
+    
+
     $(document).ready(function(){
         $(".show-detail-text").click(function(){
             var bookId = $(this).data("book-id");
