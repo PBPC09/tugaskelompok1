@@ -16,6 +16,12 @@
     display: block;
     height: 20px;  /* Adjust to your desired spacing */
 }
+.overflow-control{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
     </style>
     
     {% include "navbarloggedin.html" %}
@@ -53,7 +59,6 @@
                                 <ul class="dropdown-menu">
                                     <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
                                         <div class="list-group">
-    
                                         </div>
                                 </ul>
                         </div>
@@ -117,7 +122,7 @@
 {% include "footer.html" %}
 
 <script>
-    
+    let isBookClicked = false;
     $(document).ready(function() {
         $('.dropdown-menu').on('click', '.list-group-item', function() {
             // Get the content of the selected item (for demonstration, we'll get the heading)
@@ -127,7 +132,7 @@
             console.log(selectedBookId)
             // Update the button content
             $('.dropdown-toggle').text(selectedItem);
-
+            isBookClicked = true;
         });
     });
 
@@ -145,24 +150,26 @@
                             <tr style="height:50px;">
                             <th scope="col" style="width:400px;">Judul Topik</th>
                             <th scope="col" style="width:300px;">Buku</th>
-                            <th scope="col" style="width:200px;">Penanya</th>
+                            <th scope="col" style="width:100px;">Penanya</th>
                             <th scope="col" style="width:100px;">Tanggal</th>
                             <th scope="col" style="width:100px;">Komentar</th>
+                            <th scope="col" style="width:100px;"></th>
                             </tr>
                        <tbody class="table-group-divider">
         `;
         allForums.forEach((item) => {
             let database_url="{% url 'bookforum:show_forumcomments' id_head=9999 %}"
             const rowUrl = database_url.replace('9999', item.pk);
-            htmlString += ` <tr class="mb-1 clickable-row" data-id="${item.pk}" data-url="${rowUrl}" style="height:50px;">
-                                    <td style="width:400px;">${item.fields.title}</td>
-                                    <td style="width:300px;">${item.fields.book}</td>
-                                    <td style="width:200px;">${item.fields.user}</td>
-                                    <td style="width:100px;">${item.fields.date}</td>
-                                    <td style="width:100px;"></td>
-                            </tr>  
-                      
-                        `
+            htmlString += ` <tr class="mb-1 clickable-row " data-id="${item.pk}" data-url="${rowUrl}" style="height:50px;">
+                                    <td class="overflow-control" style="width:400px; max-width: 385px;">${item.fields.title}</td>
+                                    <td class="overflow-control" style="width:300px;max-width: 285px;">${item.fields.book}</td>
+                                    <td class="overflow-control" style="width:100px;max-width: 100px;">${item.fields.user}</td>
+                                    <td class="overflow-control" style="width:100px;max-width: 100px;">${item.fields.date}</td>
+                                    <td class="overflow-control" style="width:100px;max-width: 100px;">${item.fields.comment_counts}</td>
+                                    <td class="overflow-control" style="width:100px;max-width: 100px;"> 
+                                    <button class="btn btn-primary" style="font-size:10px;height: 24px; text-align: center;" onclick="event.stopPropagation(); deleteForum('${item.fields.user}',${item.pk}); return false;">Delete</button>
+                                        </td>
+                            </tr>`
         });
         htmlString +=  `</tbody></table>`
         document.getElementById("forum_container").innerHTML = htmlString
@@ -201,15 +208,54 @@
 
     function addForum() {
         let formData = new FormData(document.querySelector('#form'));
-            fetch("{% url 'bookforum:create_question' %}", {
-                method: "POST",
-                body: new FormData(document.querySelector('#form'))
-            }).then(refreshForum)
+        let isEmptyFieldDetected = false;
+        if(isBookClicked == false){
+            alert("Pastikan semua terisi, silakan ulangi");
+            return false;
+        }
+        for (let [key, value] of formData.entries()) {
+            console.log(key)
+            console.log(value)
+            if (value.trim() === "") {
+                isEmptyFieldDetected = true;
+                break;
+            }
+        }
 
-            document.getElementById("form").reset()
-            document.getElementById("dropdown-buku").innerText = "Pilih Buku"
+        if (isEmptyFieldDetected) {
+            alert("Pastikan semua terisi, silakan ulangi");
+            return false;
+        }
+
+        fetch("{% url 'bookforum:create_question' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshForum)
+
+        document.getElementById("form").reset()
+        document.getElementById("dropdown-buku").innerText = "Pilih Buku"
+        return false
+    }
+
+    document.getElementById("button_add").onclick = addForum
+
+    function deleteForum(username,commentId) {
+        const url = `/bookforum/delete_question/${username}/${commentId}`;
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                if (response.status === 201) {
+                    refreshForum();
+                } else {
+                    console.error("Failed to delete comment");
+                    alert("Ini bukan pertanyaan dari akun Anda, Anda tidak bisa menghapusnya :)"); // Display an alert with an error message
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting comment:", error);
+                alert("Error deleting comment. Please try again later."); // Display an alert with an error message
+            });
             return false
         }
-    document.getElementById("button_add").onclick = addForum
 </script>
 {% endblock content %}

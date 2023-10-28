@@ -44,6 +44,11 @@
         /* Add any hover effects or styles here */
         background-color: #f0f0f0; /* Example: change background color on hover */
     }
+    .fixed-card-height {
+        height: 140px;  /* Adjust this value according to your preference */
+        display: flex;
+        flex-direction: column;
+    }
 </style>
 {% include "navbarloggedin.html" %}
 <div>Nikmati Buku</div>
@@ -59,47 +64,48 @@
 </div> 
 
 <div class="row">
-    <div class="col-sm-6">
-        <a href="#" class="card-clickable">
-            <div class="card">
+    <div class="col">
+        <a href="{% url 'buybooks:show_test' %}" class="card-clickable">
+            <div class="card fixed-card-height">
                 <div class="card-body">
-                    <h5 class="card-title" href="{% url 'buybooks:show_test' %}">Beli Buku</h5>
+                    <h5 class="card-title">Beli Buku</h5>
                     <p class="card-text">Perluas cakrawala, miliki buku yang hendak Anda baca!</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-sm-6">
+    <div class="col">
         <a href="{% url 'wishlist:mywishlist' %}" class="card-clickable">
-            <div class="card">
+            <div class="card fixed-card-height">
                 <div class="card-body">
-                    <h5 class="card-title" href="{% url 'wishlist:bookprofile' %}">Simpan Keinginan</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <h5 class="card-title">Simpan Keinginan</h5>
+                    <p class="card-text">Temukan bacaan terbaik dan simpan pada koleksi Anda!</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-sm-6">
+    <div class="col">
         <a href="{% url 'wishlist:bookprofile' %}" class="card-clickable">
-            <div class="card">
+            <div class="card fixed-card-height">
                 <div class="card-body">
                     <h5 class="card-title">Lihat Profil Buku</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text">Amati buku-buku terbaik dan bagaimana mereka siap menghibur Anda!</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-sm-6">
-        <a href="#" class="card-clickable">
-            <div class="card">
+    <div class="col">
+        <a href="{% url 'bookforum:show_forum' %}" class="card-clickable">
+            <div class="card fixed-card-height">
                 <div class="card-body">
                     <h5 class="card-title">Forum Buku</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text">Temukan komunitas yang akan membantu Anda memahami bacaan terbaik!</p>
                 </div>
             </div>
         </a>
     </div>
 </div>
+
 {% include "footer.html" %}
 
 {% endblock content %}

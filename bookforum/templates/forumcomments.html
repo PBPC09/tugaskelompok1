@@ -2,28 +2,37 @@
 {% load static %}
 {% block content %}
 {% include "navbarloggedin.html" %}
-
+<style>
+.overflow-control-card{
+    overflow: hidden;
+}
+.wrap {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+</style>
 <div class="container" style="margin-top: 40px;">
     <div class="row">
-        <div class="col-12 col-md-4 forum-question">
+        <div class="col-12 col-md-4 forum-question overflow-control-card">
             <h1>Forum Question</h1>
             <div class="forum-question-details">
-                <p><strong>Title:</strong> {{ question.title }}</p>
+                <p class="wrap"><strong>Title:</strong> {{ question.title }}</p>
                 <p><strong>Date:</strong> {{ question.date }}</p>
                 <p><strong>Sender:</strong> {{ question.user }}</p>
             </div>
             <div class="forum-question-body">
-                <p><strong>Question:</strong> {{ question.question }}</p>
+                <p class="wrap"><strong>Question:</strong> {{ question.question }}</p>
             </div>
         </div>
         <div class="col-12 col-md-8 cards">
                 <div class="card h-100">
-                    <div class="card-body">
+                    <div class="card-body ">
                         <h5 class="card-title">{{ question.book.title }}</h5>
                         <p class="card-text line-spaced"><strong>Author:</strong> {{ question.book.author }} - 
                             <strong> Rating:</strong> {{ question.book.rating }} - 
                             <strong> Voters:</strong> {{ question.book.voters }} -  
-                            <strong>Price:</strong> {{ question.book.price }} 
+                            <strong>Price:</strong> {{ question.book.price }} {{question.book.currency}}
                         <p class="card-text line-spaced"></p>    
                             <strong>Publisher:</strong> {{ question.book.publisher }} -
                             <strong>Page Count:</strong> {{ question.book.page_count }} -
