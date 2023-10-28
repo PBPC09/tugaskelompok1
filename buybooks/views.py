@@ -8,38 +8,75 @@ from .forms import *
 from django.http import HttpResponseNotFound
 
 # Create your views here.
+from django.db.models import Q
+from django.shortcuts import render
+from .models import Book, CartItem
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
 @login_required
 def show_buybooks(request):
     books = Book.objects.all()
+    books, filters = apply_filters(request, books)
+    context = {
+        'books': books,
+        'filters': filters,
+    }
+    return render(request, 'buybooks.html', context)
 
+@login_required
+def apply_filters(request, queryset):
+    filters = {}
+    
     rating = request.GET.get('rating')
     if rating:
         if float(rating) >= 0:
-            books = books.filter(rating__gt=rating)
+            queryset = queryset.filter(rating__gt=rating)
+            filters['rating'] = rating
         else:
-            books = books.filter(rating__lt=-float(rating))
+            queryset = queryset.filter(rating__lt=-float(rating))
+            filters['rating'] = '-' + rating
 
     page_count = request.GET.get('page_count')
     if page_count:
         if int(page_count) >= 0:
-            books = books.filter(page_count__gt=page_count)
+            queryset = queryset.filter(page_count__gt=page_count)
+            filters['page_count'] = page_count
         else:
-            books = books.filter(page_count__lt=-int(page_count))
+            queryset = queryset.filter(page_count__lt=-int(page_count))
+            filters['page_count'] = '-' + page_count
 
     price = request.GET.get('price')
     if price:
         if float(price) >= 0:
-            books = books.filter(price__gt=price)
+            queryset = queryset.filter(price__gt=price)
+            filters['price'] = price
         else:
-            books = books.filter(price__lt=-float(price))
+            queryset = queryset.filter(price__lt=-float(price))
+            filters['price'] = '-' + price
 
-    form = AddToWishlistForm()
+    return queryset, filters
 
+@login_required
+def show_cart(request):
+    cart_items = CartItem.objects.filter(user=request.user)
     context = {
-        'books': books,
-        'form' : form,
+        'cart_items': cart_items,
     }
-    return render(request, 'buybooks.html', context)
+    return render(request, 'cart.html', context)
+
+@login_required
+def add_to_cart(request, book_id):
+    # Logika penambahan buku ke keranjang di sini
+    # Pastikan untuk menangani request POST dengan AJAX
+    return JsonResponse({'message': 'Book added to cart.'})
+
+@login_required
+def remove_from_cart(request, cart_item_id):
+    # Logika penghapusan buku dari keranjang di sini
+    # Pastikan untuk menangani request POST dengan AJAX
+    return JsonResponse({'message': 'Book removed from cart.'})
+
 
 
 

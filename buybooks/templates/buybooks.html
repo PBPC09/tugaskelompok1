@@ -33,30 +33,31 @@
             border-color: #007bff; /* Change border color */
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
 <div class="container mt-5">
     <h1>Books
-        <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
+        <a class="btn btn-info" href="{% url 'buybooks:show_cart' %}" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</a>
     </h1>
 
     <!-- Filter options -->
     <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Filter Options
         </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <div class="dropdown-menu" aria-labelledby="filterDropdownButton">
             <a class="dropdown-item" href="?rating=3">Rating > 3</a>
             <a class="dropdown-item" href="?rating=-3">Rating < 3</a>
             <a class="dropdown-item" href="?page_count=30">Page Count > 30</a>
-            <a class="dropdown-item" href="?page_count=-30">Page Count < 30</a>
+            <a class "dropdown-item" href="?page_count=-30">Page Count < 30</a>
             <a class="dropdown-item" href="?price=30">Price > 30</a>
             <a class="dropdown-item" href="?price=-30">Price < 30</a>
         </div>
     </div>
+    
 
     <div class="container mt-5">
         <div class="row card-container">
@@ -101,6 +102,14 @@
             var bookId = $(this).data("book-id");
             $("#id_book_id").val(bookId);
             $("#cartModal").modal("show");
+        });
+});
+
+    // Fungsi untuk mengganti URL saat item filter dipilih
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', event => {
+            const href = event.target.getAttribute('href');
+            window.location.href = href;
         });
 });
 </script>
