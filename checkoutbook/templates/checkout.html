@@ -7,19 +7,81 @@
 
 {% block content %}
 
+<link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
 <style>
     h1 {
         margin-top: 20px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700; 
     }
 
     h6 {
-        color: #3262ff
+        color: #3262ff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    label {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .col-form-label {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700; 
+    }
+
+    .footer {
+      background-color: #1C2964;
+      color: #fff;
+      text-align: center;
+      font-weight: 600;
+      padding: 2rem 0;
+      margin-top: 40px;
+    }
+
+    .footer__title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer__social {
+        margin-bottom: 2rem;
+    }
+
+    .footer__icon {
+        font-size: 1.5rem;
+        color: #fff;
+        margin: 0 1rem;
+    }
+    
+    footer ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    footer li {
+        display: inline;
+        margin: 0 20px;
+    }
+
+    footer a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    footer a:hover {
+        color: #a6b7ef;
+    }
+
+    .footer__copy {
+        font-size: .75rem;
     }
 </style>
 
 <body>
     <h1 class="text-center">Checkout</h1>
-    <table class="table table-bordered">
+    <table class="table table-bordered" style="margin: 20px; align-items: center;">
         <thead>
             <tr>
                 <th>Produk</th>
@@ -45,12 +107,12 @@
             </tr>
         </tbody>
     </table>
-    <form method="post" id="checkout-form" class="mx-auto">
+    <form method="post" id="checkout-form" style="text-align: center;">
         {% csrf_token %}
-        <div class="mb-3 mx-auto">
+        <div class="mb-3">
             <label for="alamat" class="col-form-label">Alamat:</label>
-            <div class="col-6">
-            <textarea class="form-control" id="alamat" name="alamat"></textarea>
+            <div style="text-align: center;">
+                <textarea class="form-control" id="alamat" name="alamat" style="margin: 0 auto; width: 400px; height: 90px;"></textarea>
             </div>
         </div>
         <div class="mb-3 mx-auto">
@@ -73,43 +135,59 @@
             </div>
         </div>
     </form>
-    <button type="button" class="btn btn-primary mx-auto" id="button_checkout">Checkout</button>
+    <div style="text-align: center;">
+        <button type="button" class="btn btn-primary" id="button_checkout" style="margin-left: 20px; width: 200px;">Checkout</button>
+    </div>
+</body>
 
-    <script>
-        function checkout() {
-            var alamatInput = document.querySelector('#alamat');
-            var metodePembayaranInput = document.querySelector('input[name="metode_pembayaran"]:checked');
+<footer class="footer">
+  <p class="footer__title">LembarPena</p>
+  <div class="footer__social">
+      <a href="https://github.com/PBPC09/tugaskelompok1" class="footer__icon"><i class='bx bxl-github'></i></a>
+      <a href="#" class="footer__icon"><i class='bx bxl-linkedin'></i></a>
+      <a href="#" class="footer__icon"><i class='bx bxl-instagram'></i></a>
+  </div>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About Us</a></li>
+    <li><a href="#">Explore</a></li>
+  </ul>
+  <p class="footer__copy">&#169; Created by C09</p>
+</footer>
     
-            if (!alamatInput.value) {
-                alert("Alamat harus diisi.");
-                return false;
-            }
-    
-            if (!metodePembayaranInput) {
-                alert("Pilih metode pembayaran.");
-                return false;
-            }
-    
-            fetch("{% url 'checkoutbook:checkout_ajax' %}", {
-                method: "POST",
-                body: new FormData(document.querySelector('#checkout-form'))
-            }).then(response => {
-                successful();
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-    
-            document.getElementById("checkout-form").reset();
+<script>
+    function checkout() {
+        var alamatInput = document.querySelector('#alamat');
+        var metodePembayaranInput = document.querySelector('input[name="metode_pembayaran"]:checked');
+
+        if (!alamatInput.value) {
+            alert("Alamat harus diisi.");
             return false;
         }
-    
-        document.getElementById("button_checkout").onclick = checkout;
 
-        function successful() {
-            // add saldo == total_harga
+        if (!metodePembayaranInput) {
+            alert("Pilih metode pembayaran.");
+            return false;
         }
-    </script>
-    
-</body>
+
+        fetch("{% url 'checkoutbook:checkout_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#checkout-form'))
+        }).then(response => {
+            successful();
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+
+        document.getElementById("checkout-form").reset();
+        return false;
+    }
+
+    document.getElementById("button_checkout").onclick = checkout;
+
+    function successful() {
+        // add saldo == total_harga
+    }
+</script>
 
 {% endblock content %}

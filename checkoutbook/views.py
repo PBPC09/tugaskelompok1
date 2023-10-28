@@ -6,7 +6,7 @@ from .models import CartItem, Checkout
 from .forms import CheckoutForm
 from django.contrib.auth.decorators import login_required
 
-@login_required
+@login_required(login_url='/login')
 def show_checkout(request):
     form = CheckoutForm()
     cart_items = CartItem.objects.filter(user=request.user, is_ordered=True)
@@ -18,7 +18,6 @@ def show_checkout(request):
     }
     return render(request, 'checkout.html', context)
     
-@login_required
 def checkout_ajax(request):
     if request.method == 'POST':
         user = request.user
