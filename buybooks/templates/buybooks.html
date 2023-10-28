@@ -1,42 +1,108 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block content %}
-
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-    <a class="navbar-brand" href="#">Lembar Pena</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        </ul>
-        <a class="nav-link active" href="{% url 'main:show_landing_page_logged_in' %}" style="margin-right: 30px;">Home</a>
-        <a class="nav-link active" href="{% url 'wishlist:bookprofile' %}" style="margin-right: 30px;">Wishlist</a>
-        <a class="nav-link active" href="{% url 'buybooks:show_test' %}" style="margin-right: 30px;">Buy Books</a>
-        <a class="nav-link active" href="{% url 'bookforum:show_forum' %}" style="margin-right: 30px;">Book Forum</a>
-        </form>
-    </div>
-    </div>
-</nav>
-
-<head>
-    <link rel="stylesheet" href="{%static 'admin/index.css' %}">
+<head> 
+    <style>
+        .book-card {
+            border: 1px solid #ccc;     
+            padding: 10px;  
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;  
+            height: 100%;  
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Add shadow effect */
+            transition: 0.3s; /* Add transition for hover effect */
+        }
+        .book-card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); /* Add hover effect */
+        }
+        .book-details {
+            display: none;
+        }
+        .show-detail-text {
+            color: #888;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .btn-primary {
+            background-color: #007bff; /* Change button color */
+            border-color: #007bff; /* Change border color */
+        }
+    </style>
 </head>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
-<div class="container">
-    <h1 class="mt-5 mb-4">Available Books</h1>
-    <div class="row">
-        {% for book in books %}
-            <div class="card-body">
-                <h5 class="card-title">{{ book.title }}</h5>
-                <p class="card-text">Price: ${{ book.price }}</p>
-                <a href="{% url 'buybooks:add_to_cart' book.id %}" class="btn btn-primary">Add to Cart</a>                
+<div class="container mt-5">
+    <h1>Books
+        <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
+    </h1>
+
+    <!-- Filter options -->
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Filter Options
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="?rating=3">Rating > 3</a>
+            <a class="dropdown-item" href="?rating=-3">Rating < 3</a>
+            <a class="dropdown-item" href="?page_count=30">Page Count > 30</a>
+            <a class="dropdown-item" href="?page_count=-30">Page Count < 30</a>
+            <a class="dropdown-item" href="?price=30">Price > 30</a>
+            <a class="dropdown-item" href="?price=-30">Price < 30</a>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row card-container">
+            {% for item in books %}
+            <div class="col-md-4 mb-4">
+                <div class="book-card">
+                    <h5 class="card-title">{{ item.title }}</h5>     
+                    <p class="card-text">Author: {{ item.author }} - {{ item.price }} {{ item.currency }}</p>
+                    <p class="show-detail-text" data-item-id="{{ item.id }}">Show Detail</p>
+                    <div class="item-details" data-item-id="{{ item.id }}">
+                        <p class="card-text">
+                            <strong>Genres:</strong> {{ item.genres }}
+                            <strong>Rating:</strong> {{ item.rating }}
+                            <strong>Voters:</strong> {{ item.voters }}
+                            <strong>Page Count:</strong> {{ item.page_count }}</p>
+                        </p>
+                        <p class="card-text"><strong>Publisher:</strong> {{ item.publisher }}</p>
+                        <button class="btn btn-primary add-to-cart-button" data-item-id="{{ item.id }}">Add to Cart</button>
+                    </div>
+                </div>
             </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 
-{% endblock content %}
 
+<!-- Modal -->
+<div class="modal" id="cartModal" tabindex="-1">
+    <!-- Modal content -->
+    ...
+</div>
+
+<!-- jQuery script -->
+<script>
+    $(document).ready(function(){
+        $(".show-detail-text").click(function(){
+            var bookId = $(this).data("book-id");
+            $(".book-details[data-book-id='" + bookId + "']").slideToggle();
+        });
+        $(".add-to-cart-button").click(function(){
+            var bookId = $(this).data("book-id");
+            $("#id_book_id").val(bookId);
+            $("#cartModal").modal("show");
+        });
+});
+</script>
+
+{% endblock %}

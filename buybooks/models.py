@@ -15,8 +15,8 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     is_ordered = models.BooleanField(default=False)
 
-def __str__(self):
-    return f"{self.user.username}'s Cart - {self.book.title}"
-
-def subtotal(self):
-    return self.book.price * self.quantity
+    def subtotal(self):
+        return self.book.price * self.quantity
+    
+    def __str__(self):
+        return f"{self.user.username}'s Cart - {self.book.title}"
