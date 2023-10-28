@@ -8,7 +8,7 @@
         }
     
         .book-card {
-            border: 1px solid #b0c4de; 
+            border: 1px solid #b0c4de; /* Light steel blue */
             padding: 10px;  
             border-radius: 5px;
             display: flex;
@@ -64,9 +64,23 @@
 </head>
 
 {% include "navbarloggedin.html" %}
+
 <div class="container mt-5">
     <h1>Books</h1>
     <div class="row">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search book" id="searchInput">
+            <div class="input-group-append">
+                <select class="form-control" id="ratingFilter">
+                    <option value="">All Ratings</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select>
+            </div>
+        </div>
         {% for book in books %}
         <div class="col-md-4 mb-4">
             <div class="book-card">
@@ -88,6 +102,18 @@
     </div>
 </div>
 
+<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="toastMessage" style="position: absolute; top: 0; right: 0;">
+    <div class="toast-header">
+      <strong class="mr-auto">Notification</strong>
+      <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      Default message
+    </div>
+  </div>
+  
 <div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="wishlistModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -96,6 +122,9 @@
                 <input type="hidden" id="id_book_id" name="book_id">
                 <div class="modal-header">
                     <h5 class="modal-title" id="wishlistModalLabel">Add to Wishlist</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     {{ form.as_p }}
@@ -109,21 +138,93 @@
     </div>
 </div>
 
+
 {% include "footer.html" %}
-<!-- ini pake jquery udah jalan -->
+<!-- ini pake jquery jalan blm ajax -->
 <script>
-    $(document).ready(function(){
-        $(".show-detail-text").click(function(){
-            var bookId = $(this).data("book-id");
-            $(".book-details[data-book-id='" + bookId + "']").slideToggle();
+$(document).ready(function(){
+    $(".show-detail-text").click(function(){
+        var bookId = $(this).data("book-id");
+        $(".book-details[data-book-id='" + bookId + "']").slideToggle();
+    });
+
+    document.querySelectorAll('.add-to-wishlist-button').forEach(function(element) {
+        element.addEventListener('click', function() {
+            var bookId = this.getAttribute('data-book-id');
+            document.getElementById('id_book_id').value = bookId;
+            $('#wishlistModal').modal('show'); 
         });
-        $(".add-to-wishlist-button").click(function(){
-            var bookId = $(this).data("book-id");
-            $("#id_book_id").val(bookId);
-            $("#wishlistModal").modal("show");
-            
-        });
+    });
+
+    document.getElementById('wishlist-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var bookId = document.getElementById('id_book_id').value;
+    var url = this.getAttribute('action');
+    var data = new FormData(this);
+    fetch(url, {
+        method: 'POST',
+        body: data
+    }).then(function(response) {
+        return response.json();
+    }).then(function(data) {
+        var toastElement = document.getElementById('toastMessage');
+        var toastBodyElement = toastElement.querySelector('.toast-body');
+        if (data.status === 'success') {
+            toastBodyElement.textContent = data.message; 
+            $('#wishlistModal').modal('hide');
+            document.getElementById('wishlist-form').reset();
+        } else {
+            $('#wishlistModal').modal('hide');
+            toastBodyElement.textContent = data.message; 
+            document.getElementById('wishlist-form').reset();
+        }
+        // show the toast
+        $(toastElement).toast({delay: 5000}); // it will hide after 5 seconds
+        $(toastElement).toast('show');
+    }).catch(function(error) {
+        console.error('Error:', error);
+    });
 });
+
+document.getElementById('searchInput').addEventListener('input', filterBooks);
+document.getElementById('ratingFilter').addEventListener('change', filterBooks);
+
+function filterBooks() {
+    var searchInput = document.getElementById('searchInput').value;
+    var ratingFilter = document.getElementById('ratingFilter').value;
+    var url = "{% url 'wishlist:get_books' %}";
+
+    fetch(url + '?search=' + searchInput + '&rating=' + ratingFilter)
+        .then(response => response.json())
+        .then(data => {
+            // update the book cards with the new data
+            var bookCardsContainer = document.querySelector('.card-container');
+            bookCardsContainer.innerHTML = '';
+            data.forEach(book => {
+                // create a new book card element and append it to the container
+                var bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                // set the book details
+                bookCard.innerHTML = `
+                    <h5 class="card-title">${book.title}</h5>
+                    <p class="show-detail-text" data-book-id="${book.id}">Show Detail</p>
+                    <div class="book-details" data-book-id="${book.id}">
+                        <p class="card-text"><strong>Author:</strong> ${book.author}</p>
+                        <p class="card-text"><strong>Rating:</strong> ${book.rating}</p>
+                        <p class="card-text"><strong>Price:</strong> ${book.price} ${book.currency}</p>
+                        <button class="btn btn-primary add-to-wishlist-button" data-book-id="${book.id}">Add to Wishlist</button>
+                    </div>
+                `;
+                bookCardsContainer.appendChild(bookCard);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+});
+
+
 </script>
 
 
