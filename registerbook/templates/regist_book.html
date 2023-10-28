@@ -5,24 +5,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <style>
-        /* Mengatur navbar agar elemen-elemen di kanan atas */
         .navbar-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        /* Mengatur nama web di kiri atas */
         .navbar-brand {
-            margin-right: auto; /* Mendorong ke kiri sejauh mungkin */
+            margin-right: auto;
         }
 
-        /* Mengatur tombol remove */
         .btn-remove {
-            font-size: 1.2rem; /* Ukuran ikon */
+            font-size: 1.2rem;
         }
 
-        /* Mengatur posisi ikon trash di pojok kanan atas card */
         .card-header {
             position: relative;
         }
@@ -48,7 +44,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">  <!-- ml-auto akan mendorong item ke kanan navbar -->
+        <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <span class="nav-link">Hi, {{ request.user.username }}!</span>
             </li>
