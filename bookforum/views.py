@@ -116,6 +116,7 @@ def show_forum_json(request):
                 "title": model.title,
                 "question": model.question,
                 "comment_counts" : comment_counts,
+                'owned_by_current_user': user.username == request.user.username,
             }
         }
         serialized_data.append(model_data)
@@ -141,6 +142,8 @@ def show_forum_json_popular_only(request):
                 "title": model.title,
                 "question": model.question,
                 "comment_counts" : comment_counts,
+                'owned_by_current_user': user.username == request.user.username,
+
             }
         }
 
@@ -166,7 +169,8 @@ def show_uniquecomments_json(request, id):
                 "user": user.username,
                 "comment_to": model.comment_to.pk,
                 "date": str(model.date),  # Convert the date to a string
-                "answer" :  model.answer
+                "answer" :  model.answer,
+                'owned_by_current_user': user.username == request.user.username,
             }
         }
         serialized_data.append(model_data)

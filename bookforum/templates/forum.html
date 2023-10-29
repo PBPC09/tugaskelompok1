@@ -161,6 +161,11 @@
         allForums.forEach((item) => {
             let database_url="{% url 'bookforum:show_forumcomments' id_head=9999 %}"
             const rowUrl = database_url.replace('9999', item.pk);
+            let deleteButton = '';
+            if (item.fields.owned_by_current_user) {
+                deleteButton = `<button class="btn btn-primary" style="font-size:12px;height: auto; text-align: center; background-color: #273faa;" onclick="event.stopPropagation(); deleteForum('${item.fields.user}',${item.pk}); return false; ">Delete</button>`;
+            }
+            console.log(item.fields.owned_by_current_user)
             htmlString += ` <tr class="mb-1 clickable-row " data-id="${item.pk}" data-url="${rowUrl}" style="height:50px;">
                                     <td class="overflow-control" style="width:400px; max-width: 385px;">${item.fields.title}</td>
                                     <td class="overflow-control" style="width:300px;max-width: 285px;">${item.fields.book}</td>
@@ -168,11 +173,10 @@
                                     <td class="overflow-control" style="width:100px;max-width: 100px;">${item.fields.date}</td>
                                     <td class="overflow-control" style="width:100px;max-width: 100px;">${item.fields.comment_counts}</td>
                                     <td class="overflow-control" style="width:100px;max-width: 100px;"> 
-                                    <button class="btn btn-primary" style="font-size:12px;height: auto; text-align: center; background-color: #273faa;" onclick="event.stopPropagation(); deleteForum('${item.fields.user}',${item.pk}); return false; ">Delete</button>
+                                        ${deleteButton}
                                     </td>
                             </tr>`
         });
-
         htmlString +=  `</tbody></table>`
         document.getElementById("forum_container").innerHTML = htmlString
         document.querySelectorAll('.clickable-row').forEach(row => {

@@ -181,12 +181,18 @@
 
         let htmlString =" ";
         allForums.forEach((item) => {
+            let deleteButton = '';
+            if (item.fields.owned_by_current_user) {
+                deleteButton = `<button class="btn btn-primary" style="font-size:12px;height: auto; text-align: center; style="background-color: #273faa;" onclick="deleteComments('${item.fields.user}', ${item.pk}); return false;">Delete</button>`;
+            }
             htmlString += `         
             <br>
             <div class="card">
                 <h7 class="card-header d-flex justify-content-between align-items-center" style="height: 30px;">
                     ${item.fields.user} pada ${item.fields.date} 
-                    <button class="btn btn-primary" style="font-size:12px;height: auto; text-align: center; style="background-color: #273faa;" onclick="deleteComments('${item.fields.user}', ${item.pk}); return false;">Delete</button>
+                    <div>
+                        ${deleteButton}
+                    </div>
                 </h7>
                 <div class="card-body">
                     <p class="card-text">${item.fields.answer}</p>
