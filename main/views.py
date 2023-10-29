@@ -64,7 +64,7 @@ def login_user(request):
                 response = HttpResponseRedirect(reverse("registerbook:show_registered_books"))
             else:
                 response = HttpResponseRedirect(reverse("main:show_landing_page_logged_in"))
- 
+
             response.set_cookie('last_login', str(datetime.now()))
             return response
         else:
@@ -76,4 +76,5 @@ def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
-    return response
+    return render(request, 'landingpage.html', {})
+
