@@ -1,0 +1,23 @@
+/* Style for buybooks/buybooks.html*/
+
+.book-card {
+    border: 1px solid #ccc;     
+    padding: 10px;  
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;  /* Baris baru */
+    height: 100%;  /* Baris baru */
+}
+.book-details {
+    display: none;
+}
+.show-detail-text {
+    color: #888;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}

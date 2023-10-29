@@ -1,42 +1,18 @@
 {% extends 'base.html' %}
+<head>
+    {% block meta %}
+        <title>Cart</title>
+    {% endblock meta %}
+</head>
 
 {% block content %}
-<head> 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #DEE3EF;
-        }
-
-        .card {
-            border: 1px solid #b0c4de; 
-            padding: 10px;  
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column; 
-            height: 100%;  
-            transition: 0.3s;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05); 
-            background-color: #FFFFFF;
-        }
-
-        button.btn-primary {
-            background-color: #3262FF;
-            border-color: #3262FF;
-        }
-
-        button.btn-secondary {
-            background-color: #bbbbbb;
-            border-color: bbbbbb;
-        }
-
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-    </style>
-</head>
+{% load static %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'Style/cartwindow.css' %}">
+<script src="{% static 'Script/cartwindow.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 {% include "navbarloggedin.html" %}
 <div class="container mt-5">
@@ -61,26 +37,5 @@
     </div>
     <button type="button" class="btn btn-primary" id="button_co" style="width: 200px;">Checkout</button>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $("#button_co").click(function() {
-            var checkedInputs = $(".form-check-input:checked");
-            if(checkedInputs.length == 0){
-                alert("Anda tidak men-checkout apapun!");
-            }
-            else{
-                checkedInputs.each(function() {
-                    var bookId = $(this).data("book-id");
-                    console.log("Item " + bookId + " dicentang.");
-                    window.location.href = `/buybooks/selected/${bookId}/`;
-                });
-                window.location.href = `/checkoutbook/`;
-            }
-        });
-
-    }); 
-</script>
-
 {% include "footer.html" %}
 {% endblock %}

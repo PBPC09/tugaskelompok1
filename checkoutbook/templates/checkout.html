@@ -6,44 +6,10 @@
 </head>
 
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'Style/checkout.css' %}">
 
-<style>
-    body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #DEE3EF;
-        }
-
-        button.btn-primary {
-            background-color: #3262FF;
-            border-color: #3262FF;
-        }
-
-        button.btn-secondary {
-            background-color: #bbbbbb;
-            border-color: bbbbbb;
-        }
-
-        h1 {
-            margin-top: 20px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700; 
-        }
-
-        h6 {
-            color: #3262ff;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700; 
-        }
-
-        label {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .col-form-label {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700; 
-        }
-</style>
+<div id="my-data" data-checkout-url="{% url 'checkoutbook:checkout_ajax' %}"></div>
 
 <body>
     <h1 class="text-center">Checkout</h1>
@@ -103,43 +69,8 @@
     </form>
     <div style="text-align: center;">
         <button type="button" class="btn btn-primary" id="button_checkout" style="margin-left: 20px; width: 200px;">Checkout</button>
-    </div>
-
-    <script>
-        function checkout() {
-            var alamatInput = document.querySelector('#alamat');
-            var metodePembayaranInput = document.querySelector('input[name="metode_pembayaran"]:checked');
-    
-            if (!alamatInput.value) {
-                alert("Alamat harus diisi.");
-                return false;
-            }
-    
-            if (!metodePembayaranInput) {
-                alert("Pilih metode pembayaran.");
-                return false;
-            }
-    
-            fetch("{% url 'checkoutbook:checkout_ajax' %}", {
-                method: "POST",
-                body: new FormData(document.querySelector('#checkout-form'))
-            }).then(response => {
-                successful();
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-    
-            document.getElementById("checkout-form").reset();
-            return false;
-        }
-    
-        document.getElementById("button_checkout").onclick = checkout;
-
-        function successful() {
-            window.location.href = `/buybooks/cart/`;
-        }
-    </script>
-    
+    </div>    
 </body>
 {% include "footer.html" %}
+<script src="{% static 'Script/checkout.js' %}"></script>
 {% endblock content %}
