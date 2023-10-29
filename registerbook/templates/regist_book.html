@@ -176,10 +176,8 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Book</button>
 </div>
 
-{% include "footer.html" %}
-
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         $(".show-detail-text").click(function() {
             var bookId = $(this).data("book-id");
             $(".book-details[data-book-id='" + bookId + "']").slideToggle();
@@ -197,10 +195,6 @@
         const url = `{% url 'registerbook:get_book_json' %}?rating_filter=${ratingFilter}`;
         return fetch(url).then((res) => res.json());
     }
-
-    // async function getBooks() {
-    //     return fetch("{% url 'registerbook:get_book_json' %}").then((res) => res.json())
-    // }
 
     async function refreshBooks() {
         const container = document.getElementById("product_table");
@@ -279,4 +273,7 @@
         window.location.href = "{% url 'main:logout' %}";
     });
 </script>
+
+{% include "footer.html" %}
+
 {% endblock %}

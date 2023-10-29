@@ -1,7 +1,8 @@
 from django.urls import path
 from registerbook.views import (show_registered_books, show_received_orders,
                                 show_json, show_json_by_id, get_book_json, 
-                                add_book_ajax, remove_book)
+                                add_book_ajax, remove_book, mark_notification_read,
+                                remove_notification)
 
 app_name = 'registerbook'
 
@@ -13,4 +14,6 @@ urlpatterns = [
     path('get-book/', get_book_json, name='get_book_json'),
     path('add-book-ajax/', add_book_ajax, name='add_book_ajax'),
     path('delete-book-ajax/<int:book_id>/', remove_book, name='remove_book'),
+    path('delete-notification/<int:notif_id>/', remove_notification, name='remove_notification'),
+    path('mark-notification-read/<int:notif_id>/', mark_notification_read, name='mark_notification_read'),
 ]

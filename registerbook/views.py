@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.core import serializers
-from .models import Book, Order
+from .models import Book
 import datetime
 from datetime import datetime
+from .models import Notification
+from checkoutbook.models import Checkout
+
 @login_required(login_url='/login')
 def show_registered_books(request):
     books = Book.objects.all()
@@ -26,10 +29,14 @@ def show_received_orders(request):
     last_login = request.COOKIES['last_login']
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    notifications = Notification.objects.all().order_by('-timestamp')
+
     context = {
         'username': request.user,
+        'notifications': notifications,
         'last_login' : formatted_without_ms,
-        #'orders': received_orders,
+
     }
 
     return render(request, 'received_orders.html', context=context)
@@ -96,3 +103,19 @@ def remove_book(request, book_id):
         return HttpResponse(b"DELETED", status=201)
     
     return HttpResponseNotFound()
+
+@csrf_exempt
+def remove_notification(request, notif_id):
+    try:
+        notif = Notification.objects.get(pk=notif_id)
+        notif.delete()
+        return JsonResponse({"status": "success"}, status=200)
+    except Notification.DoesNotExist:
+        return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
+
+def mark_notification_read(request, notif_id):
+    notif = Notification.objects.get(pk=notif_id)
+    notif.is_read = True
+    notif.save()
+
+    return redirect('registerbook:show_received_orders')

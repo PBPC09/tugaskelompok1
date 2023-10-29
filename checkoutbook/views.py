@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
 from django.urls import reverse
 from django.core import serializers
 from .models import CartItem, Checkout
+from registerbook.models import Notification
 from .forms import CheckoutForm
 from django.contrib.auth.decorators import login_required
 import datetime
@@ -39,6 +40,13 @@ def checkout_ajax(request):
         new_item.items.set(items)
         new_item.save()
 
+        message = f"{new_item.alamat} | {new_item.metode_pembayaran} | {new_item.total_price} SAR\n"
+        message += "\nOrder Summary:\n"
+        for item in items:
+            message += f"- {item.book.title}\n"
+            
+        Notification.objects.create(buyer=user, message=message)
+        
         for item in items:
             item.delete()
 
