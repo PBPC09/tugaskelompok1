@@ -1,31 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<head> 
-    <style>
-        .book-card {
-            border: 1px solid #ccc;     
-            padding: 10px;  
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;  /* Baris baru */
-            height: 100%;  /* Baris baru */
-        }
-        .book-details {
-            display: none;
-        }
-        .show-detail-text {
-            color: #888;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-    </style>
-</head>
 
+<link rel="stylesheet" href="{% static 'Style/buybooks.css' %}">
 
 {% include "navbarloggedin.html" %}
 <div class="container mt-5">
@@ -33,17 +10,6 @@
         <button type="button" class="btn btn-info" id="to_cart" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
     </h1>
 
-    <!-- Filter options -->
-    <!-- <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Filter Options
-        </button>
-        <div class="dropdown-menu" aria-labelledby="filterDropdownButton">
-            <a class="dropdown-item" href="#" value="all">Semua</a>
-            <a class="dropdown-item" href="#" value="gte">Rating >= 3</a>
-            <a class="dropdown-item" href="#" value="lt">Rating < 3</a>
-        </div>
-    </div> -->
 
     <h2 style="display: inline;">Filter: </h2>
     <select id="myDropdown" style="display: inline;">
@@ -82,7 +48,6 @@
 </div>
 
 {% include "footer.html" %}
-<!-- ini pake jquery udah jalan -->
 <script>
     async function getBookAll() {
         return fetch("{% url 'buybooks:show_books_json' %}").then((res) => res.json())
@@ -178,27 +143,7 @@
         $("#to_cart").click(function() {
                 window.location.href = `cart/`;
         });
-        // $('#form').submit(function (e) {
-        //     e.preventDefault(); // Mencegah perilaku default dari form submit
-
-        //     var quantity = $('#quantity').val();
-        //     var bookId = $("#id_book_id").val();
-
-        //     // Mengirim data ke server
-        //     $.ajax({
-        //         url: `/buybooks/create/${bookId}`,
-        //         data: {
-        //             csrfmiddlewaretoken: '{{ csrf_token }}',
-        //             quantity: quantity
-        //         },
-        //         success: function (data) {
-        //             console.log('Item berhasil masuk keranjang');
-        //         },
-        //         error: function (error) {
-        //             console.error('Terjadi kesalahan: ' + error);
-        //         }
-        //     });
-        // });
+    
     });
 </script>
 
