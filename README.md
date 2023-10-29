@@ -1,4 +1,6 @@
 # PROYEK TENGAH SEMESTER - PEMROGRAMAN BERBASIS PLATFORM C - KELOMPOK 5
+## Link Proyek
+http://lembarpena-c09-tk.pbp.cs.ui.ac.id/
 ## Nama-nama anggota kelompok
 Bryan Jeshua Mario Timung - 2206027021</br>
 Clarista - 2206815541</br>
