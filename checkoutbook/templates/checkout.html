@@ -60,7 +60,7 @@
             {% for product in cart_items %}
             <tr>
                 <td>{{product.book.title}}</td>
-                <td>${{product.book.price}}</td>
+                <td>{{product.book.currency}} {{product.book.price}}</td>
                 <td>{{product.quantity}}</td>
                 <td>{{product.subtotal}}</td>
             </tr>
@@ -69,7 +69,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><h6>Total Harga: ${{ total_price }}</h6></td>
+                <td><h6>Total Harga: {{currency}} {{ total_price }}</h6></td>
             </tr>
         </tbody>
     </table>

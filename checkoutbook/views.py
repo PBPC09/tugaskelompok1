@@ -16,6 +16,7 @@ def show_checkout(request):
         'cart_items': cart_items, 
         'total_price': total_price,
         'form': form,
+        'currency' : cart_items[0].book.currency,
     }
     return render(request, 'checkout.html', context)
     
