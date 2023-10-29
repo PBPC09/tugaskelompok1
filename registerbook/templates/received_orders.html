@@ -111,36 +111,14 @@
         <p id="mark-as-read">Mark as All Read</p>
       </header>
       <main>
-        <div class="notificationCard unread">
-          <img alt="photo" src="{% static 'Gambar/profile.png' %}">
-          <div class="description">
-            <p>Pesanan masuk dari Bryan.</p>
-          </div>
+        {% for notif in notifications %}
+        <div class="notificationCard {% if not notif.is_read %}unread{% else %}read{% endif %}">
+            <img alt="photo" src="{% static 'Gambar/profile.png' %}">
+            <div class="description">
+                <p>{{ notif.message }}</p>
+            </div>
         </div>
-        <div class="notificationCard unread">
-          <img alt="photo" src="{% static 'Gambar/profile.png' %}">
-          <div class="description">
-            <p>Pesanan masuk dari Sabrina.</p>
-          </div>
-        </div>
-        <div class="notificationCard unread">
-          <img alt="photo" src="{% static 'Gambar/profile.png' %}">
-          <div class="description">
-            <p>Pesanan masuk dari Hilal.</p>
-          </div>
-        </div>
-        <div class="notificationCard unread">
-          <img alt="photo" src="{% static 'Gambar/profile.png' %}">
-          <div class="description">
-            <p>Pesanan masuk dari Cia.</p>
-          </div>
-        </div>
-        <div class="notificationCard unread">
-          <img alt="photo" src="{% static 'Gambar/profile.png' %}">
-          <div class="description">
-            <p>Pesanan masuk dari Rifqi.</p>
-          </div>
-        </div>
+        {% endfor %}
       </main>
     </div>
   </div>
