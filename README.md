@@ -9,7 +9,7 @@ Sabrina Aviana Dewi - 2206030520</br>
 ---
 
 ## Cerita aplikasi yang diajukan serta manfaatnya
-LembarPena adalah tempat seluruh komunitas literasi berkumpul. Pembaca dapat membeli buku incaran mereka dan penerbit/penulis sebagai penjual dapat menjual serta mempromosikan karya mereka pada satu aplikasi yang sama. Terdapat fitur rekomendasi buku untuk pengguna mencari bacaan menarik yang sesuai dengan selera mereka dan fitur forum diskusi untuk pengguna berinteraksi dengan pengguna lain. Aplikasi ini ditujukan kepada para peminat literasi yang selama ini harus mencari, menjual, membeli, menyimpan, dan mengulas buku pada platform yang berbeda-beda sehingga menimbulkan anggapan bahwa untuk menjadi penggiat literasi itu rumit dan ribet. Dengan efisiensi yang ditawarkan, aplikasi ini bermanfaat untuk meningkatkan minat literasi di kalangan masyarakat, meningkatkan daya beli buku, dan menyediakan tempat untuk pembaca serta penulis berinteraksi.
+LembarPena adalah tempat seluruh komunitas literasi berkumpul. Pembaca dapat membeli buku incaran mereka. Perusahaan memiliki banyak administrator yang akan membantu menjual buku. Penulis buku dapat mempromosikan karya mereka pada satu aplikasi ini melalui fitur forum diskusi. Terdapat juga fitur wishlist sehingga pembaca bisa menyimpan buku yang hendak dibeli. Aplikasi ini ditujukan kepada para peminat literasi yang selama ini harus mencari, membeli, menyimpan, dan mengulas buku pada platform yang berbeda-beda sehingga menimbulkan anggapan bahwa untuk menjadi penggiat literasi itu rumit dan ribet. Dengan efisiensi yang ditawarkan, aplikasi ini bermanfaat untuk meningkatkan minat literasi di kalangan masyarakat, meningkatkan daya beli buku, dan menyediakan tempat untuk pembaca serta penulis berinteraksi.
 
 --- 
 
@@ -34,12 +34,12 @@ Modul ini memungkinkan pengguna untuk menyimpan daftar buku yang mereka inginkan
   
 ### 📝 Modul Book Forum 📝
 Modul ini memungkinkan pengguna untuk menulis dan berbagi opini, ulasan, serta dapat berdiskusi mengenai buku dengan pengguna lain. Fitur-fitur utama dari modul ini akan meliputi:
-- Memungkinkan pengguna lain untuk memberikan tanggapan atau komentar
-- Pengguna bisa memberikan rating dan ulasan untuk buku yang sudah dibaca
-- Berdiskusi dengan pengguna lain mengenai buku
+- Pengguna bisa memberikan pertanyaan dan tanggapan untuk buku tertentu
+- Berdiskusi dengan pengguna lain mengenai buku tersebut
+- Filter untuk hanya menampilkan diskusi terhadap buku dengan rating > 4.5
 
 ### 📥 Modul Register Book to Sell 📥
-Modul ini memungkinkan penjual untuk mendaftarkan buku yang ingin dijual di situs web. Fitur-fitur utama dari modul ini akan meliputi:
+Modul ini memungkinkan admin untuk mendaftarkan buku yang ingin dijual di situs web. Fitur-fitur utama dari modul ini akan meliputi:
 - Sebuah form yang harus diisi dengan informasi detail buku seperti judul, penulis, harga, dan lainnya
 - Proses verifikasi oleh admin sebelum buku ditampilkan di katalog untuk dijual
 
@@ -52,7 +52,7 @@ Dataset yang akan kami pakai berasal dari Kaggle dengan judul ```Google Books Da
 
 ## Role atau peran pengguna beserta deskripsinya
 1. Admin </br>
-Admin merupakan profil penjual buku yang dapat dipakai oleh para penulis maupun penerbit di luar sana. Dengan begitu, penulis yang hendak menjual karyanya bisa langsung menjualnya di sini tanpa perlu melewati penerbit sekalipun.
+Admin merupakan profil untuk mengatur pengelolaan penjualan buku lewat perusahaan lembarpena.
 
 2. Buyer </br>
 Buyer atau pembeli ini dapat membeli buku yang dicari dan diinginkan dari para penjual buku. Nantinya buyer ini juga bisa berdiskusi di forum dengan buyer yang lain.
