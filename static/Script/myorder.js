@@ -51,7 +51,7 @@ async function show_order(getOrder) {
                 <div class="card-body">
                     <h5 class="card-title">Checkout ${order.pk}</h5>
                     <p class="card-text">Alamat: ${order.fields.alamat}</p>
-                    <p class="card-text">Total Harga: SAR${order.fields.total_price}</p>
+                    <p class="card-text">Total Harga: SAR ${order.fields.total_price}</p>
                 </div>
             </div>
         </div>`   
