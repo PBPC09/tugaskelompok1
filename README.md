@@ -17,13 +17,13 @@ LembarPena adalah tempat seluruh komunitas literasi berkumpul. Pembaca dapat mem
 ### 📚 Modul Buy Book 📚
 Modul ini memungkinkan pengguna untuk memilih dan membeli buku dari katalog yang tersedia di situs web. Fitur-fitur utama dari modul ini akan meliputi:
 - Menampilkan daftar buku yang tersedia untuk dibeli. Pengguna bisa melakukan add to cart. Jendela cart akan menampilkan keranjang belanja dan bisa meminta input jumlah dan akan mengoperasikan total harga.
-- Opsi untuk pengguna mencari buku berdasarkan penulis, genre, dan harga.
+- Opsi untuk pengguna mencari buku berdasarkan rating buku.
 - Saat pengguna mengklik buku tertentu, halaman detail buku akan menampilkan informasi yang lebih lengkap
 
 ### 🛒 Modul Checkout Book 🛒
 Modul ini untuk proses finalisasi pembelian buku yang telah dipilih oleh pengguna. Fitur-fitur utama dari modul ini akan meliputi:
 - Menyimpan buku yang dipilih oleh pengguna sebelum melakukan pembayaran
-- Memberi konfirmasi kepada pengguna untuk mengisi form, seperti alamat dan pilihan kurir
+- Memberi konfirmasi kepada pengguna untuk mengisi form, seperti alamat dan pilihan pembayaran
 - Integrasikan dengan sistem pembayaran
 
 ### 🎁 Modul Wishlist 🎁
@@ -51,8 +51,8 @@ Dataset yang akan kami pakai berasal dari Kaggle dengan judul ```Google Books Da
 ---
 
 ## Role atau peran pengguna beserta deskripsinya
-1. Seller </br>
-Seller merupakan profil penjual buku yang dapat dipakai oleh para penulis maupun penerbit di luar sana. Dengan begitu, penulis yang hendak menjual karyanya bisa langsung menjualnya di sini tanpa perlu melewati penerbit sekalipun.
+1. Admin </br>
+Admin merupakan profil penjual buku yang dapat dipakai oleh para penulis maupun penerbit di luar sana. Dengan begitu, penulis yang hendak menjual karyanya bisa langsung menjualnya di sini tanpa perlu melewati penerbit sekalipun.
 
 2. Buyer </br>
 Buyer atau pembeli ini dapat membeli buku yang dicari dan diinginkan dari para penjual buku. Nantinya buyer ini juga bisa berdiskusi di forum dengan buyer yang lain.
