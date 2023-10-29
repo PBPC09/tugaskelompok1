@@ -4,7 +4,7 @@ body {
 }
 
 .book-card {
-    border: 1px solid #b0c4de; /* Light steel blue */
+    border: 1px solid #b0c4de; 
     padding: 10px;  
     border-radius: 5px;
     display: flex;

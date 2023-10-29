@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages 
 import datetime
 from datetime import datetime
+
 @login_required
 def show_book_profile(request):
     if request.method == 'POST':

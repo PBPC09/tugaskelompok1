@@ -1,46 +1,49 @@
+
 $(document).ready(function() {
     $(".show-detail-text").click(function(){
         var bookId = $(this).data("book-id");
         $(".book-details[data-book-id='" + bookId + "']").slideToggle();
     });
 
-    document.querySelectorAll('.add-to-wishlist-button').forEach(function(element) {
-        element.addEventListener('click', function() {
+    document.querySelectorAll('.add-to-wishlist-button').forEach(async function(element) {
+        element.addEventListener('click', async function() {
             var bookId = this.getAttribute('data-book-id');
             document.getElementById('id_book_id').value = bookId;
-            $('#wishlistModal').modal('show'); 
+            await $('#wishlistModal').modal('show'); 
         });
     });
 
-    document.getElementById('wishlist-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    var bookId = document.getElementById('id_book_id').value;
-    var url = this.getAttribute('action');
-    var data = new FormData(this);
-    fetch(url, {
-        method: 'POST',
-        body: data
-    }).then(function(response) {
-        return response.json();
-    }).then(function(data) {
-        var toastElement = document.getElementById('toastMessage');
-        var toastBodyElement = toastElement.querySelector('.toast-body');
-        if (data.status === 'success') {
-            toastBodyElement.textContent = data.message; 
-            $('#wishlistModal').modal('hide');
-            document.getElementById('wishlist-form').reset();
-        } else {
-            $('#wishlistModal').modal('hide');
-            toastBodyElement.textContent = data.message; 
-            document.getElementById('wishlist-form').reset();
-        }
 
-        $(toastElement).toast({delay: 5000});
-        $(toastElement).toast('show');
-    }).catch(function(error) {
-        console.error('Error:', error);
+    document.getElementById('wishlist-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var bookId = document.getElementById('id_book_id').value;
+        var url = this.getAttribute('action');
+        var data = new FormData(this);
+        fetch(url, {
+            method: 'POST',
+            body: data
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            var toastElement = document.getElementById('toastMessage');
+            var toastBodyElement = toastElement.querySelector('.toast-body');
+            if (data.status === 'success') {
+                toastBodyElement.textContent = data.message; 
+                $('#wishlistModal').modal('hide');
+                document.getElementById('wishlist-form').reset();
+            } else {
+                $('#wishlistModal').modal('hide');
+                toastBodyElement.textContent = data.message; 
+                document.getElementById('wishlist-form').reset();
+            }
+
+            $(toastElement).toast({delay: 5000});
+            $(toastElement).toast('show');
+        }).catch(function(error) {
+            console.error('Error:', error);
+        });
     });
-});
+
 
 function filterBooks() {
     var searchInput = document.getElementById('searchInput').value;
