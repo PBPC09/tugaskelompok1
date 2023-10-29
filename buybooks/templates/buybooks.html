@@ -25,96 +25,39 @@
         }
     </style>
 </head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 {% include "navbarloggedin.html" %}
 <div class="container mt-5">
     <h1>Books
-        <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
+        <button type="button" class="btn btn-info" id="to_cart" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
     </h1>
-    <div class="row card-container align-items-stretch">
-        {% for book in books %}
-            <div class="col-md-4 mb-4">
-                <div class="accordion" id="accordionExample-{{book.pk}}">
-                    <div class="book-card">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{book.pk}}" aria-expanded="false" aria-controls="collapse{{book.pk}}">
-                                    {{ book.title }}
-                                </button>
-                            </h2>
-                            <div id="collapse{{book.pk}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample-{{book.pk}}">
-                                <div class="accordion-body">
-                                    <p class="card-text">
-                                        <strong>Genres:</strong> {{ book.genres }}
-                                        <strong>Rating:</strong> {{ book.rating }}
-                                        <strong>Voters:</strong> {{ book.voters }}
-                                        <strong>Page Count:</strong> {{ book.page_count }}
-                                    </p>
-                                    <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
-                                    <button class="btn btn-primary add-to-cart-button" data-book-id="{{ book.id }}">Add to Cart</button>        
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</div>
 
-<!-- <div class="container mt-5">
-    <h1>Books
-        <button type="button" class="btn btn-info" style="margin-left: 20px; margin-bottom: auto;">Cek Keranjang Saya</button>
-    </h1>
-    <div class="row card-container">
-        <div class="accordion" id="accordionExample">
-            {% for book in books %}
-                <div  class="col-md-4 mb-4">
-                    <div class="book-card">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{book.pk}}" aria-expanded="false" aria-controls="collapse{{book.pk}}">
-                                {{ book.title }}
-                            </button>
-                        </h2>
-                        <div id="collapse{{book.pk}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <p class="card-text">
-                                    <strong>Genres:</strong> {{ book.genres }}
-                                    <strong>Rating:</strong> {{ book.rating }}
-                                    <strong>Voters:</strong> {{ book.voters }}
-                                    <strong>Page Count:</strong> {{ book.page_count }}</p>
-                                </p>
-                                <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
-                                <button class="btn btn-primary add-to-cart-button" data-book-id="{{ book.id }}">Add to Cart</button>        
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            {% endfor %}
+    <!-- Filter options -->
+    <!-- <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Filter Options
+        </button>
+        <div class="dropdown-menu" aria-labelledby="filterDropdownButton">
+            <a class="dropdown-item" href="#" value="all">Semua</a>
+            <a class="dropdown-item" href="#" value="gte">Rating >= 3</a>
+            <a class="dropdown-item" href="#" value="lt">Rating < 3</a>
         </div>
-    </div>
+    </div> -->
+
+    <h2 style="display: inline;">Filter: </h2>
+    <select id="myDropdown" style="display: inline;">
+        <option value="all">Semua</option>
+        <option value="gte">Rating >= 4</option>
+        <option value="lt">Rating < 4</option>
+    </select>
+
+    <div class= "card-book-here" id="card-book-here"></div>
+
 </div>
-        -->
-        <!-- {% for book in books %}
-        <div class="col-md-4 mb-4">
-            <div class="book-card">
-                <h5 class="card-title">{{ book.title }}</h5>     
-                <p class="card-text">Author: {{ book.author }} - {{ book.price }} {{ book.currency }}</p>
-                <p class="show-detail-text" data-book-id="{{ book.id }}">Show Detail</p>
-                <div class="book-details" data-book-id="{{ book.id }}">
-                    <p class="card-text">
-                        <strong>Genres:</strong> {{ book.genres }}
-                        <strong>Rating:</strong> {{ book.rating }}
-                        <strong>Voters:</strong> {{ book.voters }}
-                        <strong>Page Count:</strong> {{ book.page_count }}</p>
-                    </p>
-                    <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
-                    <button class="btn btn-primary add-to-cart-button" data-book-id="{{ book.id }}">Add to Cart</button>
-                </div>
-            </div>
-        </div>
-        {% endfor %} -->
 
 <div class="modal" id="cartModal" tabindex="-1">
     <div class="modal-dialog">
@@ -134,7 +77,7 @@
         </div>
 
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary" id="button_co">Checkout</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
     </div>
@@ -144,26 +87,122 @@
 {% include "footer.html" %}
 <!-- ini pake jquery udah jalan -->
 <script>
-    async function getBook() {
+    async function getBookAll() {
         return fetch("{% url 'buybooks:show_books_json' %}").then((res) => res.json())
+    }
+    async function getBookLt() {
+        return fetch("{% url 'buybooks:show_books_json_lt' %}").then((res) => res.json())
+    }
+    async function getBookGte() {
+        return fetch("{% url 'buybooks:show_books_json_gte' %}").then((res) => res.json())
     }
     async function getCart() {
         return fetch("{% url 'buybooks:get_cart_json' %}").then((res) => res.json())
     }
+
+    var dropdown = document.getElementById("myDropdown");
+
+    dropdown.addEventListener("change", function() {
+        var selectedOption = dropdown.value;
+
+        // Lakukan sesuatu berdasarkan nilai yang dipilih
+        if (selectedOption === "all") {
+            show_book(getBookAll());
+        } else if (selectedOption === "lt") {
+            show_book(getBookLt());
+        } else if (selectedOption === "gte") {
+            show_book(getBookGte());
+        }
+    });
+
+    async function show_book(getBook) {
+        const items = await getBook
+        let htmlString = `<div class="row card-container align-items-stretch">
+            `
+        items.forEach((item) => {
+            console.log(item)
+            htmlString += 
+            `<div class="col-md-4 mb-4">
+                <div class="accordion" id="accordionExample-${item.pk}">
+                    <div class="book-card">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${item.pk}" aria-expanded="false" aria-controls="collapse${item.pk}">
+                                    ${item.fields.title}
+                                </button>
+                            </h2>
+                            <div id="collapse${item.pk}" class="accordion-collapse collapse" data-bs-parent="#accordionExample-${item.pk}">
+                                <div class="accordion-body">
+                                    <p class="card-text">
+                                        <strong>Genres:</strong> ${item.fields.genres}
+                                        <strong>Rating:</strong> ${item.fields.ratings}
+                                        <strong>Voters:</strong> ${item.fields.voters}
+                                        <strong>Page Count:</strong> ${item.fields.page_count}
+                                    </p>
+                                    <p class="card-text"><strong>Publisher:</strong> ${item.fields.publisher}</p>
+                                    <button class="btn btn-primary add-to-cart-button" data-book-id="${item.pk}">Add to Cart</button>        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+        })
+        document.getElementById("card-book-here").innerHTML = htmlString
+    }
+
+    show_book(getBookAll())
     
+    var bookId
+    $('body').on('click', '.add-to-cart-button', function() {
+        bookId = $(this).data("book-id");
+        $("#id_book_id").val(bookId);
+        $("#cartModal").modal("show");
+    });
+
+    function addToCart() {
+        fetch(`/buybooks/create/${bookId}/`, {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        })
+
+        document.getElementById("form").reset()
+        $('#cartModal').modal('hide');
+        return false
+    }
+
+    document.getElementById("button_co").onclick = addToCart
 
     $(document).ready(function(){
         $(".show-detail-text").click(function(){
             var bookId = $(this).data("book-id");
             $(".book-details[data-book-id='" + bookId + "']").slideToggle();
         });
-        $(".add-to-cart-button").click(function(){
-            var bookId = $(this).data("book-id");
-            $("#id_book_id").val(bookId);
-            $("#cartModal").modal("show");
+        $("#to_cart").click(function() {
+                window.location.href = `cart/`;
         });
-});
-</script>
+        // $('#form').submit(function (e) {
+        //     e.preventDefault(); // Mencegah perilaku default dari form submit
 
+        //     var quantity = $('#quantity').val();
+        //     var bookId = $("#id_book_id").val();
+
+        //     // Mengirim data ke server
+        //     $.ajax({
+        //         url: `/buybooks/create/${bookId}`,
+        //         data: {
+        //             csrfmiddlewaretoken: '{{ csrf_token }}',
+        //             quantity: quantity
+        //         },
+        //         success: function (data) {
+        //             console.log('Item berhasil masuk keranjang');
+        //         },
+        //         error: function (error) {
+        //             console.error('Terjadi kesalahan: ' + error);
+        //         }
+        //     });
+        // });
+    });
+</script>
 
 {% endblock %}

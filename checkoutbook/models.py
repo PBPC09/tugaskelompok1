@@ -7,6 +7,7 @@ class Checkout(models.Model):
     items = models.ManyToManyField(CartItem)
     alamat = models.TextField()
     metode_pembayaran = models.CharField(max_length=50)
+    total_price = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.username}'s checkout"

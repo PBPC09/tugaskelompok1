@@ -7,9 +7,47 @@
 
 {% block content %}
 
+<style>
+    body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #DEE3EF;
+        }
+
+        button.btn-primary {
+            background-color: #3262FF;
+            border-color: #3262FF;
+        }
+
+        button.btn-secondary {
+            background-color: #bbbbbb;
+            border-color: bbbbbb;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; 
+        }
+
+        h6 {
+            color: #3262ff;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; 
+        }
+
+        label {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .col-form-label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; 
+        }
+</style>
+
 <body>
     <h1 class="text-center">Checkout</h1>
-    <table class="table table-bordered">
+    <table class="table table-bordered" style="align-items: center; text-align: center;">
         <thead>
             <tr>
                 <th>Produk</th>
@@ -23,22 +61,27 @@
             <tr>
                 <td>{{product.book.title}}</td>
                 <td>${{product.book.price}}</td>
-                <td>{{product.amount}}</td>
+                <td>{{product.quantity}}</td>
                 <td>{{product.subtotal}}</td>
             </tr>
             {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><h6>Total Harga: ${{ total_price }}</h6></td>
+            </tr>
         </tbody>
     </table>
-    <h6>Total Harga: ${{ total_price }}</h6>
-    <form method="post" id="checkout-form" class="mx-auto">
+    <form method="post" id="checkout-form" style="text-align: center;">
         {% csrf_token %}
-        <div class="mb-3 mx-auto">
+        <div class="mb-3>
             <label for="alamat" class="col-form-label">Alamat:</label>
-            <div class="col-6">
-            <textarea class="form-control" id="alamat" name="alamat"></textarea>
+            <div style="text-align: center;">
+            <textarea class="form-control" id="alamat" name="alamat"  style="margin: 0 auto; width: 400px; height: 90px;"></textarea>
             </div>
         </div>
-        <div class="mb-3 mx-auto">
+        <div class="mb-3">
             <label for="metode_pembayaran" class="col-form-label">Metode Pembayaran:</label>
             <div>
                 <input type="radio" id="metode1" name="metode_pembayaran" value="kartu_kredit">
@@ -58,7 +101,9 @@
             </div>
         </div>
     </form>
-    <button type="button" class="btn btn-primary mx-auto" id="button_checkout">Checkout</button>
+    <div style="text-align: center;">
+        <button type="button" class="btn btn-primary" id="button_checkout" style="margin-left: 20px; width: 200px;">Checkout</button>
+    </div>
 
     <script>
         function checkout() {
@@ -91,10 +136,10 @@
         document.getElementById("button_checkout").onclick = checkout;
 
         function successful() {
-            // add saldo == total_harga
+            window.location.href = `/buybooks/cart/`;
         }
     </script>
     
 </body>
-
+{% include "footer.html" %}
 {% endblock content %}
