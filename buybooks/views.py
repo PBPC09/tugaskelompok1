@@ -47,10 +47,6 @@ def show_cart(request):
     }
     return render(request, 'cartwindow.html', context)
 
-def get_cart_json(request):
-    items = CartItem.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize('json', items))
-
 def delete_cart(request, id):
     item = get_object_or_404(CartItem, pk=id)
     if request.method == 'POST':

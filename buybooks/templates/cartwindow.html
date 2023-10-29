@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block content %}
+<head>
+    {% block meta %}
+        <title>Cart</title>
+    {% endblock meta %}
+</head>
 
+{% block content %}
+{% load static %}
 <link rel="stylesheet" href="{% static 'Style/cartwindow.css' %}">
 <script src="{% static 'Script/cartwindow.js' %}"></script>
 
@@ -28,6 +33,5 @@
     </div>
     <button type="button" class="btn btn-primary" id="button_co" style="width: 200px;">Checkout</button>
 </div>
-
 {% include "footer.html" %}
 {% endblock %}

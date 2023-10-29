@@ -1,3 +1,5 @@
+/* JavaScript function for buybooks/cartwindow.html*/
+
 $(document).ready(function() {
     $("#button_co").click(function() {
         var checkedInputs = $(".form-check-input:checked");

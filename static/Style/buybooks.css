@@ -3,8 +3,8 @@
     padding: 10px;  
     border-radius: 5px;
     display: flex;
-    flex-direction: column;  
-    height: 100%;  
+    flex-direction: column;  /* Baris baru */
+    height: 100%;  /* Baris baru */
 }
 .book-details {
     display: none;
