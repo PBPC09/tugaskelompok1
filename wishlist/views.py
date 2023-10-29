@@ -5,7 +5,8 @@ from registerbook.models import Book
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+from django.contrib import messages 
+
 
 @login_required
 def show_book_profile(request):
@@ -13,14 +14,19 @@ def show_book_profile(request):
         form = AddToWishlistForm(request.POST)
 
         if form.is_valid():
-            #form.save()
             book_id = request.POST.get('book_id')
             book = get_object_or_404(Book, id=book_id)
             preference = form.cleaned_data['preference']
             Wishlist.objects.create(user=request.user, book=book, preference=preference)
         return redirect('bookprofile')
     
-    books = Book.objects.all()
+    rating = request.GET.get('rating')
+    if rating:
+        rating = float(rating)
+        books = Book.objects.filter(rating__gte=rating, rating__lt=rating + 1)
+    else:
+        books = Book.objects.all()
+    
     form = AddToWishlistForm()
     context = {
         'books': books,
@@ -68,14 +74,3 @@ def delete_wishlist_item(request, item_id):
         item.delete()
     return redirect('wishlist:mywishlist')
 
-def get_books(request):
-    search = request.GET.get('search')
-    rating = request.GET.get('rating')
-
-    books = Book.objects.all()
-    if search:
-        books = books.filter(Q(title__icontains=search))
-    if rating:
-        books = books.filter(rating=rating)
-
-    return render(request, 'books.html', {'books': books})

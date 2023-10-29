@@ -64,23 +64,22 @@
 </head>
 
 {% include "navbarloggedin.html" %}
-
 <div class="container mt-5">
     <h1>Books</h1>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search book" id="searchInput">
+        <form method="get">
+            <select name="rating" onchange="this.form.submit()">
+                <option value="">All Ratings</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+            </select>
+        </form>
+    </div>
     <div class="row">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Search book" id="searchInput">
-            <div class="input-group-append">
-                <select class="form-control" id="ratingFilter">
-                    <option value="">All Ratings</option>
-                    <option value="1">1 Star</option>
-                    <option value="2">2 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="5">5 Stars</option>
-                </select>
-            </div>
-        </div>
         {% for book in books %}
         <div class="col-md-4 mb-4">
             <div class="book-card">
@@ -139,6 +138,8 @@
 </div>
 
 
+
+
 {% include "footer.html" %}
 <!-- ini pake jquery jalan blm ajax -->
 <script>
@@ -186,40 +187,6 @@ $(document).ready(function(){
     });
 });
 
-document.getElementById('searchInput').addEventListener('input', filterBooks);
-document.getElementById('ratingFilter').addEventListener('change', filterBooks);
-
-function filterBooks() {
-    var searchInput = document.getElementById('searchInput').value;
-    var ratingFilter = document.getElementById('ratingFilter').value;
-    var url = "{% url 'wishlist:get_books' %}";
-
-    fetch(url + '?search=' + searchInput + '&rating=' + ratingFilter)
-        .then(response => response.json())
-        .then(data => {
-            // update the book cards with the new data
-            var bookCardsContainer = document.querySelector('.card-container');
-            bookCardsContainer.innerHTML = '';
-            data.forEach(book => {
-                // create a new book card element and append it to the container
-                var bookCard = document.createElement('div');
-                bookCard.className = 'book-card';
-                // set the book details
-                bookCard.innerHTML = `
-                    <h5 class="card-title">${book.title}</h5>
-                    <p class="show-detail-text" data-book-id="${book.id}">Show Detail</p>
-                    <div class="book-details" data-book-id="${book.id}">
-                        <p class="card-text"><strong>Author:</strong> ${book.author}</p>
-                        <p class="card-text"><strong>Rating:</strong> ${book.rating}</p>
-                        <p class="card-text"><strong>Price:</strong> ${book.price} ${book.currency}</p>
-                        <button class="btn btn-primary add-to-wishlist-button" data-book-id="${book.id}">Add to Wishlist</button>
-                    </div>
-                `;
-                bookCardsContainer.appendChild(bookCard);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-}
 
 
 });
