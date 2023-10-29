@@ -1,0 +1,56 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+.accordion-button {
+    background-color: #f8f9fa;
+}
+
+.accordion-item.show .accordion-button {
+    background-color: #e9ecef;
+}
+
+.accordion-item.show .btn-remove {
+    display: inline-block;
+}
+
+#ratingFilter {
+    background-color: whitesmoke;
+    width: 150px;
+    display: inline-block;
+}
+
+.card-header {
+    position: relative;
+}
+
+.add-book-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.book-card {
+    border: 1px solid #ccc;     
+    padding: 10px;  
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column; 
+    height: 100%; 
+}
+
+.book-details {
+    display: none;
+}
+
+.show-detail-text {
+    color: #888;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}

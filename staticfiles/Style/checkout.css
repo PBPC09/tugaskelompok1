@@ -1,0 +1,37 @@
+/* Style for checkoutbook/checkout.html*/
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #DEE3EF;
+}
+
+button.btn-primary {
+    background-color: #3262FF;
+    border-color: #3262FF;
+}
+
+button.btn-secondary {
+    background-color: #bbbbbb;
+    border-color: bbbbbb;
+}
+
+h1 {
+    margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700; 
+}
+
+h6 {
+    color: #3262ff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700; 
+}
+
+label {
+    font-family: 'Poppins', sans-serif;
+}
+
+.col-form-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700; 
+}

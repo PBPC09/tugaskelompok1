@@ -1,0 +1,85 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.overflow-control-card {
+    overflow: hidden;
+}
+
+.wrap {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+button {
+    background-color: #273faa; 
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3; 
+}
+   /* CSS styles for the forum question section */
+   .forum-question {
+    flex: 1;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-right: 20px; /* Add some spacing between forum-question and cards */
+}
+
+.forum-question h1 {
+    font-size: 24px;
+}
+
+.forum-question-details {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.forum-question-body {
+    font-size: 18px;
+}
+
+/* CSS styles for the comments section */
+h2 {
+    font-size: 24px;
+}
+
+.comment-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 20px 20px 20px;
+}
+
+.comment {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.comment-details {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.comment-body {
+    font-size: 16px;
+}
+
+.line-spaced {
+    line-height: 1; /* Adjust the value as needed to control the line spacing */
+}
+
+.no-comments {
+    font-size: 16px;
+    color: #777;
+}
