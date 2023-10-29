@@ -22,7 +22,7 @@ def show_checkout(request):
         'total_price': total_price,
         'last_login' : formatted_without_ms,
         'form': form,
-        'currency' : cart_items[0].book.currency,
+        'currency' : 'SAR',
     }
     return render(request, 'checkout.html', context)
     
