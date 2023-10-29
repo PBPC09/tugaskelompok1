@@ -1,42 +1,8 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-<head> 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #DEE3EF;
-        }
 
-        .card {
-            border: 1px solid #b0c4de; 
-            padding: 10px;  
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column; 
-            height: 100%;  
-            transition: 0.3s;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05); 
-            background-color: #FFFFFF;
-        }
-
-        button.btn-primary {
-            background-color: #3262FF;
-            border-color: #3262FF;
-        }
-
-        button.btn-secondary {
-            background-color: #bbbbbb;
-            border-color: bbbbbb;
-        }
-
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-    </style>
-</head>
+<link rel="stylesheet" href="{% static 'Style/mywishlist.css' %}">
 
 {% include "navbarloggedin.html" %}
 <div class="container mt-5">

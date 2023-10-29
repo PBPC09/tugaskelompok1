@@ -1,0 +1,57 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #DEE3EF;
+}
+
+.book-card {
+    border: 1px solid #b0c4de; /* Light steel blue */
+    padding: 10px;  
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column; 
+    height: 100%;  
+    transition: 0.3s;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05); 
+    background-color: #FFFFFF;
+}
+
+.book-details {
+    display: none;
+}
+
+.show-detail-text {
+    color: #010246; 
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.modal-content {
+    border-radius: 5px;
+    background-color: #FFFFFF
+}
+
+.modal-header {
+    border-bottom: none;
+    background-color: #FFFFFF;
+}
+
+.modal-footer {
+    border-top: none;
+    background-color: #FFFFFF; 
+}
+
+button.btn-primary {
+    background-color: #3262FF;
+    border-color: #3262FF;
+}
+
+button.btn-secondary {
+    background-color: #bbbbbb;
+    border-color: bbbbbb;
+}

@@ -21,9 +21,10 @@ def show_book_profile(request):
         return redirect('bookprofile')
     
     rating = request.GET.get('rating')
-    if rating:
-        rating = float(rating)
-        books = Book.objects.filter(rating__gte=rating, rating__lt=rating + 1)
+    if rating and rating != ''and rating != 'All Ratings':
+        lower_bound = float(rating)
+        upper_bound = lower_bound + 0.9
+        books = Book.objects.filter(rating__range=(lower_bound, upper_bound))
     else:
         books = Book.objects.all()
     
@@ -34,11 +35,9 @@ def show_book_profile(request):
     }
     return render(request, 'bookprofile.html', context=context)
 
-
 def show_book_details(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     return render(request, 'book_details.html', {'book': book})
-
 
 @login_required
 @csrf_exempt
@@ -74,3 +73,11 @@ def delete_wishlist_item(request, item_id):
         item.delete()
     return redirect('wishlist:mywishlist')
 
+def get_books(request):
+    rating = request.GET.get('rating')
+
+    books = Book.objects.all()
+    if rating:
+        books = books.filter(rating=rating)
+
+    return render(request, 'books.html', {'books': books})
