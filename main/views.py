@@ -40,7 +40,7 @@ def signup(request):
             form.save()
             role = form.cleaned_data["role"]
 
-            if role == 'Admin':
+            if role == 'A':
                 messages.success(request, 'You are now an Admin!')
             else:
                 messages.success(request, 'You are now a Buyer!')

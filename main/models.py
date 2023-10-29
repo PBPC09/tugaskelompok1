@@ -11,10 +11,10 @@ class Profile(models.Model):
     email = models.EmailField(max_length=200)
 
     def is_admin(self):
-        return self.role == 'Admin'
+        return self.role == 'A'
 
     def is_buyer(self):
-        return self.role == 'Buyer'
+        return self.role == 'B'
 
     def __str__(self):
         return self.user.username
