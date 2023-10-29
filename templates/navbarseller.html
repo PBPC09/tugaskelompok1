@@ -22,14 +22,14 @@
   </style>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'main:show_landing_page' %}">Lembar Pena - Hi, {{user.username}}!</a>
+      <a class="navbar-brand" href="{% url 'registerbook:show_registered_books' %}">Lembar Pena - Hi, {{user.username}}!</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           </ul>
-          <a class="nav-link active" href="{% url 'registerbook:show_registered_books' %}" style="margin-right: 30px;">Your Books</a>
+          <a class="nav-link active" href="{% url 'registerbook:show_registered_books' %}" style="margin-right: 30px;">Home</a>
           <a class="nav-link active" href="{% url 'registerbook:show_received_orders' %}" style="margin-right: 30px;">Received Order</a>
           <a class="btn btn-outline-success" id="log-out" style="margin-right: 10px;" href="{% url 'main:logout' %}">Logout</a>    
       </div>
