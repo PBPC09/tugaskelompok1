@@ -14,6 +14,8 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def show_landing_page(request):
+    if request.user.is_authenticated:
+        return show_landing_page_logged_in(request)
     context = {
     }
     return render(request, "landingpage.html", context)
