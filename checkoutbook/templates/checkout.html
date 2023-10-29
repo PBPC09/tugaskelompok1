@@ -7,81 +7,47 @@
 
 {% block content %}
 
-<link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
-
 <style>
-    h1 {
-        margin-top: 20px;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700; 
-    }
+    body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #DEE3EF;
+        }
 
-    h6 {
-        color: #3262ff;
-        font-family: 'Poppins', sans-serif;
-    }
+        button.btn-primary {
+            background-color: #3262FF;
+            border-color: #3262FF;
+        }
 
-    label {
-        font-family: 'Poppins', sans-serif;
-    }
+        button.btn-secondary {
+            background-color: #bbbbbb;
+            border-color: bbbbbb;
+        }
 
-    .col-form-label {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700; 
-    }
+        h1 {
+            margin-top: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; 
+        }
 
-    .footer {
-      background-color: #1C2964;
-      color: #fff;
-      text-align: center;
-      font-weight: 600;
-      padding: 2rem 0;
-      margin-top: 40px;
-    }
+        h6 {
+            color: #3262ff;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; 
+        }
 
-    .footer__title {
-        font-size: 2rem;
-        margin-bottom: 2rem;
-    }
+        label {
+            font-family: 'Poppins', sans-serif;
+        }
 
-    .footer__social {
-        margin-bottom: 2rem;
-    }
-
-    .footer__icon {
-        font-size: 1.5rem;
-        color: #fff;
-        margin: 0 1rem;
-    }
-    
-    footer ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    footer li {
-        display: inline;
-        margin: 0 20px;
-    }
-
-    footer a {
-        text-decoration: none;
-        color: #fff;
-        font-weight: bold;
-    }
-
-    footer a:hover {
-        color: #a6b7ef;
-    }
-
-    .footer__copy {
-        font-size: .75rem;
-    }
+        .col-form-label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700; 
+        }
 </style>
 
 <body>
     <h1 class="text-center">Checkout</h1>
-    <table class="table table-bordered" style="margin: 20px; align-items: center;">
+    <table class="table table-bordered" style="align-items: center; text-align: center;">
         <thead>
             <tr>
                 <th>Produk</th>
@@ -95,7 +61,7 @@
             <tr>
                 <td>{{product.book.title}}</td>
                 <td>${{product.book.price}}</td>
-                <td>{{product.amount}}</td>
+                <td>{{product.quantity}}</td>
                 <td>{{product.subtotal}}</td>
             </tr>
             {% endfor %}
@@ -109,13 +75,13 @@
     </table>
     <form method="post" id="checkout-form" style="text-align: center;">
         {% csrf_token %}
-        <div class="mb-3">
+        <div class="mb-3>
             <label for="alamat" class="col-form-label">Alamat:</label>
             <div style="text-align: center;">
-                <textarea class="form-control" id="alamat" name="alamat" style="margin: 0 auto; width: 400px; height: 90px;"></textarea>
+            <textarea class="form-control" id="alamat" name="alamat"  style="margin: 0 auto; width: 400px; height: 90px;"></textarea>
             </div>
         </div>
-        <div class="mb-3 mx-auto">
+        <div class="mb-3">
             <label for="metode_pembayaran" class="col-form-label">Metode Pembayaran:</label>
             <div>
                 <input type="radio" id="metode1" name="metode_pembayaran" value="kartu_kredit">
@@ -138,56 +104,42 @@
     <div style="text-align: center;">
         <button type="button" class="btn btn-primary" id="button_checkout" style="margin-left: 20px; width: 200px;">Checkout</button>
     </div>
-</body>
 
-<footer class="footer">
-  <p class="footer__title">LembarPena</p>
-  <div class="footer__social">
-      <a href="https://github.com/PBPC09/tugaskelompok1" class="footer__icon"><i class='bx bxl-github'></i></a>
-      <a href="#" class="footer__icon"><i class='bx bxl-linkedin'></i></a>
-      <a href="#" class="footer__icon"><i class='bx bxl-instagram'></i></a>
-  </div>
-  <ul>
-    <li><a href="#">Home</a></li>
-    <li><a href="#">About Us</a></li>
-    <li><a href="#">Explore</a></li>
-  </ul>
-  <p class="footer__copy">&#169; Created by C09</p>
-</footer>
+    <script>
+        function checkout() {
+            var alamatInput = document.querySelector('#alamat');
+            var metodePembayaranInput = document.querySelector('input[name="metode_pembayaran"]:checked');
     
-<script>
-    function checkout() {
-        var alamatInput = document.querySelector('#alamat');
-        var metodePembayaranInput = document.querySelector('input[name="metode_pembayaran"]:checked');
-
-        if (!alamatInput.value) {
-            alert("Alamat harus diisi.");
+            if (!alamatInput.value) {
+                alert("Alamat harus diisi.");
+                return false;
+            }
+    
+            if (!metodePembayaranInput) {
+                alert("Pilih metode pembayaran.");
+                return false;
+            }
+    
+            fetch("{% url 'checkoutbook:checkout_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#checkout-form'))
+            }).then(response => {
+                successful();
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+    
+            document.getElementById("checkout-form").reset();
             return false;
         }
+    
+        document.getElementById("button_checkout").onclick = checkout;
 
-        if (!metodePembayaranInput) {
-            alert("Pilih metode pembayaran.");
-            return false;
+        function successful() {
+            window.location.href = `/buybooks/cart/`;
         }
-
-        fetch("{% url 'checkoutbook:checkout_ajax' %}", {
-            method: "POST",
-            body: new FormData(document.querySelector('#checkout-form'))
-        }).then(response => {
-            successful();
-        }).catch(error => {
-            console.error('Error:', error);
-        });
-
-        document.getElementById("checkout-form").reset();
-        return false;
-    }
-
-    document.getElementById("button_checkout").onclick = checkout;
-
-    function successful() {
-        // add saldo == total_harga
-    }
-</script>
-
+    </script>
+    
+</body>
+{% include "footer.html" %}
 {% endblock content %}

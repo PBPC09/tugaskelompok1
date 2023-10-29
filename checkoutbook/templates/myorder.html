@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head> 
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #DEE3EF;
+        }
+
+        .card {
+            border: 1px solid #b0c4de; 
+            padding: 10px;  
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column; 
+            height: 100%;  
+            transition: 0.3s;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05); 
+            background-color: #FFFFFF;
+        }
+
+        button.btn-primary {
+            background-color: #3262FF;
+            border-color: #3262FF;
+        }
+
+        button.btn-secondary {
+            background-color: #bbbbbb;
+            border-color: bbbbbb;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+{% include "navbarloggedin.html" %}
+<div class="container mt-5">
+    <h1 style="display: inline;">My Order</h1>
+    <label style="display: inline;">Filter: </label>
+    <select id="myDropdown" style="display: inline;">
+        <option value="all">Semua</option>
+        <option value="cc">Metode Pembayaran Kartu Kredit</option>
+        <option value="dc">Metode Pembayaran Kartu Debit</option>
+        <option value="tf">Metode Pembayaran Transfer Bank</option>
+        <option value="ew">Metode Pembayaran E-Wallet</option>
+    </select>
+    
+    <div class="row" id="tempatcard"></div>
+
+</div>
+
+<script>
+    async function getOrderAll() {
+        return fetch("{% url 'checkoutbook:get_order_json' %}").then((res) => res.json())
+    }
+    async function getOrderCc() {
+        return fetch("{% url 'checkoutbook:get_order_json_cc' %}").then((res) => res.json())
+    }
+    async function getOrderDc() {
+        return fetch("{% url 'checkoutbook:get_order_json_dc' %}").then((res) => res.json())
+    }
+    async function getOrderTf() {
+        return fetch("{% url 'checkoutbook:get_order_json_tf' %}").then((res) => res.json())
+    }
+    async function getOrderEw() {
+        return fetch("{% url 'checkoutbook:get_order_json_ew' %}").then((res) => res.json())
+    }
+
+    var dropdown = document.getElementById("myDropdown");
+    dropdown.addEventListener("change", function() {
+        var selectedOption = dropdown.value;
+
+        // Lakukan sesuatu berdasarkan nilai yang dipilih
+        if (selectedOption === "all") {
+            show_order(getOrderAll());
+        } else if (selectedOption === "cc") {
+            show_order(getOrderCc());
+        } else if (selectedOption === "dc") {
+            show_order(getOrderDc());
+        } else if (selectedOption === "tf") {
+            show_order(getOrderTf());
+        } else if (selectedOption === "ew") {
+            show_order(getOrderEw());
+        }
+    });
+
+    async function show_order(getOrder) {
+        const orders = await getOrder
+        let htmlString = ""
+        orders.forEach((order) => {
+            console.log(order)
+            htmlString += 
+            `<div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Checkout ${order.pk}</h5>
+                        <p class="card-text">Alamat: ${order.fields.alamat}</p>
+                        <p class="card-text">Total Harga: $${order.fields.total_price}</p>
+                    </div>
+                </div>
+            </div>`   
+        })
+        document.getElementById("tempatcard").innerHTML = htmlString
+    }
+
+    show_order(getOrderAll())
+</script>
+
+{% include "footer.html" %}
+{% endblock %}
