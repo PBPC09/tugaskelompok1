@@ -5,60 +5,17 @@
 {% block meta %}
   <title>Received Orders</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'Style/received_orders.css' %}">
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/js/bootstrap.min.js"></script>
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins',sans-serif;
-    }
-
-    .container {
-      background-color: white;
-      width: 100%;
-      height: 100vh;
-    }
-
-    .notificationContainer {
-      background-color: whitesmoke;
-      margin: 2rem;
-      padding: 1rem 1rem;
-      border-radius: 1rem;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    #num-of-notif {
-      background-color: red;
-      color: #fff;
-      font-weight: 700;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      margin-left: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      line-height: 30px;
-    }
-
-    #mark-as-read {
-      color: gray;
-      cursor: pointer;
-      transition: 0.6s ease;
-    }
-
-    #mark-as-read:hover {
-      color: black;
-    }
-  </style>
 {% endblock meta %}
 
 {% block content %}
+<div id="data-urls" 
+     data-mark-notification-read-url="/registerbook/mark-notification-read/"
+     data-delete-notification-url="/registerbook/delete-notification/">
+</div>
+
 {% include "navbarseller.html" %}
   <div class="container">
     <div class="notificationContainer">
@@ -74,12 +31,10 @@
         <div class="card mb-3 {% if not notif.is_read %}border-primary{% endif %}">
             <div class="card-body">
                 <img alt="photo" src="{% static 'Gambar/profile.png' %}" class="float-left mr-3" style="width: 50px; height: 50px; border-radius: 50%;">
-                <p class="card-text">
                 <p class="card-text mb-0">Pesanan masuk dari {{ notif.buyer.username }}.</p>
                 {% autoescape off %}
                 {{ notif.message|linebreaks }}
                 {% endautoescape %}
-                </p>
                 <button class="btn btn-sm btn-info float-right" data-notif-id="{{ notif.id }}">Read</button>
                 <button class="btn btn-sm btn-danger float-right mr-2 delete-notif-btn" data-notif-id="{{ notif.id }}">Delete</button>
             </div>
@@ -89,111 +44,8 @@
     </div>
   </div>
 
-<script>
-  const readNotifButtons = document.querySelectorAll('.btn-info');
-  readNotifButtons.forEach((button) => {
-      button.addEventListener('click', (event) => {
-          const notifId = event.target.dataset.notifId;
-          markNotificationAsRead(notifId);
-      });
-  });
-
-  function markNotificationAsRead(notifId) {
-      // Mengirim permintaan ke server untuk menandai notifikasi sebagai 'sudah dibaca'
-      fetch(`/registerbook/mark-notification-read/${notifId}/`, {
-          method: 'GET',
-      })
-      .then(response => {
-          if (response.ok) {
-              location.reload();  // Refresh halaman setelah memperbarui notifikasi
-          } else {
-              console.error('Failed to mark notification as read');
-          }
-      })
-      .catch(error => {
-          console.error('Error:', error);
-      });
-  }
-
-  function markAllAsRead() {
-    const unreadNotifIds = Array.from(unReadMessages).map(message => message.querySelector('.btn-info').dataset.notifId);
-    
-    const promises = unreadNotifIds.map(notifId => {
-        return fetch(`/registerbook/mark-notification-read/${notifId}/`, {
-            method: 'GET',
-        });
-    });
-
-    Promise.all(promises)
-    .then(responses => {
-        const allOk = responses.every(response => response.ok);
-        if (allOk) {
-            location.reload();
-        } else {
-            console.error('Some notifications failed to mark as read');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-  }
-
-  const unReadMessages = document.querySelectorAll('.border-primary')
-  const unReadMessagesCount = document.getElementById('num-of-notif')
-  const markAll = document.getElementById('mark-as-read')
-
-  updateNotifCount();
-
-  function updateNotifCount() {
-    const newUnreadMessages = document.querySelectorAll('.border-primary')
-    if (newUnreadMessages.length === 0) {
-      unReadMessagesCount.innerText = '';
-      unReadMessagesCount.style.display = 'none';
-    } else {
-      unReadMessagesCount.innerText = newUnreadMessages.length;
-      unReadMessagesCount.style.display = 'block';
-    }
-  }
-
-  unReadMessages.forEach((message) => {
-    message.addEventListener('click', () => {
-      message.classList.remove('border-primary')
-      updateNotifCount();
-    })
-  })
-
-  markAll.addEventListener('click', markAllAsRead);
-
-  document.addEventListener("DOMContentLoaded", function() {
-    const deleteButtons = document.querySelectorAll('.delete-notif-btn');
-    
-    deleteButtons.forEach((button) => {
-        button.addEventListener('click', (event) => {
-            const notifId = event.target.dataset.notifId;
-            deleteNotification(notifId);
-        });
-    });
-  });
-
-  
-  function deleteNotification(notifId) {
-    fetch(`/registerbook/delete-notification/${notifId}/`, {
-        method: 'DELETE',
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "success") {
-            location.reload();
-        } else {
-            console.error('Failed to delete notification');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-  }
-</script>
-
 {% include "footer.html" %}
+
+<script src="{% static 'Script/received_orders.js' %}"></script>
 
 {% endblock %}

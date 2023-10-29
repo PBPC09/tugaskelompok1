@@ -12,6 +12,7 @@ from checkoutbook.models import Checkout
 @login_required(login_url='/login')
 def show_registered_books(request):
     books = Book.objects.all()
+    
     last_login = request.COOKIES['last_login']
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -25,7 +26,6 @@ def show_registered_books(request):
 
 @login_required(login_url='/login')
 def show_received_orders(request):
-    #received_orders = Order.objects.filter(seller__user=request.user)
     last_login = request.COOKIES['last_login']
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -36,7 +36,6 @@ def show_received_orders(request):
         'username': request.user,
         'notifications': notifications,
         'last_login' : formatted_without_ms,
-
     }
 
     return render(request, 'received_orders.html', context=context)
