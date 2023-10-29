@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 <head>
     {% block meta %}
         <title>Login</title>
@@ -9,112 +9,7 @@
 
 <body>
     {% block content %}
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(#273faa, #010246);
-        }
-
-        .container {
-            display: flex;
-            max-width: 850px;
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .login {
-            width: 400px;
-        }
-
-        form {
-            width: 250px;
-            margin: 60px auto;
-        }
-
-        h1 {
-            text-align: center;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700; 
-
-        }
-
-        hr {
-            border-top: 2px solid #e7a1b0;
-        }
-
-        form label {
-            display: block;
-            font-size: 16px;
-            font-weight: 400;
-            padding: 5px;
-        }
-
-        input {
-            width: 100%;
-            margin: 2px;
-            border: none;
-            outline: none;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid gray;
-        }
-
-        button {
-            font-weight: 600;
-            border: none;
-            outline: none;
-            padding: 8px;
-            width: 100%;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 20px;
-            border-radius: 5px;
-            background: #010246;
-            transition: background 0.2s ease;
-        }
-
-        button:hover {
-            background: #3262ff;
-        }
-
-        .right img {
-            width: 450px;
-            height: 100%;
-            border-top-right-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-
-        @media (max-width: 880px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            form {
-                width: 90%;
-                margin: 20px auto;
-            }
-
-            .login {
-                width: 100%;
-            }
-
-            .right img {
-                width: 80%;
-                height: auto;
-            }
-        }
-    </style>
-
+    <link rel="stylesheet" href="{% static 'Style/login.css' %}">
     <div class="container">
         <div class = "login">
 

@@ -1,0 +1,42 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.scrollspy-example {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.table-row-spacing tbody tr:not(:last-child) {
+    border-bottom: none;
+}
+
+.table-row-spacing tbody tr:after {
+    content: "";
+    display: block;
+    height: 20px;
+}
+
+.overflow-control {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+button {
+    background-color: #273faa; 
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3; 
+}
