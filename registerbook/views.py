@@ -73,7 +73,7 @@ def add_book_ajax(request):
         publisher = request.POST.get("publisher")
         page_count = int(request.POST.get("page_count"))
         genres = request.POST.get("genres")
-        user = request.user
+        # user = request.user
 
         new_book = Book(
             title=title, 
@@ -86,7 +86,7 @@ def add_book_ajax(request):
             publisher=publisher,
             page_count=page_count, 
             genres=genres,
-            user=user
+            # user=user
         )
         new_book.save()
 
