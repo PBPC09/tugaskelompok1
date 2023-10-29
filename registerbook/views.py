@@ -22,7 +22,7 @@ def show_registered_books(request):
         'books': books,
     }
 
-    return render(request, 'regist_book.html', context=context)
+    return render(request, 'regist_book.html', context)
 
 @login_required(login_url='/login')
 def show_received_orders(request):
@@ -30,7 +30,7 @@ def show_received_orders(request):
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
 
-    notifications = Notification.objects.all().order_by('-timestamp')
+    notifications = Notification.objects.all()
 
     context = {
         'username': request.user,
@@ -38,7 +38,7 @@ def show_received_orders(request):
         'last_login' : formatted_without_ms,
     }
 
-    return render(request, 'received_orders.html', context=context)
+    return render(request, 'received_orders.html', context)
 
 def show_json(request):
     books = Book.objects.all()
