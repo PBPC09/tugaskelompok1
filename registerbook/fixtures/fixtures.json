@@ -995,7 +995,7 @@
     "pk": 63,
     "model": "registerbook.Book",
     "fields": {
-      "title": "The Complete Works of William Shakespeare: All 213 Plays, Poems, Sonnets, Apocryphal Plays + The Biography: The Life of William Shakespeare by Sidney Lee: Hamlet - Romeo and Juliet - King Lear - A Midsummer Night’s Dream - Macbeth - The Tempest",
+      "title": "The Complete Works of William Shakespeare: All 213 Plays, Poems, Sonnets, Apocryphal Plays + The Biography",
       "author": "William Shakespeare",
       "rating": 4.7,
       "voters": 6,
