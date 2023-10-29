@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.core import serializers
 from .models import Book, Notification
 from checkoutbook.models import Checkout
@@ -91,22 +91,18 @@ def remove_book(request, book_id):
     
     return HttpResponseNotFound()
 
+@csrf_exempt
+def remove_notification(request, notif_id):
+    try:
+        notif = Notification.objects.get(pk=notif_id)
+        notif.delete()
+        return JsonResponse({"status": "success"}, status=200)
+    except Notification.DoesNotExist:
+        return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
+
 def mark_notification_read(request, notif_id):
     notif = Notification.objects.get(pk=notif_id)
     notif.is_read = True
     notif.save()
-    # Anda dapat mengarahkan kembali ke halaman yang sama atau ke halaman ringkasan pesanan
+
     return redirect('registerbook:show_received_orders')
-
-from django.http import JsonResponse
-
-def get_order_details(request):
-    notif_id = request.GET.get('notifId')
-    notif = Notification.objects.get(pk=notif_id)
-    order = Checkout.objects.filter(user=notif.buyer)
-
-    data = {
-        'alamat': order.alamat,
-        'total_price': order.total_price
-    }
-    return JsonResponse(data)

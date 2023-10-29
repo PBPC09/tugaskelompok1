@@ -34,9 +34,11 @@ def checkout_ajax(request):
         new_item.items.set(items)
         new_item.save()
 
-        message=f"Pesanan masuk dari {user.username}.\nOrder Sumarry:"
+        message = f"{new_item.alamat} | {new_item.metode_pembayaran} | {new_item.total_price} SAR\n"
+        message += "\nOrder Summary:\n"
         for item in items:
-            message += f"\n{item.book.title}"
+            message += f"- {item.book.title}\n"
+            
         Notification.objects.create(buyer=user, message=message)
         
         for item in items:

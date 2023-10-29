@@ -176,8 +176,6 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Book</button>
 </div>
 
-{% include "footer.html" %}
-
 <script>
     $(document).ready(function() {
         $(".show-detail-text").click(function() {
@@ -275,4 +273,7 @@
         window.location.href = "{% url 'main:logout' %}";
     });
 </script>
+
+{% include "footer.html" %}
+
 {% endblock %}
