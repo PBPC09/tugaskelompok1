@@ -6,15 +6,20 @@ from .models import Book, CartItem
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.http import HttpResponseNotFound
+import datetime
+from datetime import datetime
 # Create your views here.
 @login_required(login_url='/login')
 def show_buybooks(request):
     books = Book.objects.all()
     form = AddToCart()
-
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
     context = {
         'books': books,
         'form' : form,
+        "last_login":formatted_without_ms,
     }
     
     return render(request, 'buybooks.html', context)
@@ -33,8 +38,12 @@ def add_cart_ajax(request, id):
 @login_required(login_url='/login')
 def show_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
     context = {
         'cart_items': cart_items,
+        'last_login' : formatted_without_ms,
     }
     return render(request, 'cartwindow.html', context)
 

@@ -9,15 +9,24 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def show_landing_page(request):
-    context = {}
+    context = {
+    }
     return render(request, "landingpage.html", context)
 
+@login_required(login_url='/login')
 @csrf_exempt
 def show_landing_page_logged_in(request):
-    context = {}
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
+    context = {
+        'last_login': formatted_without_ms,
+    }
     return render(request, "landingpageafterlogin.html", context)
 
 def signup(request):
@@ -54,7 +63,7 @@ def login_user(request):
             else:
                 response = HttpResponseRedirect(reverse("main:show_landing_page_logged_in"))
  
-            response.set_cookie('last_login', str(datetime.datetime.now()))
+            response.set_cookie('last_login', str(datetime.now()))
             return response
         else:
             messages.info(request, 'Sorry, incorrect username or password. Please try again.')
@@ -63,4 +72,6 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('main:show_landing_page')
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response

@@ -21,11 +21,15 @@ from django.contrib.auth.models import User
 def show_forum(request):
     questions = ForumHead.objects.all()
     comments = ForumComment.objects.all()
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
     context = {
         'user' : request.user,
         'name':request.user.username,
         'questions' : questions,
         'comments': comments,
+        'last_login': formatted_without_ms,
     }
     return render(request, "forum.html", context)
 
@@ -186,11 +190,15 @@ def show_books_json(request):
 def show_forumcomments(request, id_head):
     question = ForumHead.objects.get(pk = id_head)
     comments = ForumComment.objects.filter(comment_to=question)
-    
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
     context = {
         'name' : request.user,
         'question': question,
         'comments': comments,
+        'last_login': formatted_without_ms,
+
     }
     
     return render(request, "forumcomments.html", context)

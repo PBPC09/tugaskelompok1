@@ -6,8 +6,8 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages 
-
-
+import datetime
+from datetime import datetime
 @login_required
 def show_book_profile(request):
     if request.method == 'POST':
@@ -29,15 +29,25 @@ def show_book_profile(request):
         books = Book.objects.all()
     
     form = AddToWishlistForm()
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
+
     context = {
         'books': books,
-        'form': form
+        'form': form,
+        'last_login' : formatted_without_ms,
+
     }
     return render(request, 'bookprofile.html', context=context)
 
 def show_book_details(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
-    return render(request, 'book_details.html', {'book': book})
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    return render(request, 'book_details.html', {'book': book, 'last_login' : formatted_without_ms})
 
 @login_required
 @csrf_exempt
@@ -61,8 +71,14 @@ def add_to_wishlist(request):
 @login_required
 def mywishlist(request):
     wishlist_books = Wishlist.objects.filter(user=request.user)
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
+
     context = {
-        'wishlist_books': wishlist_books
+        'wishlist_books': wishlist_books,
+        'last_login' : formatted_without_ms,
+
     }
     return render(request, 'mywishlist.html', context=context)
 
@@ -75,9 +91,12 @@ def delete_wishlist_item(request, item_id):
 
 def get_books(request):
     rating = request.GET.get('rating')
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
 
     books = Book.objects.all()
     if rating:
         books = books.filter(rating=rating)
 
-    return render(request, 'books.html', {'books': books})
+    return render(request, 'books.html', {'books': books, 'last_login' : formatted_without_ms})

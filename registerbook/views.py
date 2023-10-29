@@ -4,12 +4,16 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotFound
 from django.core import serializers
 from .models import Book, Order
-
+import datetime
+from datetime import datetime
 @login_required(login_url='/login')
 def show_registered_books(request):
     books = Book.objects.all()
-   
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
     context = {
+        'last_login' : formatted_without_ms,
         'username': request.user,
         'books': books,
     }
@@ -19,8 +23,12 @@ def show_registered_books(request):
 @login_required(login_url='/login')
 def show_received_orders(request):
     #received_orders = Order.objects.filter(seller__user=request.user)
+    last_login = request.COOKIES['last_login']
+    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
     context = {
         'username': request.user,
+        'last_login' : formatted_without_ms,
         #'orders': received_orders,
     }
 

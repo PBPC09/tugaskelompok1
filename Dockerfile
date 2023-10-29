@@ -29,4 +29,4 @@ RUN chown -R django:django /app
 USER django
 
 # Run application
-# CMD gunicorn lembarpena.wsgi:application
+CMD gunicorn lembarpena.wsgi:application
