@@ -5,7 +5,6 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.core import serializers
 from .models import Book, Order
 
-# Buat nampilin semua buku di page admin
 @login_required(login_url='/login')
 def show_registered_books(request):
     books = Book.objects.all()
@@ -17,7 +16,6 @@ def show_registered_books(request):
 
     return render(request, 'regist_book.html', context=context)
 
-# Buat nampilin order yang masuk
 @login_required(login_url='/login')
 def show_received_orders(request):
     #received_orders = Order.objects.filter(seller__user=request.user)
@@ -28,22 +26,26 @@ def show_received_orders(request):
 
     return render(request, 'received_orders.html', context=context)
 
-# Json semua buku
 def show_json(request):
     books = Book.objects.all()
     return HttpResponse(serializers.serialize('json', books), content_type="application/json")
 
-# Json by id
 def show_json_by_id(request, id):
     data = Book.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-# Json semua buku tapi dipake di AJAX
 def get_book_json(request):
-    books = Book.objects.all()
+    rating_filter = request.GET.get('rating_filter')
+    
+    if rating_filter == "gt4":
+        books = Book.objects.filter(rating__gt=4)
+    elif rating_filter == "lte4":
+        books = Book.objects.filter(rating__lte=4)
+    else:
+        books = Book.objects.all()
+        
     return HttpResponse(serializers.serialize('json', books))
 
-# Add buku ajax
 @csrf_exempt
 def add_book_ajax(request):
     if request.method == 'POST':
@@ -78,7 +80,6 @@ def add_book_ajax(request):
 
     return HttpResponseNotFound()
 
-# DELETE buku ajax
 @csrf_exempt
 def remove_book(request, book_id):
     if request.method == "DELETE":
