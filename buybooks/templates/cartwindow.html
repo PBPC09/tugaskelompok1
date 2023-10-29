@@ -8,7 +8,6 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'Style/cartwindow.css' %}">
-<script src="{% static 'Script/cartwindow.js' %}"></script>
 
 {% include "navbarloggedin.html" %}
 <div class="container mt-5">
@@ -33,5 +32,6 @@
     </div>
     <button type="button" class="btn btn-primary" id="button_co" style="width: 200px;">Checkout</button>
 </div>
+<script src="{% static 'Script/cartwindow.js' %}"></script>
 {% include "footer.html" %}
 {% endblock %}
