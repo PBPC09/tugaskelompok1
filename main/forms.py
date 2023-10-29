@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from main.models import Profile
 
 class SignUpForm(UserCreationForm):
-    ROLE_CHOICES = [('Admin', 'Admin'), ('Buyer', 'Buyer')]
+    ROLE_CHOICES = [('A', 'Admin'), ('B', 'Buyer')]
     role = forms.ChoiceField(
         label="Choose Your User Type",
         required=True,
