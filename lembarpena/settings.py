@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-tezdpwt*m&iicr=&%&7b9yo@qjs6mxo(sou@&g0z()%z40^s6s
 
 PRODUCTION = env.bool('PRODUCTION', False)
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -138,3 +138,5 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+CSRF_COOKIE_SECURE = True 
+SESSION_COOKIE_SECURE = True
