@@ -31,7 +31,6 @@ def show_landing_page_logged_in(request):
     }
     return render(request, "landingpageafterlogin.html", context)
 
-@csrf_exempt
 def signup(request):
     form = SignUpForm()
     if request.method == "POST":
@@ -50,7 +49,6 @@ def signup(request):
     context = {'form': form}
     return render(request, 'signup.html', context)
 
-@csrf_exempt
 def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
