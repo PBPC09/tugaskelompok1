@@ -11,4 +11,6 @@ urlpatterns = [
     path('show_books_json_lt', show_books_json_rating_lt, name="show_books_json_lt"),
     path('show_books_json_gte', show_books_json_rating_gte, name="show_books_json_gte"),
     path('selected/<int:id>/', selected, name="selected"),
+    path('show_cart_json/<str:uname>/', show_cart_json, name="show_cart_json"),
+    path('show_carts_json', show_carts_json, name="show_carts_json"),
 ]
