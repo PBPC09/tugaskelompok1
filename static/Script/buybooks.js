@@ -49,7 +49,7 @@ async function show_book(getBook) {
                             <div class="accordion-body">
                                 <p class="card-text">
                                     <strong>Genres:</strong> ${item.fields.genres}
-                                    <strong>Rating:</strong> ${item.fields.ratings}
+                                    <strong>Rating:</strong> ${item.fields.rating}
                                     <strong>Voters:</strong> ${item.fields.voters}
                                     <strong>Page Count:</strong> ${item.fields.page_count}
                                 </p>

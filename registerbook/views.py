@@ -7,7 +7,6 @@ from .models import Book
 import datetime
 from datetime import datetime
 from .models import Notification
-from checkoutbook.models import Checkout
 
 @login_required(login_url='/login')
 def show_registered_books(request):
@@ -30,7 +29,7 @@ def show_received_orders(request):
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
 
-    notifications = Notification.objects.all()
+    notifications = Notification.objects.all().order_by('-timestamp')
 
     context = {
         'username': request.user,
