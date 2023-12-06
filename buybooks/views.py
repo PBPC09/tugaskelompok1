@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.core import serializers
 from .models import Book, CartItem
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,7 @@ from .forms import *
 from django.http import HttpResponseNotFound
 import datetime
 from datetime import datetime
-# Create your views here.
+
 @login_required(login_url='/login')
 def show_buybooks(request):
     books = Book.objects.all()
@@ -24,23 +24,33 @@ def show_buybooks(request):
     
     return render(request, 'buybooks.html', context)
 
+@login_required(login_url='/login')
 def add_cart_ajax(request, id):
     if request.method == 'POST':
         user = request.user
         book = Book.objects.get(pk=id)
         quantity = request.POST.get("quantity")
         is_ordered = False  
-        new_item = CartItem(user=user, book=book, quantity=quantity, is_ordered=is_ordered)
+
+        new_item = CartItem(
+            user=user, 
+            book=book, 
+            quantity=quantity, 
+            is_ordered=is_ordered
+        )
         new_item.save()
+
         return HttpResponse(b"CREATED", status=201)
+    
     return HttpResponseNotFound()
 
 @login_required(login_url='/login')
 def show_cart(request):
-    cart_items = CartItem.objects.filter(user=request.user)
+    cart_items = CartItem.objects.filter(user=request.user, is_ordered=False)
     last_login = request.COOKIES['last_login']
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
+    
     context = {
         'cart_items': cart_items,
         'last_login' : formatted_without_ms,
