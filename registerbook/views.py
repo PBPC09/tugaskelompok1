@@ -25,9 +25,12 @@ def show_registered_books(request):
 
 @login_required(login_url='/login')
 def show_received_orders(request):
-    last_login = request.COOKIES['last_login']
-    parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
-    formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
+    last_login = request.COOKIES.get('last_login')
+    if last_login:
+        parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
+        formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        formatted_without_ms = ""
 
     notifications = Notification.objects.all().order_by('-timestamp')
 
