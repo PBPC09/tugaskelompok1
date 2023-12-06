@@ -77,8 +77,15 @@ def show_books_json_rating_gte(request):
 
 def selected(request, id):
     item = CartItem.objects.get(pk=id)
-    item.is_ordered = True
+    if item.is_ordered == False :
+        item.is_ordered = True
+    else:
+        item.is_ordered = False
+    # print(item)
+    # print("AAAAAAAAAAAAA")
+    item.is_ordered = True    
     item.save()
+
     return redirect('buybooks:show_cart')
 
 def show_cart_json(request, uname):

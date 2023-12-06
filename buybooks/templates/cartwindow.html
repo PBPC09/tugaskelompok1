@@ -17,8 +17,9 @@
         <div class="col-md-4 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <input class="form-check-input" type="checkbox" data-book-id="{{item.id}}">
-                    <h5 class="card-title">{{ item.book.title }}</h5>
+                    <input class="form-check-input" type="checkbox" id="book-{{ item.id }}" name="book-{{ item.id }}" data-book-id="{{item.id}}">
+                    <!-- <h5 class="card-title">{{ item.book.title }}</h5> -->
+                    <label for="book-{{ item.id }}">{{ item.book.title }}</label>
                     <p class="card-text">Qty: {{ item.quantity }}</p>
                     <p class="card-text">Subtotal Harga: {{item.book.currency}} {{ item.subtotal }}</p>
                     <form method="post" action="{% url 'buybooks:delete_cart' item.id %}">

@@ -24,6 +24,7 @@ def show_checkout(request):
         'form': form,
         'currency' : 'SAR',
     }
+    # print("aa")
     return render(request, 'checkout.html', context)
     
 def checkout_ajax(request):
