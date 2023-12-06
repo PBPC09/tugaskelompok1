@@ -58,3 +58,4 @@ Admin merupakan profil untuk mengatur pengelolaan penjualan buku lewat perusahaa
 
 2. Buyer </br>
 Buyer atau pembeli ini dapat membeli buku yang dicari dan diinginkan dari para penjual buku. Nantinya buyer ini juga bisa berdiskusi di forum dengan buyer yang lain.
+
