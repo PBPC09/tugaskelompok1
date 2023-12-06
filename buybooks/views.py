@@ -80,3 +80,18 @@ def selected(request, id):
     item.is_ordered = True
     item.save()
     return redirect('buybooks:show_cart')
+
+def show_cart_json(request, uname):
+    data_item = CartItem.objects.all()
+    for data in data_item:
+        if data.user.username == uname:
+            user_id = data.user
+            data = CartItem.objects.filter(user = user_id)
+            break
+        else:
+            data = []
+    return HttpResponse(serializers.serialize('json', data), content_type="application/json")
+
+def show_carts_json(request):
+    books = CartItem.objects.all()
+    return HttpResponse(serializers.serialize('json', books), content_type="application/json")
