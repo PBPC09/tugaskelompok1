@@ -83,7 +83,7 @@ def selected(request, id):
         item.is_ordered = False
     # print(item)
     # print("AAAAAAAAAAAAA")
-    item.is_ordered = True    
+    # item.is_ordered = True    
     item.save()
 
     return redirect('buybooks:show_cart')

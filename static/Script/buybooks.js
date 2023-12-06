@@ -77,6 +77,8 @@ $('body').on('click', '.add-to-cart-button', function() {
 function addToCart() {
     fetch(`/buybooks/create/${bookId}/`, {
         method: "POST",
+        headers: {
+            'x-csrf-token' : document.getElementsByName("csrfmiddlewaretoken")[0].value },
         body: new FormData(document.querySelector('#form'))
     })
 
