@@ -62,6 +62,7 @@
     <li><a href="#">Explore</a></li>
   </ul>
   <p class="footer__copy">&#169; Created by C09</p>  
-  <p class="footer__copy">Last Login : {{last_login}}</p>
-
+  {% if user.is_authenticated %}
+    <p class="footer__copy">Last Login : {{ user.last_login }}</p>
+  {% endif %}
 </footer>

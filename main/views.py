@@ -16,8 +16,8 @@ from django.contrib.auth.decorators import login_required
 def show_landing_page(request):
     if request.user.is_authenticated:
         return show_landing_page_logged_in(request)
-    context = {
-    }
+    context = {}
+
     return render(request, "landingpage.html", context)
 
 @login_required(login_url='/login')
@@ -26,9 +26,7 @@ def show_landing_page_logged_in(request):
     last_login = request.COOKIES['last_login']
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
-    context = {
-        'last_login': formatted_without_ms,
-    }
+    context = {'last_login': formatted_without_ms,}
     return render(request, "landingpageafterlogin.html", context)
 
 @csrf_exempt
@@ -79,4 +77,3 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:show_landing_page'))
     response.delete_cookie('last_login')
     return render(request, 'landingpage.html', {})
-
