@@ -41,8 +41,8 @@ def checkout_ajax(request):
         new_item = Checkout(user=user, alamat=alamat, metode_pembayaran=metode_pembayaran, total_price=total_price)
         new_item.save()
 
-        new_item.items.set(items)
-        new_item.save()
+        # new_item.items.set(items)
+        # new_item.save()
 
         message = f"{new_item.alamat} | {new_item.metode_pembayaran} | {new_item.total_price} SAR\n"
         message += "\nOrder Summary:\n"
