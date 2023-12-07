@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.core import serializers
 from .models import CartItem, Checkout
@@ -31,32 +31,40 @@ def show_checkout(request):
 
 @csrf_exempt
 def checkout_ajax(request):
-    if request.method == 'POST':
-        user = request.user
-        items = CartItem.objects.filter(user=request.user, is_ordered=True)
-        alamat = request.POST.get("alamat")
-        metode_pembayaran = request.POST.get("metode_pembayaran")
-        total_price = sum(item.subtotal() for item in items)
+    try:
+        if request.method == 'POST':
+            user = request.user
+            items = CartItem.objects.filter(user=request.user, is_ordered=True)
+            alamat = request.POST.get("alamat")
+            metode_pembayaran = request.POST.get("metode_pembayaran")
+            total_price = sum(item.subtotal() for item in items)
 
-        new_item = Checkout(user=user, alamat=alamat, metode_pembayaran=metode_pembayaran, total_price=total_price)
-        new_item.save()
+            new_item = Checkout(user=user, alamat=alamat, metode_pembayaran=metode_pembayaran, total_price=total_price)
+            new_item.save()
 
-        # new_item.items.set(items)
-        # new_item.save()
+            # new_item.items.set(items)
+            # new_item.save()
 
-        message = f"{new_item.alamat} | {new_item.metode_pembayaran} | {new_item.total_price} SAR\n"
-        message += "\nOrder Summary:\n"
-        for item in items:
-            message += f"- {item.book.title}\n"
+            message = f"{new_item.alamat} | {new_item.metode_pembayaran} | {new_item.total_price} SAR\n"
+            message += "\nOrder Summary:\n"
+            for item in items:
+                message += f"- {item.book.title}\n"
+                
+            Notification.objects.create(buyer=user, message=message)
             
-        Notification.objects.create(buyer=user, message=message)
-        
-        for item in items:
-            item.delete()
+            for item in items:
+                item.delete()
 
-        return HttpResponseRedirect(reverse('buybooks:show_cart'))
+            return HttpResponseRedirect(reverse('buybooks:show_cart'))
 
-    return HttpResponseNotFound()
+        return HttpResponseNotFound()
+    except: 
+        return JsonResponse({"user" : user, 
+                             "items" : items, 
+                             "alamat" : alamat, 
+                             "metode_pembayaran" : metode_pembayaran,
+                             "total_price" : total_price,
+                             "new_item" : new_item})
 
 @login_required(login_url='/login')
 def show_myorder(request):
