@@ -9,6 +9,8 @@ from .forms import CheckoutForm
 from django.contrib.auth.decorators import login_required
 import datetime
 from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
+
 @login_required(login_url='/login')
 def show_checkout(request):
     form = CheckoutForm()
@@ -26,7 +28,8 @@ def show_checkout(request):
     }
     # print("aa")
     return render(request, 'checkout.html', context)
-    
+
+@csrf_exempt
 def checkout_ajax(request):
     if request.method == 'POST':
         user = request.user
