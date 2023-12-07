@@ -8,6 +8,7 @@ from .forms import *
 from django.http import HttpResponseNotFound
 import datetime
 from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required(login_url='/login')
 def show_buybooks(request):
@@ -25,6 +26,7 @@ def show_buybooks(request):
     return render(request, 'buybooks.html', context)
 
 @login_required(login_url='/login')
+@csrf_exempt
 def add_cart_ajax(request, id):
     if request.method == 'POST':
         user = request.user
