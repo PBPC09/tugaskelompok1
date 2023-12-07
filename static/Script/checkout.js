@@ -21,6 +21,7 @@ function checkout() {
         method: "POST",
         body: new FormData(document.querySelector('#checkout-form'))
     }).then(response => {
+        console.log(response);
         successful();
     }).catch(error => {
         console.error('Error:', error);
