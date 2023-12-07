@@ -78,6 +78,7 @@ def show_books_json_rating_gte(request):
     books = Book.objects.filter(rating__gte=4)
     return HttpResponse(serializers.serialize('json', books), content_type="application/json")
 
+@csrf_exempt
 def selected(request, id):
     item = CartItem.objects.get(pk=id)
     if item.is_ordered == False :
