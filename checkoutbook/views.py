@@ -60,7 +60,7 @@ def checkout_ajax(request):
 
 @login_required(login_url='/login')
 def show_myorder(request):
-    orders = Checkout.objects.all()
+    orders = Checkout.objects.filter(user = request.user)
     last_login = request.COOKIES['last_login']
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')

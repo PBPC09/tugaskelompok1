@@ -84,6 +84,7 @@ def mywishlist(request):
     return render(request, 'mywishlist.html', context=context)
 
 @login_required
+@csrf_exempt
 def delete_wishlist_item(request, item_id):
     item = get_object_or_404(Wishlist, pk=item_id)
     if request.method == 'POST':

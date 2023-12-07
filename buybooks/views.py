@@ -59,6 +59,7 @@ def show_cart(request):
     }
     return render(request, 'cartwindow.html', context)
 
+@csrf_exempt
 def delete_cart(request, id):
     item = get_object_or_404(CartItem, pk=id)
     if request.method == 'POST':
