@@ -62,6 +62,10 @@ def get_book_json(request):
         
     return HttpResponse(serializers.serialize('json', books))
 
+def get_notif_json(request):
+    notif = Notification.objects.all()
+    return HttpResponse(serializers.serialize('json', notif))
+
 @csrf_exempt
 def add_book_ajax(request):
     if request.method == 'POST':
