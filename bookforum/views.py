@@ -53,6 +53,7 @@ def create_question(request):
                 'question' : new_question.question,
                 'date' : new_question.date,
                 'book' : new_question.book.title,
+                'book_id' : new_question.book,
             }
         }
         new_question.save()
@@ -115,6 +116,7 @@ def show_forum_json(request):
             "pk": model.pk,  # Include the "pk" field
             "fields": {
                 "book": book.title,
+                "book_id" : book.id,
                 "user": user.username,
                 "date": str(model.date),  # Convert the date to a string
                 "title": model.title,
@@ -141,6 +143,7 @@ def show_forum_json_popular_only(request):
             "pk": model.pk,  # Include the "pk" field
             "fields": {
                 "book": book.title,
+                "book_id" : book.id,
                 "user": user.username,
                 "date": str(model.date),  # Convert the date to a string
                 "title": model.title,
@@ -185,6 +188,11 @@ def show_uniquecomments_json(request, id):
 def show_books_json(request):
     books = Book.objects.all()
     return HttpResponse(serializers.serialize('json', books), content_type="application/json")
+    
+def book_details(request, id):
+    books = Book.objects.filter(pk = id)
+    return HttpResponse(serializers.serialize('json', books), content_type="application/json")
+
 
 @login_required(login_url='/login/')
 def show_forumcomments(request, id_head):
