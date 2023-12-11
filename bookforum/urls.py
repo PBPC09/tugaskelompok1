@@ -19,6 +19,6 @@ urlpatterns = [
     path('show_forumcomments/<int:id_head>/', show_forumcomments, name="show_forumcomments"),
     path('forum/json/', show_forum_json, name="show_forum_json"),
     path('comments/json/', show_comments_json, name="show_comments_json"),
-    path('show_forum_json_popular_only', show_forum_json_popular_only, name="show_forum_popular_only"),
+    path('show_forum_json_popular_only/', show_forum_json_popular_only, name="show_forum_popular_only"),
     path('book_details/json/<int:id>', book_details, name="book_details"),
 ]
