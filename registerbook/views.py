@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -99,6 +100,32 @@ def add_book_ajax(request):
         return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
+
+@csrf_exempt
+def create_book_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_book = Book.objects.create(
+            user = request.user,
+            title = data["title"],
+            author = data["author"],
+            rating = float(data["rating"]),
+            voters = int(data["voters"]),
+            price = int(data["price"]),
+            currency = data["currency"],
+            description = data["description"],
+            publisher = data["publisher"],
+            page_count = data["page_count"],
+            genres = data["genres"],
+        )
+
+        new_book.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
 
 @csrf_exempt
 def remove_book(request, book_id):
