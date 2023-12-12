@@ -5,4 +5,8 @@ psycopg2-binary
 requests
 urllib3
 django-environ
+<<<<<<< HEAD
 django-cors-headers
+=======
+corsheaders
+>>>>>>> a3f4aed373984e6b8807fbdb8c3aeb5137360452

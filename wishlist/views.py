@@ -1,8 +1,9 @@
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AddToWishlistForm
 from .models import Wishlist
 from registerbook.models import Book
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages 
@@ -102,3 +103,70 @@ def get_books(request):
         books = books.filter(rating=rating)
 
     return render(request, 'books.html', {'books': books, 'last_login' : formatted_without_ms})
+
+# @login_required
+def mywishlist_json(request):
+    # wishlist_books = Wishlist.objects.filter(user=request.user)
+    # a = [
+    #     {
+    #         "model": "wishlist.wishlist",
+    #         "pk": 1,
+    #         "fields": {
+    #             "title": "Antiques Roadkill: A Trash 'n' Treasures Mystery",
+    #             "preference": "Maybe Later"
+    #         }
+    #     },
+    #             {
+    #         "model": "wishlist.wishlist",
+    #         "pk": 1,
+    #         "fields": {
+    #             "title": "aaaa",
+    #             "preference": "Funn"
+    #         }
+    #     }
+    # ]
+    # b = json.dumps(a)
+    # return  HttpResponse(b, content_type="application/json")
+    print("aaaaa")  
+    wishlist_books = Wishlist.objects.all()
+    wishlist_data = [
+        {
+            'model' : "wishlist.wishlist",
+            'pk' : 2,
+            'fields' : {
+                'title': wishlist.book.title,
+                'preference': wishlist.get_preference_display(),
+            }
+        }
+        for wishlist in wishlist_books
+    ]
+    json_data = json.dumps(wishlist_data)
+    return HttpResponse(json_data, content_type="application/json")
+
+
+def add_to_wishlist_flutter(request, level):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        book_id = data['book_id']
+        preference = preference_level(level)
+        book = Book.objects.get(pk=book_id)
+
+        if Wishlist.objects.filter(user=request.user, book=book).exists():
+            return JsonResponse({'status': 'error', 'message': f"Buku berjudul {book.title} sudah ada dalam wishlist Anda."})
+        else:
+            Wishlist.objects.create(user=request.user, book=book, preference=preference)
+            return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully!'})
+
+def preference_level (level):
+    if level == 1:
+        return 'Not Interested'
+    elif level == 2:
+        return 'Maybe Later'
+    elif level == 3:
+        return 'Interested'
+    elif level == 4:
+        return 'Really Want It'
+    elif level == 5:
+        return 'Musr Have'
+    else:
+        return 'Not Interested'
