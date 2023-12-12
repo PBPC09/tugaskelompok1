@@ -132,7 +132,7 @@ def mywishlist_json(request):
     wishlist_data = [
         {
             'model' : "wishlist.wishlist",
-            'pk' : 2,
+            'pk' : wishlist.pk,
             'fields' : {
                 'title': wishlist.book.title,
                 'preference': wishlist.get_preference_display(),
