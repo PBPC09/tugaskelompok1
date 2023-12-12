@@ -59,11 +59,13 @@ def register(request):
         username = data["username"]
         password1 = data["password1"]
         password2 = data["password2"]
+        # role = data.get("role", "default_role")
 
         if password1 != password2:
             return JsonResponse({'status': 'failed', 'message': 'Gagal woi'})
 
         new_user = User.objects.create_user(username = username, password = password1)
+        # new_user.role = role
         new_user.save()
         return JsonResponse({"status": "success"}, status=200)
     else:
