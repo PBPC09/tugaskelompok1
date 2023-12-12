@@ -106,27 +106,8 @@ def get_books(request):
 
 # @login_required
 def mywishlist_json(request):
-    # wishlist_books = Wishlist.objects.filter(user=request.user)
-    # a = [
-    #     {
-    #         "model": "wishlist.wishlist",
-    #         "pk": 1,
-    #         "fields": {
-    #             "title": "Antiques Roadkill: A Trash 'n' Treasures Mystery",
-    #             "preference": "Maybe Later"
-    #         }
-    #     },
-    #             {
-    #         "model": "wishlist.wishlist",
-    #         "pk": 1,
-    #         "fields": {
-    #             "title": "aaaa",
-    #             "preference": "Funn"
-    #         }
-    #     }
-    # ]
-    # b = json.dumps(a)
-    # return  HttpResponse(b, content_type="application/json")
+    # print(request.user.username)
+    # print(request.user)
     print("aaaaa")  
     wishlist_books = Wishlist.objects.all()
     wishlist_data = [
@@ -134,6 +115,7 @@ def mywishlist_json(request):
             'model' : "wishlist.wishlist",
             'pk' : wishlist.pk,
             'fields' : {
+                'user': wishlist.user.username,
                 'title': wishlist.book.title,
                 'preference': wishlist.get_preference_display(),
             }
