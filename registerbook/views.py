@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.contrib.auth.models import User
 from django.core import serializers
 from .models import Book
 import datetime
@@ -102,25 +103,23 @@ def add_book_ajax(request):
     return HttpResponseNotFound()
 
 @csrf_exempt
+# @login_required(login_url='/login')
 def create_book_flutter(request):
-    if request.method == 'POST':
-        
+    if request.method == 'POST':  
         data = json.loads(request.body)
 
         new_book = Book.objects.create(
-            user = request.user,
             title = data["title"],
             author = data["author"],
             rating = float(data["rating"]),
             voters = int(data["voters"]),
-            price = int(data["price"]),
+            price = float(data["price"]),
             currency = data["currency"],
             description = data["description"],
             publisher = data["publisher"],
-            page_count = data["page_count"],
+            page_count = int(data["page_count"]),
             genres = data["genres"],
         )
-
         new_book.save()
 
         return JsonResponse({"status": "success"}, status=200)

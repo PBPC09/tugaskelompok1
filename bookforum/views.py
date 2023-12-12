@@ -38,26 +38,25 @@ def show_forum(request):
 def create_question(request):
     if request.method == 'POST':
         user = request.user
-        # user = USER_BARU
         book_id = request.POST.get('book_id')
         book = Book.objects.get(pk=book_id)
         question = request.POST.get('question')
         date = datetime.now()
         title = request.POST.get('title')
         new_question = ForumHead(user = user, book = book, date = date , title = title, question = question)
-        result = {
-            'pk' : new_question.pk,
-            'fields' : {
-                'username' : new_question.user.username,
-                'title' : new_question.title,
-                'question' : new_question.question,
-                'date' : new_question.date,
-                'book' : new_question.book.title,
-                'book_id' : new_question.book,
-            }
-        }
+        # result = {
+        #     'pk' : new_question.pk,
+        #     'fields' : {
+        #         'username' : new_question.user.username,
+        #         'title' : new_question.title,
+        #         'question' : new_question.question,
+        #         'date' : new_question.date,
+        #         'book' : new_question.book.title,
+        #         'book_id' : new_question.book,
+        #     }
+        # }
         new_question.save()
-        return JsonResponse(result)
+        # return JsonResponse(result)
     return HttpResponseNotFound()
 
 @login_required(login_url='/login/')
@@ -118,19 +117,10 @@ def create_comments_flutter(request, pk):
         forum_head = ForumHead.objects.get(pk = pk)
         data = json.loads(request.body)
         user = request.user
-        # user = USER_BARU
         date = datetime.now()
-        # answer = request.POST.get('answer')
         new_comment = ForumComment(user = user, comment_to = forum_head, date = date, answer = data["answer"])
-        result = {
-            'pk' : new_comment.pk,
-            'fields' : {
-                'username' : new_comment.user.username,
-                'comment' : new_comment.answer,
-                'date' : new_comment.date
-            }
-        }
         new_comment.save()
+
         return JsonResponse({"status": "success"}, status=200)
 
         # return JsonResponse(result)
