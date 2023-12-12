@@ -25,16 +25,9 @@ SECRET_KEY = 'django-insecure-tezdpwt*m&iicr=&%&7b9yo@qjs6mxo(sou@&g0z()%z40^s6s
 
 PRODUCTION = env.bool('PRODUCTION', False)
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
 
 # Application definition
 
