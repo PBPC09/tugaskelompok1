@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from django.contrib.auth.models import User
 from django.core import serializers
 from .models import Book
@@ -129,11 +129,13 @@ def create_book_flutter(request):
 @csrf_exempt
 def remove_book(request, book_id):
     if request.method == "DELETE":
-        book = Book.objects.get(pk=book_id)
-        book.delete()
-        return HttpResponse(b"DELETED", status=201)
-    
-    return HttpResponseNotFound()
+        try:
+            book = Book.objects.get(pk=book_id)
+            book.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Book.DoesNotExist:
+            return JsonResponse({"status": "failed", "error": "Book not found"}, status=404)
+    return HttpResponseNotAllowed(['DELETE'])
 
 @csrf_exempt
 def remove_notification(request, notif_id):
@@ -150,3 +152,8 @@ def mark_notification_read(request, notif_id):
     notif.save()
 
     return redirect('registerbook:show_received_orders')
+
+@login_required(login_url='/login')
+def mark_all_notifications_read(request):
+    Notification.objects.filter(buyer=request.user).update(is_read=True)
+    return JsonResponse({"status": "success"}, status=200)
