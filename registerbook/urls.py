@@ -1,9 +1,8 @@
 from django.urls import path
-from registerbook.views import (show_registered_books, show_received_orders,
-                                show_json, show_json_by_id, get_book_json, 
-                                add_book_ajax, remove_book, mark_notification_read,
-                                remove_notification, get_notif_json,  create_book_flutter,
-                                mark_all_notifications_read)
+from registerbook.views import (show_registered_books, show_received_orders, show_json, 
+                                show_json_by_id, get_book_json, add_book_ajax, remove_book, 
+                                mark_notification_read, remove_notification, get_notif_json, 
+                                create_book_flutter, mark_all_notifications_read)
 
 app_name = 'registerbook'
 

@@ -5,7 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from django.core import serializers
 from .models import Book
-import datetime
 from datetime import datetime
 from .models import Notification
 
@@ -80,7 +79,6 @@ def add_book_ajax(request):
         publisher = request.POST.get("publisher")
         page_count = int(request.POST.get("page_count"))
         genres = request.POST.get("genres")
-        # user = request.user
 
         new_book = Book(
             title=title, 
@@ -93,37 +91,12 @@ def add_book_ajax(request):
             publisher=publisher,
             page_count=page_count, 
             genres=genres,
-            # user=user
         )
         new_book.save()
 
         return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
-
-@csrf_exempt
-# @login_required(login_url='/login')
-def create_book_flutter(request):
-    if request.method == 'POST':  
-        data = json.loads(request.body)
-
-        new_book = Book.objects.create(
-            title = data["title"],
-            author = data["author"],
-            rating = float(data["rating"]),
-            voters = int(data["voters"]),
-            price = float(data["price"]),
-            currency = data["currency"],
-            description = data["description"],
-            publisher = data["publisher"],
-            page_count = int(data["page_count"]),
-            genres = data["genres"],
-        )
-        new_book.save()
-
-        return JsonResponse({"status": "success"}, status=200)
-    else:
-        return JsonResponse({"status": "error"}, status=401)
 
 @csrf_exempt
 def remove_book(request, book_id):
@@ -162,3 +135,26 @@ def remove_notification(request, notif_id):
 def mark_all_notifications_read(request):
     Notification.objects.filter(buyer=request.user).update(is_read=True)
     return JsonResponse({"status": "success"}, status=200)
+
+@csrf_exempt
+def create_book_flutter(request):
+    if request.method == 'POST':  
+        data = json.loads(request.body)
+
+        new_book = Book.objects.create(
+            title = data["title"],
+            author = data["author"],
+            rating = float(data["rating"]),
+            voters = int(data["voters"]),
+            price = float(data["price"]),
+            currency = data["currency"],
+            description = data["description"],
+            publisher = data["publisher"],
+            page_count = int(data["page_count"]),
+            genres = data["genres"],
+        )
+        new_book.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
