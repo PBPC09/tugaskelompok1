@@ -10,25 +10,50 @@ const readNotifButtons = document.querySelectorAll('.btn-info');
       });
   });
 
-  function markNotificationAsRead(notifId) {
-      // Mengirim permintaan ke server untuk menandai notifikasi sebagai 'sudah dibaca'
-      fetch(markNotificationReadUrl + notifId + "/", {
-          method: 'GET',
-      })
-      .then(response => {
-          if (response.ok) {
-              location.reload();  // Refresh halaman setelah memperbarui notifikasi
-          } else {
-              console.error('Failed to mark notification as read');
-          }
-      })
-      .catch(error => {
-          console.error('Error:', error);
-      });
-  }
+// Fungsi untuk menandai notifikasi sebagai sudah dibaca
+function markNotificationAsRead(notifId) {
+    fetch(markNotificationReadUrl + notifId + "/", {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            const notifElement = document.querySelector(`[data-notif-id="${notifId}"]`).parentNode.parentNode;
+            notifElement.classList.remove('border-primary');
+            updateNotifCount();
+        } else {
+            console.error('Failed to mark notification as read');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
-  function markAllAsRead() {
-    const unreadNotifIds = Array.from(unReadMessages).map(message => message.querySelector('.btn-info').dataset.notifId);
+// Fungsi untuk menghapus notifikasi
+function deleteNotification(notifId) {
+    fetch(deleteNotificationUrl + notifId + "/", {
+        method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            const notifElement = document.querySelector(`[data-notif-id="${notifId}"]`).parentNode.parentNode;
+            notifElement.remove();
+            updateNotifCount();
+        } else {
+            console.error('Failed to delete notification');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Fungsi untuk menandai semua notifikasi sebagai sudah dibaca
+function markAllAsRead() {
+    const unreadNotifIds = Array.from(document.querySelectorAll('.border-primary .btn-info'))
+                                .map(button => button.dataset.notifId);
     
     const promises = unreadNotifIds.map(notifId => {
         return fetch(markNotificationReadUrl + notifId + "/", {
@@ -38,68 +63,51 @@ const readNotifButtons = document.querySelectorAll('.btn-info');
 
     Promise.all(promises)
     .then(responses => {
-        const allOk = responses.every(response => response.ok);
-        if (allOk) {
-            location.reload();
-        } else {
-            console.error('Some notifications failed to mark as read');
-        }
+        responses.forEach(response => {
+            if (response.ok) {
+                const notifId = response.url.split('/').slice(-2, -1)[0];
+                const notifElement = document.querySelector(`[data-notif-id="${notifId}"]`).parentNode.parentNode;
+                notifElement.classList.remove('border-primary');
+            }
+        });
+        updateNotifCount();
     })
     .catch(error => {
         console.error('Error:', error);
     });
-  }
+}
 
-  const unReadMessages = document.querySelectorAll('.border-primary')
-  const unReadMessagesCount = document.getElementById('num-of-notif')
-  const markAll = document.getElementById('mark-as-read')
-
-  updateNotifCount();
-
-  function updateNotifCount() {
-    const newUnreadMessages = document.querySelectorAll('.border-primary')
-    if (newUnreadMessages.length === 0) {
-      unReadMessagesCount.innerText = '';
-      unReadMessagesCount.style.display = 'none';
+// Fungsi untuk memperbarui jumlah notifikasi yang belum dibaca
+function updateNotifCount() {
+    const unreadNotifCount = document.querySelectorAll('.border-primary').length;
+    const unReadMessagesCount = document.getElementById('num-of-notif');
+    if (unreadNotifCount === 0) {
+        unReadMessagesCount.innerText = '';
+        unReadMessagesCount.style.display = 'none';
     } else {
-      unReadMessagesCount.innerText = newUnreadMessages.length;
-      unReadMessagesCount.style.display = 'block';
+        unReadMessagesCount.innerText = unreadNotifCount;
+        unReadMessagesCount.style.display = 'block';
     }
-  }
+}
 
-  unReadMessages.forEach((message) => {
-    message.addEventListener('click', () => {
-      message.classList.remove('border-primary')
-      updateNotifCount();
-    })
-  })
+// Event listener untuk tombol 'Read' dan 'Delete'
+document.addEventListener("DOMContentLoaded", function() {
+    const readNotifButtons = document.querySelectorAll('.btn-info');
+    readNotifButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const notifId = event.target.dataset.notifId;
+            markNotificationAsRead(notifId);
+        });
+    });
 
-  markAll.addEventListener('click', markAllAsRead);
-
-  document.addEventListener("DOMContentLoaded", function() {
     const deleteButtons = document.querySelectorAll('.delete-notif-btn');
-    
     deleteButtons.forEach((button) => {
         button.addEventListener('click', (event) => {
             const notifId = event.target.dataset.notifId;
             deleteNotification(notifId);
         });
     });
-  });
 
-  function deleteNotification(notifId) {
-    fetch(deleteNotificationUrl + notifId + "/", {
-        method: 'DELETE',
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "success") {
-            location.reload();
-        } else {
-            console.error('Failed to delete notification');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-  }
+    const markAll = document.getElementById('mark-as-read');
+    markAll.addEventListener('click', markAllAsRead);
+});
