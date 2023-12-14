@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
+from django.contrib.auth.models import User
 # from django.contrib.auth.models import User
 from django.core import serializers
 from main.models import Profile
