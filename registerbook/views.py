@@ -102,18 +102,6 @@ def add_book_ajax(request):
     return HttpResponseNotFound()
 
 @csrf_exempt
-def remove_book(request, book_id):
-    if request.method == "DELETE":
-        try:
-            book = Book.objects.get(pk=book_id)
-            book.delete()
-            return JsonResponse({"status": "success"}, status=200)
-        except Book.DoesNotExist:
-            return JsonResponse({"status": "failed", "error": "Book not found"}, status=404)
-    return HttpResponseNotAllowed(['DELETE'])
-
-
-@csrf_exempt
 # @login_required(login_url='/login')
 def create_book_flutter(request):
     if request.method == 'POST':  
@@ -138,14 +126,14 @@ def create_book_flutter(request):
         return JsonResponse({"status": "error"}, status=401)
 
 @csrf_exempt
-def remove_notification(request, notif_id):
+def remove_book(request, book_id):
     if request.method == "DELETE":
         try:
-            notif = Notification.objects.get(pk=notif_id)
-            notif.delete()
+            book = Book.objects.get(pk=book_id)
+            book.delete()
             return JsonResponse({"status": "success"}, status=200)
-        except Notification.DoesNotExist:
-            return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
+        except Book.DoesNotExist:
+            return JsonResponse({"status": "failed", "error": "Book not found"}, status=404)
     return HttpResponseNotAllowed(['DELETE'])
 
 @csrf_exempt
@@ -157,7 +145,18 @@ def mark_notification_read(request, notif_id):
         return JsonResponse({"status": "success"}, status=200)
     except Notification.DoesNotExist:
         return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
-    
+
+@csrf_exempt
+def remove_notification(request, notif_id):
+    if request.method == "DELETE":
+        try:
+            notif = Notification.objects.get(pk=notif_id)
+            notif.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Notification.DoesNotExist:
+            return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
+    return HttpResponseNotAllowed(['DELETE'])
+
 @login_required(login_url='/login')
 @csrf_exempt
 def mark_all_notifications_read(request):
