@@ -1,12 +1,9 @@
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
-from django.contrib.auth.models import User
-# from django.contrib.auth.models import User
 from django.core import serializers
-from main.models import Profile
 from .models import Book
 import datetime
 from datetime import datetime
@@ -163,6 +160,5 @@ def remove_notification(request, notif_id):
 @login_required(login_url='/login')
 @csrf_exempt
 def mark_all_notifications_read(request):
-    user_profile = Profile.objects.get(user=request.user)
-    Notification.objects.filter(buyer=user_profile).update(is_read=True)
+    Notification.objects.filter(buyer=request.user).update(is_read=True)
     return JsonResponse({"status": "success"}, status=200)
