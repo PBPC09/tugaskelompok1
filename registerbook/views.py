@@ -3,8 +3,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.core import serializers
+from main.models import Profile
 from .models import Book
 import datetime
 from datetime import datetime
@@ -138,22 +139,29 @@ def remove_book(request, book_id):
     return HttpResponseNotAllowed(['DELETE'])
 
 @csrf_exempt
-def remove_notification(request, notif_id):
+def mark_notification_read(request, notif_id):
     try:
         notif = Notification.objects.get(pk=notif_id)
-        notif.delete()
+        notif.is_read = True
+        notif.save()
         return JsonResponse({"status": "success"}, status=200)
     except Notification.DoesNotExist:
         return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
 
-def mark_notification_read(request, notif_id):
-    notif = Notification.objects.get(pk=notif_id)
-    notif.is_read = True
-    notif.save()
-
-    return redirect('registerbook:show_received_orders')
+@csrf_exempt
+def remove_notification(request, notif_id):
+    if request.method == "DELETE":
+        try:
+            notif = Notification.objects.get(pk=notif_id)
+            notif.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Notification.DoesNotExist:
+            return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
+    return HttpResponseNotAllowed(['DELETE'])
 
 @login_required(login_url='/login')
+@csrf_exempt
 def mark_all_notifications_read(request):
-    Notification.objects.filter(buyer=request.user).update(is_read=True)
+    user_profile = Profile.objects.get(user=request.user)
+    Notification.objects.filter(buyer=user_profile).update(is_read=True)
     return JsonResponse({"status": "success"}, status=200)
