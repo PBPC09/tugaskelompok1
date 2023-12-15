@@ -95,6 +95,6 @@ function showBookDescriptionFromData(buttonElement) {
 refreshBooks();
 document.getElementById("button_add").onclick = addBook
 document.getElementById("ratingFilter").addEventListener("change", refreshBooks);
-document.getElementById("logout-button").addEventListener("click", function() {
-    window.location.href = logoutUrl;
-});
+// document.getElementById("logout-button").addEventListener("click", function() {
+//     window.location.href = logoutUrl;
+// });
