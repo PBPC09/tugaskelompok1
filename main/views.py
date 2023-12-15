@@ -2,14 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import SignUpForm
 from .models import Profile
-import datetime
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
+from django.core import serializers
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -77,3 +77,7 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:show_landing_page'))
     response.delete_cookie('last_login')
     return render(request, 'landingpage.html', {})
+
+def get_user_json(request):
+    notif = Profile.objects.all()
+    return HttpResponse(serializers.serialize('json', notif))

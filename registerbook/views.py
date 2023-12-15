@@ -1,12 +1,10 @@
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
-from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from django.core import serializers
 from .models import Book
-import datetime
 from datetime import datetime
 from .models import Notification
 
@@ -81,7 +79,6 @@ def add_book_ajax(request):
         publisher = request.POST.get("publisher")
         page_count = int(request.POST.get("page_count"))
         genres = request.POST.get("genres")
-        # user = request.user
 
         new_book = Book(
             title=title, 
@@ -94,7 +91,6 @@ def add_book_ajax(request):
             publisher=publisher,
             page_count=page_count, 
             genres=genres,
-            # user=user
         )
         new_book.save()
 
@@ -103,7 +99,44 @@ def add_book_ajax(request):
     return HttpResponseNotFound()
 
 @csrf_exempt
-# @login_required(login_url='/login')
+def remove_book(request, book_id):
+    if request.method == "DELETE":
+        try:
+            book = Book.objects.get(pk=book_id)
+            book.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Book.DoesNotExist:
+            return JsonResponse({"status": "failed", "error": "Book not found"}, status=404)
+    return HttpResponseNotAllowed(['DELETE'])
+
+@csrf_exempt
+def mark_notification_read(request, notif_id):
+    try:
+        notif = Notification.objects.get(pk=notif_id)
+        notif.is_read = True
+        notif.save()
+        return JsonResponse({"status": "success"}, status=200)
+    except Notification.DoesNotExist:
+        return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
+
+@csrf_exempt
+def remove_notification(request, notif_id):
+    if request.method == "DELETE":
+        try:
+            notif = Notification.objects.get(pk=notif_id)
+            notif.delete()
+            return JsonResponse({"status": "success"}, status=200)
+        except Notification.DoesNotExist:
+            return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
+    return HttpResponseNotAllowed(['DELETE'])
+
+@login_required(login_url='/login')
+@csrf_exempt
+def mark_all_notifications_read(request):
+    Notification.objects.filter(buyer=request.user).update(is_read=True)
+    return JsonResponse({"status": "success"}, status=200)
+
+@csrf_exempt
 def create_book_flutter(request):
     if request.method == 'POST':  
         data = json.loads(request.body)
@@ -125,28 +158,3 @@ def create_book_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
-
-@csrf_exempt
-def remove_book(request, book_id):
-    if request.method == "DELETE":
-        book = Book.objects.get(pk=book_id)
-        book.delete()
-        return HttpResponse(b"DELETED", status=201)
-    
-    return HttpResponseNotFound()
-
-@csrf_exempt
-def remove_notification(request, notif_id):
-    try:
-        notif = Notification.objects.get(pk=notif_id)
-        notif.delete()
-        return JsonResponse({"status": "success"}, status=200)
-    except Notification.DoesNotExist:
-        return JsonResponse({"status": "failed", "error": "Notification not found"}, status=404)
-
-def mark_notification_read(request, notif_id):
-    notif = Notification.objects.get(pk=notif_id)
-    notif.is_read = True
-    notif.save()
-
-    return redirect('registerbook:show_received_orders')

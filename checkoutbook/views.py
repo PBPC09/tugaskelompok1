@@ -26,7 +26,7 @@ def show_checkout(request):
         'form': form,
         'currency' : 'SAR',
     }
-    # print("aa")
+
     return render(request, 'checkout.html', context)
 
 @csrf_exempt
@@ -35,36 +35,33 @@ def checkout_ajax(request):
         if request.method == 'POST':
             user = request.user
             items = CartItem.objects.filter(user=request.user, is_ordered=True)
-            print(items)
             alamat = request.POST.get("alamat")
-            print(alamat)
             metode_pembayaran = request.POST.get("metode_pembayaran")
-            print(metode_pembayaran)
+
             total_price = sum(item.subtotal() for item in items)
-            print(total_price)
-            new_item = Checkout(user=user, alamat=alamat, metode_pembayaran=metode_pembayaran, total_price=total_price)
+            new_item = Checkout(
+                            user=user, 
+                            alamat=alamat, 
+                            metode_pembayaran=metode_pembayaran, 
+                            total_price=total_price
+                        )
+            
             new_item.save()
-            print(new_item)
             new_item.items.set(items)
             new_item.save()
-            print(0000)
-            message = f"{new_item.alamat} | {new_item.metode_pembayaran} | {new_item.total_price} SAR\n"
+            
+            message = f"Pesanan masuk dari {user.username}.\n"
+            message += f"{new_item.alamat} | {new_item.metode_pembayaran} | {new_item.total_price} SAR\n"
             message += "\nOrder Summary:\n"
             for item in items:
                 message += f"- {item.book.title}\n"
                 
             Notification.objects.create(buyer=user, message=message)
-            print(1111)
             for item in items:
                 item.delete()
-            print(2222222)
+
             return HttpResponseRedirect(reverse('buybooks:show_cart'))
-            # return JsonResponse({"user" : user, 
-            #                             "items" : items, 
-            #                             "alamat" : alamat, 
-            #                             "metode_pembayaran" : metode_pembayaran,
-            #                             "total_price" : total_price,
-            #                             "new_item" : new_item})
+        
         return HttpResponseNotFound()
     except: 
         return JsonResponse({"user" : user, 
