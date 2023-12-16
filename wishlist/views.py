@@ -126,18 +126,38 @@ def mywishlist_json(request):
     return HttpResponse(json_data, content_type="application/json")
 
 
+# def add_to_wishlist_flutter(request, level):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         book_id = data['book_id']
+#         preference = preference_level(level)
+#         book = Book.objects.get(pk=book_id)
+
+#         if Wishlist.objects.filter(user=request.user, book=book).exists():
+#             return JsonResponse({'status': 'error', 'message': f"Buku berjudul {book.title} sudah ada dalam wishlist Anda."})
+#         else:
+#             Wishlist.objects.create(user=request.user, book=book, preference=preference)
+#             return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully!'})
+
 def add_to_wishlist_flutter(request, level):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        book_id = data['book_id']
-        preference = preference_level(level)
-        book = Book.objects.get(pk=book_id)
-
-        if Wishlist.objects.filter(user=request.user, book=book).exists():
-            return JsonResponse({'status': 'error', 'message': f"Buku berjudul {book.title} sudah ada dalam wishlist Anda."})
-        else:
+        form = AddToWishlistForm(request.POST)
+        try:
+            data = json.loads(request.body)
+            book_id = data['book_id']
+            preference = form.cleaned_data['preference']
+            book = Book.objects.get(pk=book_id)
+            if Wishlist.objects.filter(user=request.user, book=book).exists():
+                return JsonResponse({'status': 'error', 'message': f"Buku berjudul {book.title} sudah ada dalam wishlist Anda."})
+            
             Wishlist.objects.create(user=request.user, book=book, preference=preference)
+
             return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully!'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f'Error: {str(e)}'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
+
+
 
 def preference_level (level):
     if level == 1:
@@ -149,6 +169,6 @@ def preference_level (level):
     elif level == 4:
         return 'Really Want It'
     elif level == 5:
-        return 'Musr Have'
+        return 'Must Have'
     else:
         return 'Not Interested'
