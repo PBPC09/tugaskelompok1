@@ -1,10 +1,10 @@
 import json
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from .models import Book, CartItem
 from django.contrib.auth.decorators import login_required
-from .forms import *
+from .forms import AddToCart
 from django.http import HttpResponseNotFound
 import datetime
 from datetime import datetime
@@ -103,3 +103,20 @@ def show_cart_json(request, uname):
 def show_carts_json(request):
     books = CartItem.objects.all()
     return HttpResponse(serializers.serialize('json', books), content_type="application/json")
+
+@login_required
+@csrf_exempt
+def add_to_cart(request, id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        book = Book.objects.get(pk=id)
+        new_cart = CartItem.objects.create(
+            user = request.user,
+            book = book,
+            quantity = data["quantity"],
+            is_ordered = False
+        )
+        new_cart.save()
+        return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully!'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Form is not valid.'})
