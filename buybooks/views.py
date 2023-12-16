@@ -6,7 +6,7 @@ from .models import Book, CartItem
 from django.contrib.auth.decorators import login_required
 from .forms import AddToCart
 from django.http import HttpResponseNotFound
-import datetime
+from django.contrib.auth.models import User
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 
@@ -49,14 +49,26 @@ def add_cart_ajax(request, id):
 @login_required(login_url='/login')
 def show_cart(request):
     cart_items = CartItem.objects.filter(user=request.user, is_ordered=False)
+    cart_data = [
+        {
+            'id': item.id,
+            'title': item.book.title,
+            'quantity': item.quantity,
+            'subtotal': item.subtotal(),
+            'currency': item.book.currency
+        }
+        for item in cart_items
+    ]
+
     last_login = request.COOKIES['last_login']
     parsed_date_time = datetime.strptime(last_login, '%Y-%m-%d %H:%M:%S.%f')
     formatted_without_ms = parsed_date_time.strftime('%Y-%m-%d %H:%M:%S')
     
     context = {
-        'cart_items': cart_items,
+        'cart_data': cart_data,
         'last_login' : formatted_without_ms,
     }
+    
     return render(request, 'cartwindow.html', context)
 
 @csrf_exempt
@@ -67,7 +79,16 @@ def delete_cart(request, id):
     return redirect('buybooks:show_cart')
 
 def show_books_json(request):
-    books = Book.objects.all()
+    rating_gte = request.GET.get('rating_gte')
+    rating_lt = request.GET.get('rating_lt')
+
+    if rating_gte:
+        books = Book.objects.filter(rating__gte=rating_gte)
+    elif rating_lt:
+        books = Book.objects.filter(rating__lt=rating_lt)
+    else:
+        books = Book.objects.all()
+
     return HttpResponse(serializers.serialize('json', books), content_type="application/json")
 
 def show_books_json_rating_lt(request):
@@ -89,16 +110,33 @@ def selected(request, id):
 
     return redirect('buybooks:show_cart')
 
+# def show_cart_json(request, uname):
+#     data_item = CartItem.objects.all()
+#     for data in data_item:
+#         if data.user.username == uname:
+#             user_id = data.user
+#             data = CartItem.objects.filter(user = user_id)
+#             break
+#         else:
+#             data = []
+#     return HttpResponse(serializers.serialize('json', data), content_type="application/json")
+
 def show_cart_json(request, uname):
-    data_item = CartItem.objects.all()
-    for data in data_item:
-        if data.user.username == uname:
-            user_id = data.user
-            data = CartItem.objects.filter(user = user_id)
-            break
-        else:
-            data = []
-    return HttpResponse(serializers.serialize('json', data), content_type="application/json")
+    user = get_object_or_404(User, username=uname)
+    cart_items = CartItem.objects.filter(user=user, is_ordered=False)
+
+    cart_data = [
+        {
+            'id': item.id,
+            'title': item.book.title,
+            'quantity': item.quantity,
+            'subtotal': item.subtotal(),
+            'currency': item.book.currency
+        }
+        for item in cart_items
+    ]
+
+    return JsonResponse(cart_data, safe=False)  # safe=False allows us to return a list
 
 def show_carts_json(request):
     books = CartItem.objects.all()
