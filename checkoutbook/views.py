@@ -51,7 +51,7 @@ def checkout_ajax(request):
             new_item.save()
             
             message = f"Pesanan masuk dari {user.username}.\n"
-            message += f"{new_item.alamat} | {new_item.metode_pembayaran} | {new_item.total_price} SAR\n"
+            message += f"{new_item.alamat} | {new_item.metode_pembayaran} | SAR {new_item.total_price}\n"
             message += "\nOrder Summary:\n"
             for item in items:
                 message += f"- {item.book.title}\n"
