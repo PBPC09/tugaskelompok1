@@ -114,6 +114,7 @@ def mywishlist_json(request):
             'fields' : {
                 'user': wishlist.user.username,
                 'title': wishlist.book.title,
+                'book_id' : wishlist.book.pk,
                 'preference': wishlist.get_preference_display(),
             }
         }
@@ -123,23 +124,26 @@ def mywishlist_json(request):
     json_data = json.dumps(wishlist_data)
     return HttpResponse(json_data, content_type="application/json")
 
-@login_required(login_url='/login')
+@login_required(login_url='/login/')
 @csrf_exempt
-@require_http_methods(["POST"])
+# @require_http_methods(["POST"])
 def add_to_wishlist_flutter(request):
     data = json.loads(request.body)
-    user_id = data["user_id"]
+    username = data["username"]
     book_id = data["book_id"]
     preference = int(data["preference"])
 
     book = Book.objects.get(pk=book_id)
-    user = User.objects.get(pk=user_id)
+    user = User.objects.get(username=username)
+    
+    # TEST DOANG
+    # return JsonResponse({'status': 'success', 'message': 'Book already in wishlist'}, status=200)
 
     if Wishlist.objects.filter(user=user, book=book).exists():
         return JsonResponse({'status': 'error', 'message': 'Book already in wishlist'}, status=400)
 
     Wishlist.objects.create(user=user, book=book, preference=preference)
-    return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully'})
+    return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully'}, status=200)
 
 def preference_level(level):
     if level == 1:
