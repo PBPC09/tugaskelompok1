@@ -145,6 +145,18 @@ def add_to_wishlist_flutter(request):
     Wishlist.objects.create(user=user, book=book, preference=preference)
     return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully'}, status=200)
 
+@csrf_exempt
+def delete_wishlist_item_flutter(request, item_id):
+    # print(item_id)
+    if request.method == 'POST' :
+        Wishlist.objects.get(pk=item_id).delete()
+        return JsonResponse({'status': 'success'}, status=200)
+    else:
+        return JsonResponse({'status': 'failed'}, status=300)
+
+
+
+
 def preference_level(level):
     if level == 1:
         return 'Not Interested'
