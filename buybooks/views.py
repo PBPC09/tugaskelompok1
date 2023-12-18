@@ -48,7 +48,7 @@ def add_cart_ajax(request, id):
 
 @login_required(login_url='/login')
 def show_cart(request):
-    cart_items = CartItem.objects.filter(user=request.user, is_ordered=False)
+    cart_items = CartItem.objects.filter(user=request.user)
     cart_data = [
         {
             'id': item.id,
@@ -78,6 +78,14 @@ def delete_cart(request, id):
         item.delete()
     return redirect('buybooks:show_cart')
 
+@csrf_exempt
+def delete_cart_flutter(request, id):
+    if request.method == 'POST' :
+        CartItem.objects.get(pk=id).delete()
+        return JsonResponse({'status': 'success'}, status=200)
+    else:
+        return JsonResponse({'status': 'failed'}, status=300)
+
 def show_books_json(request):
     rating_gte = request.GET.get('rating_gte')
     rating_lt = request.GET.get('rating_lt')
@@ -88,7 +96,6 @@ def show_books_json(request):
         books = Book.objects.filter(rating__lt=rating_lt)
     else:
         books = Book.objects.all()
-
     return HttpResponse(serializers.serialize('json', books), content_type="application/json")
 
 def show_books_json_rating_lt(request):
@@ -110,6 +117,20 @@ def selected(request, id):
 
     return redirect('buybooks:show_cart')
 
+@csrf_exempt
+def selected_flutter(request, id):
+    if request.method == 'POST':
+        item = CartItem.objects.get(pk=id)
+        if item.is_ordered == False :
+            item.is_ordered = True
+        else:
+            item.is_ordered = False  
+        item.save()
+        return JsonResponse({'status': 'success'}, status=200)
+    else:
+        return JsonResponse({'status': 'failed'}, status=300)
+
+
 # def show_cart_json(request, uname):
 #     data_item = CartItem.objects.all()
 #     for data in data_item:
@@ -123,7 +144,7 @@ def selected(request, id):
 
 def show_cart_json(request, uname):
     user = get_object_or_404(User, username=uname)
-    cart_items = CartItem.objects.filter(user=user, is_ordered=False)
+    cart_items = CartItem.objects.filter(user=user)
 
     cart_data = [
         {
@@ -131,7 +152,8 @@ def show_cart_json(request, uname):
             'title': item.book.title,
             'quantity': item.quantity,
             'subtotal': item.subtotal(),
-            'currency': item.book.currency
+            'currency': item.book.currency,
+            'is_ordered' : item.is_ordered,
         }
         for item in cart_items
     ]

@@ -8,6 +8,7 @@ from .models import Book
 from datetime import datetime
 from .models import Notification
 
+
 @login_required(login_url='/login')
 def show_registered_books(request):
     books = Book.objects.all()
