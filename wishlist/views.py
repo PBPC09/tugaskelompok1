@@ -5,7 +5,9 @@ from .models import Wishlist
 from registerbook.models import Book
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 from django.contrib import messages 
 import datetime
 from datetime import datetime
@@ -51,7 +53,7 @@ def show_book_details(request, book_id):
 
     return render(request, 'book_details.html', {'book': book, 'last_login' : formatted_without_ms})
 
-@login_required
+@login_required(login_url='/login')
 @csrf_exempt
 def add_to_wishlist(request):
     if request.method == 'POST':
@@ -70,7 +72,6 @@ def add_to_wishlist(request):
             return JsonResponse({'status': 'error', 'message': 'Form is not valid.'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
 
-@login_required
 def mywishlist(request):
     wishlist_books = Wishlist.objects.filter(user=request.user)
     last_login = request.COOKIES['last_login']
@@ -82,9 +83,9 @@ def mywishlist(request):
         'last_login' : formatted_without_ms,
 
     }
+
     return render(request, 'mywishlist.html', context=context)
 
-@login_required
 @csrf_exempt
 def delete_wishlist_item(request, item_id):
     item = get_object_or_404(Wishlist, pk=item_id)
@@ -104,11 +105,7 @@ def get_books(request):
 
     return render(request, 'books.html', {'books': books, 'last_login' : formatted_without_ms})
 
-# @login_required
 def mywishlist_json(request):
-    # print(request.user.username)
-    # print(request.user)
-    print("aaaaa")  
     wishlist_books = Wishlist.objects.all()
     wishlist_data = [
         {
@@ -122,24 +119,29 @@ def mywishlist_json(request):
         }
         for wishlist in wishlist_books
     ]
+
     json_data = json.dumps(wishlist_data)
     return HttpResponse(json_data, content_type="application/json")
 
+@login_required(login_url='/login')
+@csrf_exempt
+@require_http_methods(["POST"])
+def add_to_wishlist_flutter(request):
+    data = json.loads(request.body)
+    user_id = data["user_id"]
+    book_id = data["book_id"]
+    preference = int(data["preference"])
 
-def add_to_wishlist_flutter(request, level):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        book_id = data['book_id']
-        preference = preference_level(level)
-        book = Book.objects.get(pk=book_id)
+    book = Book.objects.get(pk=book_id)
+    user = User.objects.get(pk=user_id)
 
-        if Wishlist.objects.filter(user=request.user, book=book).exists():
-            return JsonResponse({'status': 'error', 'message': f"Buku berjudul {book.title} sudah ada dalam wishlist Anda."})
-        else:
-            Wishlist.objects.create(user=request.user, book=book, preference=preference)
-            return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully!'})
+    if Wishlist.objects.filter(user=user, book=book).exists():
+        return JsonResponse({'status': 'error', 'message': 'Book already in wishlist'}, status=400)
 
-def preference_level (level):
+    Wishlist.objects.create(user=user, book=book, preference=preference)
+    return JsonResponse({'status': 'success', 'message': 'Book added to wishlist successfully'})
+
+def preference_level(level):
     if level == 1:
         return 'Not Interested'
     elif level == 2:
@@ -149,6 +151,4 @@ def preference_level (level):
     elif level == 4:
         return 'Really Want It'
     elif level == 5:
-        return 'Musr Have'
-    else:
-        return 'Not Interested'
+        return 'Must Have'

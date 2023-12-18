@@ -136,7 +136,7 @@ def show_cart_json(request, uname):
         for item in cart_items
     ]
 
-    return JsonResponse(cart_data, safe=False)  # safe=False allows us to return a list
+    return JsonResponse(cart_data, safe=False)
 
 def show_carts_json(request):
     books = CartItem.objects.all()

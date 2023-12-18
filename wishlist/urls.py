@@ -12,5 +12,4 @@ urlpatterns = [
     path('get-books/', get_books, name='get_books'),
     path('mywishlist/json', mywishlist_json, name='mywishlist_json'),
     path('add_to_wishlist_flutter/', add_to_wishlist_flutter, name= 'add_to_wishlist_flutter'),
-
 ]
