@@ -1,8 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User
 from registerbook.models import Book
+from django.contrib.auth.models import User
 
-# Create your models here.
+class Buybooks(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='buybooks_book')  
+    book = models.ForeignKey(Book, on_delete=models.CASCADE) 
+    amount = models.IntegerField() 
+    quantity = models.PositiveIntegerField(default=1)  
+    is_ordered = models.BooleanField(default=False)
+
+
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
