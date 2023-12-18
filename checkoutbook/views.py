@@ -11,6 +11,8 @@ import datetime
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 
+
+
 @login_required(login_url='/login')
 def show_checkout(request):
     form = CheckoutForm()
@@ -26,8 +28,33 @@ def show_checkout(request):
         'form': form,
         'currency' : 'SAR',
     }
-
     return render(request, 'checkout.html', context)
+
+def show_checkout_json(request, username):
+    # print("a")
+    cart_items = CartItem.objects.filter(user__username = username, is_ordered=True)
+    cart_data = [
+        {
+            'id': item.id,
+            'title': item.book.title,
+            'quantity': item.quantity,
+            'subtotal': item.subtotal(),
+            'currency': item.book.currency,
+            'is_ordered' : item.is_ordered,
+        }
+        for item in cart_items
+    ]
+
+    return JsonResponse(cart_data, safe=False)
+
+def get_total_harga(request, username):
+    cart_items = CartItem.objects.filter(user__username = username, is_ordered=True)
+    total_price = sum(item.subtotal() for item in cart_items)
+    context = [{
+        'total_harga' : total_price,
+    }]
+    return JsonResponse(context, safe=False)
+
 
 @csrf_exempt
 def checkout_ajax(request):
@@ -70,6 +97,40 @@ def checkout_ajax(request):
                              "metode_pembayaran" : metode_pembayaran,
                              "total_price" : total_price,
                              "new_item" : new_item})
+
+@login_required
+@csrf_exempt
+def checkout_flutter(request):
+    if request.method == 'POST':
+        user = request.user
+        items = CartItem.objects.filter(user=request.user, is_ordered=True)
+
+        data = json.loads(request.body)
+        alamat = data["alamat"]
+        metode_pembayaran = data["metode_pembayaran"]
+        total_price = int(data["total_harga"])
+        new_item = Checkout(
+                        user=user, 
+                        alamat=alamat, 
+                        metode_pembayaran=metode_pembayaran, 
+                        total_price=total_price
+                    )
+        
+        new_item.save()
+        new_item.items.set(items)
+        new_item.save()
+        
+        message = f"Pesanan masuk dari {user.username}.\n"
+        message += f"{new_item.alamat} | {new_item.metode_pembayaran} | SAR {new_item.total_price}\n"
+        message += "\nOrder Summary:\n"
+        for item in items:
+            message += f"- {item.book.title}\n"
+            
+        Notification.objects.create(buyer=user, message=message)
+        for item in items:
+            item.delete()
+        return JsonResponse({"status": "success"}, status=200)
+    return JsonResponse({"status": "error"}, status=401)
 
 @login_required(login_url='/login')
 def show_myorder(request):

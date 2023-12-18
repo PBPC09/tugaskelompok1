@@ -14,4 +14,6 @@ urlpatterns = [
     path('selected/<int:id>/', selected, name="selected"),
     path('show_cart_json/<str:uname>/', show_cart_json, name="show_cart_json"),
     path('show_carts_json', show_carts_json, name="show_carts_json"),
+    path('delete_cart_flutter/<int:id>/', delete_cart_flutter, name="delete_cart_flutter"),
+    path('selected_flutter/<int:id>/', selected_flutter, name="selected_flutter"),
 ]
