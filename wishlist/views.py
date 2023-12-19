@@ -168,3 +168,5 @@ def preference_level(level):
         return 'Really Want It'
     elif level == 5:
         return 'Must Have'
+    else:
+        return 'Not Interested'
