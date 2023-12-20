@@ -154,9 +154,6 @@ def delete_wishlist_item_flutter(request, item_id):
     else:
         return JsonResponse({'status': 'failed'}, status=300)
 
-
-
-
 def preference_level(level):
     if level == 1:
         return 'Not Interested'
