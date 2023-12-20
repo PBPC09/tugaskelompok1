@@ -108,7 +108,7 @@ def checkout_flutter(request):
         data = json.loads(request.body)
         alamat = data["alamat"]
         metode_pembayaran = data["metode_pembayaran"]
-        total_price = int(data["total_harga"])
+        total_price = float(data["total_harga"])
         new_item = Checkout(
                         user=user, 
                         alamat=alamat, 
