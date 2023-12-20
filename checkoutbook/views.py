@@ -150,6 +150,24 @@ def get_order_json(request):
     orders = Checkout.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', orders))
 
+def get_order_json_all(request):
+    orders = Checkout.objects.all()
+    order_data = [
+        {
+            'model' : "checkoutbook.checkout",
+            'pk' : order.pk,
+            'fields' : {
+                'user': order.user.username,
+                'alamat' : order.alamat,
+                'metode_pembayaran': order.metode_pembayaran,
+                'total_price' : order.total_price,
+            }
+        }
+        for order in orders
+    ]
+    json_data = json.dumps(order_data)
+    return HttpResponse(json_data, content_type="application/json")
+
 def get_order_json_cc(request):
     orders = Checkout.objects.filter(user=request.user, metode_pembayaran="kartu_kredit")
     return HttpResponse(serializers.serialize('json', orders), content_type="application/json")
